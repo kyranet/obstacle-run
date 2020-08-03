@@ -1,3 +1,4 @@
+#pragma once
 #include "SDL.h"
 
 const unsigned int SCREEN_WIDTH = 640;
@@ -7,14 +8,16 @@ class Game final {
   static Game* instance_;
   SDL_Window* window_ = nullptr;
   SDL_Renderer* renderer_ = nullptr;
-  SDL_Surface* surface_ = nullptr;
-  bool init();
-  Game();
+  bool stop_ = false;
+
+  bool init() noexcept;
+  Game() noexcept;
 
  public:
-  ~Game();
-  bool start();
-  bool end();
+  ~Game() noexcept;
+  bool start() noexcept;
+  bool end() noexcept;
+  void run();
 
   static Game* getInstance();
 };

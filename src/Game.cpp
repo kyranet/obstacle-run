@@ -6,12 +6,12 @@
 #include "SDL_net.h"
 #include "SDL_ttf.h"
 
-Game::Game() = default;
-Game::~Game() { end(); }
+Game::Game() noexcept = default;
+Game::~Game() noexcept { end(); }
 
 Game* Game::instance_ = nullptr;
 
-bool Game::start() {
+bool Game::start() noexcept {
   if (!init()) return false;
 
   window_ = SDL_CreateWindow("Obstacle Run", SDL_WINDOWPOS_UNDEFINED,
@@ -30,22 +30,10 @@ bool Game::start() {
     return false;
   }
 
-  surface_ = SDL_GetWindowSurface(window_);
-
-  // Fill the surface white
-  SDL_FillRect(surface_, nullptr,
-               SDL_MapRGB(surface_->format, 0xFF, 0xFF, 0xFF));
-
-  // Update the surface
-  SDL_UpdateWindowSurface(window_);
-
-  // Wait two seconds
-  SDL_Delay(2000);
-
   return true;
 }
 
-bool Game::end() {
+bool Game::end() noexcept {
   // Destroy window
   SDL_DestroyWindow(window_);
 
@@ -58,7 +46,7 @@ bool Game::end() {
   return true;
 }
 
-bool Game::init() {
+bool Game::init() noexcept {
   if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_TIMER | SDL_INIT_AUDIO) != 0) {
     std::cerr << "Error initializing SDL.\nReason: " << SDL_GetError();
     return false;
@@ -80,6 +68,23 @@ bool Game::init() {
   }
 
   return true;
+}
+
+void Game::run() {
+  // Event handler
+  SDL_Event e;
+  unsigned int run = 0;
+
+  while (!stop_) {
+    // Handle events on queue
+    while (SDL_PollEvent(&e) != 0) {
+      std::cout << "Run!" << ++run << '\n';
+      // User requests quit
+      if (e.type == SDL_QUIT) {
+        stop_ = true;
+      }
+    }
+  }
 }
 
 Game* Game::getInstance() {

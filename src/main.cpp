@@ -10,8 +10,9 @@ int main(int, char*[]) {
                  _CRTDBG_LEAK_CHECK_DF);  // Check Memory Leaks
 #endif
   auto* game = Game::getInstance();
+  game->start();
   try {
-    game->start();
+    game->run();
     return 0;
   } catch (const std::exception& exception) {
     std::cerr << exception.what();

@@ -71,7 +71,7 @@ find_package(SDL2_net REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR} ${SDL2_NET_INCLUDE_DIR})
 
 file(COPY assets DESTINATION .)
-add_executable(obstaclerun src/main.cpp src/Game.cpp src/Game.h src/exceptions/SDLException.h)
+add_executable(obstaclerun src/main.cpp src/Game.cpp src/Game.h src/exceptions/SDLException.h src/scenes/Scene.cpp src/scenes/Scene.h src/objects/GameObject.cpp src/objects/GameObject.h src/managers/Input.cpp src/managers/Input.h src/utils/Vector2D.h src/utils/Constants.h src/managers/SceneManager.cpp src/managers/SceneManager.h)
 
 # If a deps folder was used, it is most likely that OS' scoped libraries will be tried to be used even if they are not
 # available, so we copy the .dll files.
