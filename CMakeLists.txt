@@ -45,7 +45,7 @@ message("CMAKE_CXX_FLAGS_RELEASE = ${CMAKE_CXX_FLAGS_RELEASE}")
 
 # Set the cmake module path.
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${obstaclerun_SOURCE_DIR}/cmake/")
-set(BIN_DIR ${obstaclerun_SOURCE_DIR}/bin)
+set(BIN_DIR ${obstaclerun_SOURCE_DIR}/cmake-build-debug)
 
 # If the generator is MSVC and a deps folder exists, try to link the libraries.
 if (BUILD_LOCAL EQUAL 1)
@@ -71,7 +71,7 @@ find_package(SDL2_net REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR} ${SDL2_NET_INCLUDE_DIR})
 
 file(COPY assets DESTINATION .)
-add_executable(obstaclerun src/main.cpp)
+add_executable(obstaclerun src/main.cpp src/Game.cpp src/Game.h src/exceptions/SDLException.h)
 
 # If a deps folder was used, it is most likely that OS' scoped libraries will be tried to be used even if they are not
 # available, so we copy the .dll files.
@@ -80,11 +80,12 @@ if (BUILD_LOCAL EQUAL 1)
             "${SDL2_TTF_DIR}/*.dll"
             "${SDL2_MIXER_DIR}/*.dll"
             "${SDL2_IMAGE_DIR}/*.dll"
+            "${SDL2_NET_DIR}/*.dll"
             "${SDL2_DIR}/*.dll"
             )
     file(COPY ${DEPENDENCY_DLLS} DESTINATION "${BIN_DIR}")
 endif ()
 
 # Link the libraries and install them.
-target_link_libraries(obstaclerun ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${SDL2_TTF_LIBRARIES} ${SDL2_MIXER_LIBRARY} ${SDL2_NET_LIBRARY})
+target_link_libraries(obstaclerun ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SDL2_MIXER_LIBRARIES} ${SDL2_NET_LIBRARY})
 install(TARGETS obstaclerun RUNTIME DESTINATION ${BIN_DIR})
