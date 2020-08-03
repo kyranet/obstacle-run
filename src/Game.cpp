@@ -1,3 +1,5 @@
+// Copyright (c) 2020 Antonio Román. All rights reserved.
+
 #include "Game.h"
 
 #include <iostream>
@@ -5,6 +7,8 @@
 #include "SDL_mixer.h"
 #include "SDL_net.h"
 #include "SDL_ttf.h"
+#include "managers/SceneManager.h"
+#include "scenes/Scene.h"
 
 Game::Game() noexcept = default;
 Game::~Game() noexcept { end(); }
@@ -71,20 +75,11 @@ bool Game::init() noexcept {
 }
 
 void Game::run() {
-  // Event handler
-  SDL_Event e;
-  unsigned int run = 0;
+  auto* scene = SceneManager::createScene("Menu");
+  SceneManager::loadScene(scene);
+  SceneManager::setActiveScene(scene);
 
-  while (!stop_) {
-    // Handle events on queue
-    while (SDL_PollEvent(&e) != 0) {
-      std::cout << "Run!" << ++run << '\n';
-      // User requests quit
-      if (e.type == SDL_QUIT) {
-        stop_ = true;
-      }
-    }
-  }
+  scene->run();
 }
 
 Game* Game::getInstance() {

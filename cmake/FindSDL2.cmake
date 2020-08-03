@@ -71,9 +71,9 @@
 # "SDL.h", not <SDL/SDL.h>.  This is done for portability reasons
 # because not all systems place things in SDL/ (see FreeBSD).
 
-if(NOT SDL2_DIR)
+if (NOT SDL2_DIR)
     set(SDL2_DIR "" CACHE PATH "SDL2 directory")
-endif()
+endif ()
 
 find_path(SDL2_INCLUDE_DIR SDL.h
         HINTS
@@ -84,11 +84,11 @@ find_path(SDL2_INCLUDE_DIR SDL.h
         include/SDL2 include
         )
 
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+if (CMAKE_SIZEOF_VOID_P EQUAL 8)
     set(VC_LIB_PATH_SUFFIX lib/x64)
-else()
+else ()
     set(VC_LIB_PATH_SUFFIX lib/x86)
-endif()
+endif ()
 
 find_library(SDL2_LIBRARY_TEMP
         NAMES SDL2
@@ -103,8 +103,8 @@ find_library(SDL2_LIBRARY_TEMP
 # which is derived from SDL2_LIBRARY_TEMP further below.
 set_property(CACHE SDL2_LIBRARY_TEMP PROPERTY TYPE INTERNAL)
 
-if(NOT SDL2_BUILDING_LIBRARY)
-    if(NOT SDL2_INCLUDE_DIR MATCHES ".framework")
+if (NOT SDL2_BUILDING_LIBRARY)
+    if (NOT SDL2_INCLUDE_DIR MATCHES ".framework")
         # Non-OS X framework versions expect you to also dynamically link to
         # SDLmain. This is mainly for Windows and OS X. Other (Unix) platforms
         # seem to provide SDLmain for compatibility even though they don't
@@ -121,32 +121,32 @@ if(NOT SDL2_BUILDING_LIBRARY)
                 /opt/csw
                 /opt
                 )
-    endif()
-endif()
+    endif ()
+endif ()
 
 # SDL may require threads on your system.
 # The Apple build may not need an explicit flag because one of the
 # frameworks may already provide it.
 # But for non-OSX systems, I will use the CMake Threads package.
-if(NOT APPLE)
+if (NOT APPLE)
     find_package(Threads)
-endif()
+endif ()
 
 # MinGW needs an additional link flag, -mwindows
 # It's total link flags should look like -lmingw32 -lSDLmain -lSDL -mwindows
-if(MINGW)
+if (MINGW)
     set(MINGW32_LIBRARY mingw32 "-mwindows" CACHE STRING "link flags for MinGW")
-endif()
+endif ()
 
-if(SDL2_LIBRARY_TEMP)
+if (SDL2_LIBRARY_TEMP)
     # For SDLmain
-    if(SDL2MAIN_LIBRARY AND NOT SDL2_BUILDING_LIBRARY)
+    if (SDL2MAIN_LIBRARY AND NOT SDL2_BUILDING_LIBRARY)
         list(FIND SDL2_LIBRARY_TEMP "${SDLMAIN_LIBRARY}" _SDL2_MAIN_INDEX)
-        if(_SDL2_MAIN_INDEX EQUAL -1)
+        if (_SDL2_MAIN_INDEX EQUAL -1)
             set(SDL2_LIBRARY_TEMP "${SDLMAIN_LIBRARY}" ${SDL2_LIBRARY_TEMP})
-        endif()
+        endif ()
         unset(_SDL2_MAIN_INDEX)
-    endif()
+    endif ()
 
     # For OS X, SDL uses Cocoa as a backend so it must link to Cocoa.
     # CMake doesn't display the -framework Cocoa string in the UI even
@@ -154,27 +154,27 @@ if(SDL2_LIBRARY_TEMP)
     # I think it has something to do with the CACHE STRING.
     # So I use a temporary variable until the end so I can set the
     # "real" variable in one-shot.
-    if(APPLE)
+    if (APPLE)
         set(SDL2_LIBRARY_TEMP ${SDL2_LIBRARY_TEMP} "-framework Cocoa")
-    endif()
+    endif ()
 
     # For threads, as mentioned Apple doesn't need this.
     # In fact, there seems to be a problem if I used the Threads package
     # and try using this line, so I'm just skipping it entirely for OS X.
-    if(NOT APPLE)
+    if (NOT APPLE)
         set(SDL2_LIBRARY_TEMP ${SDL2_LIBRARY_TEMP} ${CMAKE_THREAD_LIBS_INIT})
-    endif()
+    endif ()
 
     # For MinGW library
-    if(MINGW)
+    if (MINGW)
         set(SDL2_LIBRARY_TEMP ${MINGW32_LIBRARY} ${SDL2_LIBRARY_TEMP})
-    endif()
+    endif ()
 
     # Set the final string here so the GUI reflects the final state.
     set(SDL2_LIBRARY ${SDL2_LIBRARY_TEMP} CACHE STRING "Where the SDL Library can be found")
-endif()
+endif ()
 
-if(SDL2_INCLUDE_DIR AND EXISTS "${SDL2_INCLUDE_DIR}/SDL2_version.h")
+if (SDL2_INCLUDE_DIR AND EXISTS "${SDL2_INCLUDE_DIR}/SDL2_version.h")
     file(STRINGS "${SDL2_INCLUDE_DIR}/SDL2_version.h" SDL2_VERSION_MAJOR_LINE REGEX "^#define[ \t]+SDL2_MAJOR_VERSION[ \t]+[0-9]+$")
     file(STRINGS "${SDL2_INCLUDE_DIR}/SDL2_version.h" SDL2_VERSION_MINOR_LINE REGEX "^#define[ \t]+SDL2_MINOR_VERSION[ \t]+[0-9]+$")
     file(STRINGS "${SDL2_INCLUDE_DIR}/SDL2_version.h" SDL2_VERSION_PATCH_LINE REGEX "^#define[ \t]+SDL2_PATCHLEVEL[ \t]+[0-9]+$")
@@ -188,13 +188,13 @@ if(SDL2_INCLUDE_DIR AND EXISTS "${SDL2_INCLUDE_DIR}/SDL2_version.h")
     unset(SDL2_VERSION_MAJOR)
     unset(SDL2_VERSION_MINOR)
     unset(SDL2_VERSION_PATCH)
-endif()
+endif ()
 
 set(SDL2_LIBRARIES ${SDL2_LIBRARY} ${SDL2MAIN_LIBRARY})
 set(SDL2_INCLUDE_DIRS ${SDL2_INCLUDE_DIR})
 
 include(FindPackageHandleStandardArgs)
 
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(SDL
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(SDL2
         REQUIRED_VARS SDL2_LIBRARY SDL2_INCLUDE_DIR
         VERSION_VAR SDL2_VERSION_STRING)

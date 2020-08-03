@@ -1,10 +1,12 @@
+// Copyright (c) 2020 Antonio Román. All rights reserved.
+
 #pragma once
 #include <vector>
 
 #include "../utils/Vector2D.h"
 #include "SDL.h"
 
-class GameObject {
+class GameObject final {
   bool active_ = false;
   bool destroyed_ = false;
   bool transparent_ = false;
@@ -14,6 +16,9 @@ class GameObject {
   Vector2D<int> size_{0, 0};
 
  public:
+  GameObject() noexcept;
+  ~GameObject() noexcept;
+
   bool getActive() const noexcept;
   void setActive(bool active) noexcept;
 
@@ -30,7 +35,6 @@ class GameObject {
 
   virtual void onAwake() noexcept;
   virtual void onUpdate() noexcept;
-  virtual void onEvent(const SDL_Event& event) noexcept;
   virtual void onRender() noexcept;
   virtual void onDestroy() noexcept;
 };

@@ -42,9 +42,9 @@
 # (To distribute this file outside of CMake, substitute the full
 #  License text for the above reference.)
 
-if(NOT SDL2_MIXER_DIR)
+if (NOT SDL2_MIXER_DIR)
     set(SDL2_MIXER_DIR "" CACHE PATH "SDL2 Mixer directory")
-endif()
+endif ()
 
 find_path(SDL2_MIXER_INCLUDE_DIR SDL_mixer.h
         HINTS
@@ -56,11 +56,11 @@ find_path(SDL2_MIXER_INCLUDE_DIR SDL_mixer.h
         include/SDL2 include
         )
 
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+if (CMAKE_SIZEOF_VOID_P EQUAL 8)
     set(VC_LIB_PATH_SUFFIX lib/x64)
-else()
+else ()
     set(VC_LIB_PATH_SUFFIX lib/x86)
-endif()
+endif ()
 
 find_library(SDL2_MIXER_LIBRARY
         NAMES SDL2_mixer
@@ -71,7 +71,7 @@ find_library(SDL2_MIXER_LIBRARY
         PATH_SUFFIXES lib ${VC_LIB_PATH_SUFFIX}
         )
 
-if(SDL2_MIXER_INCLUDE_DIR AND EXISTS "${SDL2_MIXER_INCLUDE_DIR}/SDL_mixer.h")
+if (SDL2_MIXER_INCLUDE_DIR AND EXISTS "${SDL2_MIXER_INCLUDE_DIR}/SDL_mixer.h")
     file(STRINGS "${SDL2_MIXER_INCLUDE_DIR}/SDL_mixer.h" SDL_MIXER_VERSION_MAJOR_LINE REGEX "^#define[ \t]+SDL_MIXER_MAJOR_VERSION[ \t]+[0-9]+$")
     file(STRINGS "${SDL2_MIXER_INCLUDE_DIR}/SDL_mixer.h" SDL2_MIXER_VERSION_MINOR_LINE REGEX "^#define[ \t]+SDL2_MIXER_MINOR_VERSION[ \t]+[0-9]+$")
     file(STRINGS "${SDL2_MIXER_INCLUDE_DIR}/SDL_mixer.h" SDL2_MIXER_VERSION_PATCH_LINE REGEX "^#define[ \t]+SDL2_MIXER_PATCHLEVEL[ \t]+[0-9]+$")
@@ -85,7 +85,7 @@ if(SDL2_MIXER_INCLUDE_DIR AND EXISTS "${SDL2_MIXER_INCLUDE_DIR}/SDL_mixer.h")
     unset(SDL2_MIXER_VERSION_MAJOR)
     unset(SDL2_MIXER_VERSION_MINOR)
     unset(SDL2_MIXER_VERSION_PATCH)
-endif()
+endif ()
 
 set(SDL2_MIXER_LIBRARIES ${SDL2_MIXER_LIBRARY})
 set(SDL2_MIXER_INCLUDE_DIRS ${SDL2_MIXER_INCLUDE_DIR})

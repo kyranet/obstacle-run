@@ -1,4 +1,13 @@
+// Copyright (c) 2020 Antonio Román. All rights reserved.
+
 #include "GameObject.h"
+
+GameObject::GameObject() noexcept {}
+GameObject::~GameObject() noexcept {
+  for (auto* child : getChildren()) {
+    delete child;
+  }
+}
 
 bool GameObject::getActive() const noexcept { return active_; }
 void GameObject::setActive(bool active) noexcept { active_ = active; }
@@ -36,8 +45,6 @@ std::vector<GameObject*> GameObject::getChildren() const noexcept {
 void GameObject::onAwake() noexcept { setActive(true); }
 
 void GameObject::onUpdate() noexcept {}
-
-void GameObject::onEvent(const SDL_Event& event) noexcept {}
 
 void GameObject::onRender() noexcept {}
 

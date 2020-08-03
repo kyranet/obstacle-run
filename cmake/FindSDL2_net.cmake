@@ -42,9 +42,9 @@
 # (To distribute this file outside of CMake, substitute the full
 #  License text for the above reference.)
 
-if(NOT SDL2_NET_DIR)
+if (NOT SDL2_NET_DIR)
     set(SDL2_NET_DIR "" CACHE PATH "SDL2 NET directory")
-endif()
+endif ()
 
 find_path(SDL2_NET_INCLUDE_DIR SDL_net.h
         HINTS
@@ -56,11 +56,11 @@ find_path(SDL2_NET_INCLUDE_DIR SDL_net.h
         include/SDL2 include
         )
 
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+if (CMAKE_SIZEOF_VOID_P EQUAL 8)
     set(VC_LIB_PATH_SUFFIX lib/x64)
-else()
+else ()
     set(VC_LIB_PATH_SUFFIX lib/x86)
-endif()
+endif ()
 
 find_library(SDL2_NET_LIBRARY
         NAMES SDL2_net
@@ -71,7 +71,7 @@ find_library(SDL2_NET_LIBRARY
         PATH_SUFFIXES lib ${VC_LIB_PATH_SUFFIX}
         )
 
-if(SDL2_NET_INCLUDE_DIR AND EXISTS "${SDL2_NET_INCLUDE_DIR}/SDL_net.h")
+if (SDL2_NET_INCLUDE_DIR AND EXISTS "${SDL2_NET_INCLUDE_DIR}/SDL_net.h")
     file(STRINGS "${SDL2_NET_INCLUDE_DIR}/SDL_net.h" SDL_NET_VERSION_MAJOR_LINE REGEX "^#define[ \t]+SDL_NET_MAJOR_VERSION[ \t]+[0-9]+$")
     file(STRINGS "${SDL2_NET_INCLUDE_DIR}/SDL_net.h" SDL2_NET_VERSION_MINOR_LINE REGEX "^#define[ \t]+SDL2_NET_MINOR_VERSION[ \t]+[0-9]+$")
     file(STRINGS "${SDL2_NET_INCLUDE_DIR}/SDL_net.h" SDL2_NET_VERSION_PATCH_LINE REGEX "^#define[ \t]+SDL2_NET_PATCHLEVEL[ \t]+[0-9]+$")
@@ -85,7 +85,7 @@ if(SDL2_NET_INCLUDE_DIR AND EXISTS "${SDL2_NET_INCLUDE_DIR}/SDL_net.h")
     unset(SDL2_NET_VERSION_MAJOR)
     unset(SDL2_NET_VERSION_MINOR)
     unset(SDL2_NET_VERSION_PATCH)
-endif()
+endif ()
 
 set(SDL2_NET_LIBRARIES ${SDL2_NET_LIBRARY})
 set(SDL2_NET_INCLUDE_DIRS ${SDL2_NET_INCLUDE_DIR})

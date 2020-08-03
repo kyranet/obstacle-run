@@ -1,12 +1,11 @@
-//
-// Created by antor on 03/08/2020.
-//
+// Copyright (c) 2020 Antonio Román. All rights reserved.
 
 #pragma once
 #include <array>
-#include "SDL.h"
+
 #include "../utils/Constants.h"
 #include "../utils/Vector2D.h"
+#include "SDL.h"
 
 class GameObject;
 

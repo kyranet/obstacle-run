@@ -1,9 +1,9 @@
+// Copyright (c) 2020 Antonio Román. All rights reserved.
+
 #include "Input.h"
 
-#include "../Game.h"
 #include "../objects/GameObject.h"
 #include "../scenes/Scene.h"
-#include "../utils/Constants.h"
 #include "SDL.h"
 #include "SceneManager.h"
 

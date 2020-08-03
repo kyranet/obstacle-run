@@ -1,17 +1,20 @@
+// Copyright (c) 2020 Antonio Román. All rights reserved.
+
 #include "Scene.h"
 
 #include <algorithm>
 
 #include "../Game.h"
 #include "../managers/Input.h"
+#include "../utils/TimePool.h"
 #include "SDL.h"
 
-Scene::Scene() noexcept = default;
+Scene::Scene(const std::string& name) noexcept { name_ = name; }
 Scene::~Scene() noexcept { end(); }
 
-void Scene::onStart() {}
+void Scene::onStart() noexcept {}
 
-void Scene::onCreate() {
+void Scene::onCreate() noexcept {
   size_t last = gameObjects_.size();
   gameObjects_.resize(last + newGameObjects_.size());
   for (auto* object : newGameObjects_) {
@@ -32,12 +35,10 @@ void Scene::onEvents() noexcept {
     if (event.type == SDL_QUIT) return end();
 
     Input::instance()->update(event);
-    for (auto gameObject : gameObjects_)
-      if (gameObject->getActive()) gameObject->onEvent(event);
   }
 }
 
-void Scene::onUpdate() {
+void Scene::onUpdate() noexcept {
   size_t i = 0;
   while (i < gameObjects_.size()) {
     auto* entry = gameObjects_[i];
@@ -52,16 +53,33 @@ void Scene::onUpdate() {
   }
 }
 
-void Scene::onRender() {
+void Scene::onRender() noexcept {
   for (auto* entry : gameObjects_) entry->onRender();
 }
 
-void Scene::onEnd() {
+void Scene::onEnd() noexcept {
   for (auto* entry : newGameObjects_) delete entry;
   newGameObjects_.clear();
 
   for (auto* entry : gameObjects_) delete entry;
   gameObjects_.clear();
+}
+
+void Scene::run() noexcept {
+  stop_ = false;
+
+  const static uint32_t gameFrameRate = 60;
+  TimePool timePool(1000 / gameFrameRate, SDL_GetTicks());
+  while (!stop_) {
+    onCreate();
+    onEvents();
+    onUpdate();
+    onRender();
+
+    if (timePool.next(SDL_GetTicks())) {
+      SDL_Delay(timePool.getRemaining());
+    }
+  }
 }
 
 void Scene::end() noexcept {
@@ -74,6 +92,16 @@ void Scene::stop() noexcept {
   onEnd();
 }
 
+void Scene::addGameObject(GameObject* gameObject) noexcept {
+  gameObjects_.emplace_back(gameObject);
+}
+
+void Scene::removeGameObject(GameObject* gameObject) noexcept {
+  gameObject->setDestroy(true);
+}
+
 std::vector<GameObject*> Scene::getGameObjects() const noexcept {
   return gameObjects_;
 }
+
+std::string Scene::getName() const noexcept { return name_; }
