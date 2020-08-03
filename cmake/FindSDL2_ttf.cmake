@@ -1,23 +1,23 @@
-# Locate SDL_ttf library
+# Locate SDL_image library
 #
 # This module defines:
 #
 # ::
 #
-#   SDL2_TTF_LIBRARIES, the name of the library to link against
-#   SDL2_TTF_INCLUDE_DIRS, where to find the headers
-#   SDL2_TTF_FOUND, if false, do not try to link against
-#   SDL2_TTF_VERSION_STRING - human-readable string containing the version of SDL_ttf
+#   SDL_TTF_LIBRARIES, the name of the library to link against
+#   SDL_TTF_INCLUDE_DIRS, where to find the headers
+#   SDL_TTF_FOUND, if false, do not try to link against
+#   SDL_F_VERSION_STRING - human-readable string containing the version of SDL_ttf
 #
 #
 #
-# For backward compatibility the following variables are also set:
+# For backward compatiblity the following variables are also set:
 #
 # ::
 #
-#   SDLTTF_LIBRARY (same value as SDL2_TTF_LIBRARIES)
-#   SDLTTF_INCLUDE_DIR (same value as SDL2_TTF_INCLUDE_DIRS)
-#   SDLTTF_FOUND (same value as SDL2_TTF_FOUND)
+#   SDLTTF_LIBRARY (same value as SDL_TTF_LIBRARIES)
+#   SDLTTF_INCLUDE_DIR (same value as SDL_TTF_INCLUDE_DIRS)
+#   SDLTTF_FOUND (same value as SDL_TTF_FOUND)
 #
 #
 #
@@ -42,38 +42,42 @@
 # (To distribute this file outside of CMake, substitute the full
 #  License text for the above reference.)
 
+if(NOT SDL2_TTF_DIR)
+    set(SDL2_TTF_DIR "" CACHE PATH "SDL2 TTF directory")
+endif()
+
 find_path(SDL2_TTF_INCLUDE_DIR SDL_ttf.h
         HINTS
         ENV SDL2TTFDIR
         ENV SDL2DIR
+        ${SDL2_TTF_DIR}
         PATH_SUFFIXES SDL2
         # path suffixes to search inside ENV{SDLDIR}
         include/SDL2 include
-        PATHS ${SDL2_TTF_PATH}
         )
 
-if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
     set(VC_LIB_PATH_SUFFIX lib/x64)
-else ()
+else()
     set(VC_LIB_PATH_SUFFIX lib/x86)
-endif ()
+endif()
 
 find_library(SDL2_TTF_LIBRARY
         NAMES SDL2_ttf
         HINTS
         ENV SDL2TTFDIR
         ENV SDL2DIR
+        ${SDL2_TTF_DIR}
         PATH_SUFFIXES lib ${VC_LIB_PATH_SUFFIX}
-        PATHS ${SDL2_TTF_PATH}
         )
 
-if (SDL2_TTF_INCLUDE_DIR AND EXISTS "${SDL2_TTF_INCLUDE_DIR}/SDL_ttf.h")
-    file(STRINGS "${SDL2_TTF_INCLUDE_DIR}/SDL_ttf.h" SDL2_TTF_VERSION_MAJOR_LINE REGEX "^#define[ \t]+SDL_TTF_MAJOR_VERSION[ \t]+[0-9]+$")
-    file(STRINGS "${SDL2_TTF_INCLUDE_DIR}/SDL_ttf.h" SDL2_TTF_VERSION_MINOR_LINE REGEX "^#define[ \t]+SDL_TTF_MINOR_VERSION[ \t]+[0-9]+$")
-    file(STRINGS "${SDL2_TTF_INCLUDE_DIR}/SDL_ttf.h" SDL2_TTF_VERSION_PATCH_LINE REGEX "^#define[ \t]+SDL_TTF_PATCHLEVEL[ \t]+[0-9]+$")
-    string(REGEX REPLACE "^#define[ \t]+SDL_TTF_MAJOR_VERSION[ \t]+([0-9]+)$" "\\1" SDL2_TTF_VERSION_MAJOR "${SDL2_TTF_VERSION_MAJOR_LINE}")
-    string(REGEX REPLACE "^#define[ \t]+SDL_TTF_MINOR_VERSION[ \t]+([0-9]+)$" "\\1" SDL2_TTF_VERSION_MINOR "${SDL2_TTF_VERSION_MINOR_LINE}")
-    string(REGEX REPLACE "^#define[ \t]+SDL_TTF_PATCHLEVEL[ \t]+([0-9]+)$" "\\1" SDL2_TTF_VERSION_PATCH "${SDL2_TTF_VERSION_PATCH_LINE}")
+if(SDL2_TTF_INCLUDE_DIR AND EXISTS "${SDL2_TTF_INCLUDE_DIR}/SDL_ttf.h")
+    file(STRINGS "${SDL2_TTF_INCLUDE_DIR}/SDL_ttf.h" SDL_TTF_VERSION_MAJOR_LINE REGEX "^#define[ \t]+SDL_TTF_MAJOR_VERSION[ \t]+[0-9]+$")
+    file(STRINGS "${SDL2_TTF_INCLUDE_DIR}/SDL_ttf.h" SDL2_TTF_VERSION_MINOR_LINE REGEX "^#define[ \t]+SDL2_TTF_MINOR_VERSION[ \t]+[0-9]+$")
+    file(STRINGS "${SDL2_TTF_INCLUDE_DIR}/SDL_ttf.h" SDL2_TTF_VERSION_PATCH_LINE REGEX "^#define[ \t]+SDL2_TTF_PATCHLEVEL[ \t]+[0-9]+$")
+    string(REGEX REPLACE "^#define[ \t]+SDL2_TTF_MAJOR_VERSION[ \t]+([0-9]+)$" "\\1" SDL2_TTF_VERSION_MAJOR "${SDL2_TTF_VERSION_MAJOR_LINE}")
+    string(REGEX REPLACE "^#define[ \t]+SDL2_TTF_MINOR_VERSION[ \t]+([0-9]+)$" "\\1" SDL2_TTF_VERSION_MINOR "${SDL2_TTF_VERSION_MINOR_LINE}")
+    string(REGEX REPLACE "^#define[ \t]+SDL2_TTF_PATCHLEVEL[ \t]+([0-9]+)$" "\\1" SDL2_TTF_VERSION_PATCH "${SDL2_TTF_VERSION_PATCH_LINE}")
     set(SDL2_TTF_VERSION_STRING ${SDL2_TTF_VERSION_MAJOR}.${SDL2_TTF_VERSION_MINOR}.${SDL2_TTF_VERSION_PATCH})
     unset(SDL2_TTF_VERSION_MAJOR_LINE)
     unset(SDL2_TTF_VERSION_MINOR_LINE)
@@ -81,7 +85,7 @@ if (SDL2_TTF_INCLUDE_DIR AND EXISTS "${SDL2_TTF_INCLUDE_DIR}/SDL_ttf.h")
     unset(SDL2_TTF_VERSION_MAJOR)
     unset(SDL2_TTF_VERSION_MINOR)
     unset(SDL2_TTF_VERSION_PATCH)
-endif ()
+endif()
 
 set(SDL2_TTF_LIBRARIES ${SDL2_TTF_LIBRARY})
 set(SDL2_TTF_INCLUDE_DIRS ${SDL2_TTF_INCLUDE_DIR})
@@ -92,7 +96,4 @@ FIND_PACKAGE_HANDLE_STANDARD_ARGS(SDL2_ttf
         REQUIRED_VARS SDL2_TTF_LIBRARIES SDL2_TTF_INCLUDE_DIRS
         VERSION_VAR SDL2_TTF_VERSION_STRING)
 
-# for backward compatibility
-set(SDLTTF_LIBRARY ${SDL2_TTF_LIBRARIES})
-set(SDLTTF_INCLUDE_DIR ${SDL2_TTF_INCLUDE_DIRS})
-set(SDLTTF_FOUND ${SDL2_TTF_FOUND})
+mark_as_advanced(SDL2_TTF_LIBRARY SDL2_TTF_INCLUDE_DIR)

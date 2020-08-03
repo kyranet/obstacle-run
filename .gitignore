@@ -504,4 +504,7 @@ MigrationBackup/
 build/
 build_*/
 
+# Ignore dependency folder
+deps/
+
 # End of https://www.gitignore.io/api/c++,cmake,clion,visualstudio,visualstudiocode
