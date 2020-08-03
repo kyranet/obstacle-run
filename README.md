@@ -1,1 +1,13 @@
 # obstacle-run
+
+A multiplayergame built on top of SDL2.
+
+---
+
+## Build Pre-requisites
+
+### Debian/Ubuntu
+
+```sh-session
+$ apt-get install libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-net-dev
+```
