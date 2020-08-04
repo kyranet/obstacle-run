@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 /**
- * \brief The SDL Exception class for any SDL-related error.
+ * \brief The Pointer Exception class for any Pointer-related error.
  */
 class PointerException : public std::logic_error {
  public:
@@ -13,5 +13,5 @@ class PointerException : public std::logic_error {
    * \param message The error message description.
    */
   explicit PointerException(const std::string& message)
-      : std::logic_error("SDL Error " + message) {}
+      : std::logic_error("Pointer Exception: " + message) {}
 };

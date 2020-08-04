@@ -13,5 +13,5 @@ class SDLException : public std::logic_error {
    * \param message The error message description.
    */
   explicit SDLException(const std::string& message)
-      : std::logic_error("SDL Error " + message) {}
+      : std::logic_error("SDL Exception: " + message) {}
 };

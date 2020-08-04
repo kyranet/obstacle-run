@@ -68,10 +68,10 @@ find_package(SDL2_image REQUIRED)
 find_package(SDL2_ttf REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 find_package(SDL2_net REQUIRED)
-include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR} ${SDL2_NET_INCLUDE_DIR})
+include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR} ${SDL2_NET_INCLUDE_DIR} src/third-party/jsoncpp)
 
 file(COPY assets DESTINATION .)
-add_executable(obstaclerun src/main.cpp src/Game.cpp src/Game.h src/exceptions/SDLException.h src/scenes/Scene.cpp src/scenes/Scene.h src/objects/GameObject.cpp src/objects/GameObject.h src/managers/Input.cpp src/managers/Input.h src/utils/Vector2D.h src/utils/Constants.h src/managers/SceneManager.cpp src/managers/SceneManager.h src/exceptions/PointerException.h src/utils/TimePool.cpp src/utils/TimePool.h)
+add_executable(obstaclerun src/main.cpp src/Game.cpp src/Game.h src/exceptions/SDLException.h src/scenes/Scene.cpp src/scenes/Scene.h src/objects/GameObject.cpp src/objects/GameObject.h src/managers/Input.cpp src/managers/Input.h src/utils/Vector2D.h src/utils/Constants.h src/managers/SceneManager.cpp src/managers/SceneManager.h src/exceptions/PointerException.h src/utils/TimePool.cpp src/utils/TimePool.h src/third-party/jsoncpp/jsoncpp.cpp src/utils/DebugAssert.h src/exceptions/FileSystemException.h)
 
 # If a deps folder was used, it is most likely that OS' scoped libraries will be tried to be used even if they are not
 # available, so we copy the .dll files.
@@ -87,5 +87,5 @@ if (BUILD_LOCAL EQUAL 1)
 endif ()
 
 # Link the libraries and install them.
-target_link_libraries(obstaclerun ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SDL2_MIXER_LIBRARIES} ${SDL2_NET_LIBRARY})
+target_link_libraries(obstaclerun PUBLIC ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SDL2_MIXER_LIBRARIES} ${SDL2_NET_LIBRARY})
 install(TARGETS obstaclerun RUNTIME DESTINATION ${BIN_DIR})

@@ -75,7 +75,7 @@ bool Game::init() noexcept {
 }
 
 void Game::run() {
-  auto* scene = SceneManager::createScene("Menu");
+  auto* scene = SceneManager::createScene("menu");
   SceneManager::loadScene(scene);
   SceneManager::setActiveScene(scene);
 

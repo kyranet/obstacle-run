@@ -2,10 +2,13 @@
 
 #include "SceneManager.h"
 
+#include <json/json.h>
+
+#include "../scenes/Scene.h"
+#include "../utils/DebugAssert.h"
 #if _DEBUG
 #include "../exceptions/PointerException.h"
 #endif
-#include "../scenes/Scene.h"
 
 std::vector<std::pair<std::string, Scene*>> SceneManager::scenes_ = {};
 size_t SceneManager::invalidIndex_ = ~(size_t)0;
@@ -35,12 +38,10 @@ Scene* SceneManager::getSceneByName(const std::string& name) noexcept {
 }
 
 void SceneManager::loadScene(Scene* scene) {
-#if _DEBUG
-  if (scene == nullptr)
-    throw PointerException(
-        "'scene' from SceneManager::loadScene(Scene*) must not be nullptr.");
-#endif
-  // TODO: Add JSON to load scenes
+  ASSERT_NOT_NULL(
+      scene,
+      "'scene' from SceneManager::loadScene(Scene*) must not be nullptr.")
+  scene->load();
 }
 
 void SceneManager::loadScene(const std::string& name) {
@@ -48,16 +49,14 @@ void SceneManager::loadScene(const std::string& name) {
 }
 
 void SceneManager::moveGameObjectToScene(GameObject* object, Scene* scene) {
-#if _DEBUG
-  if (object == nullptr)
-    throw PointerException(
-        "'object' from SceneManager::moveGameObjectToScene(GameObject*, "
-        "Scene*) must not be nullptr.");
-  if (scene == nullptr)
-    throw PointerException(
-        "'scene' from SceneManager::moveGameObjectToScene(GameObject*, Scene*) "
-        "must not be nullptr.");
-#endif
+  ASSERT_NOT_NULL(
+      object,
+      "'object' from SceneManager::moveGameObjectToScene(GameObject*, "
+      "Scene*) must not be nullptr.")
+  ASSERT_NOT_NULL(
+      scene,
+      "'scene' from SceneManager::moveGameObjectToScene(GameObject*, Scene*) "
+      "must not be nullptr.")
   scene->addGameObject(object);
 }
 

@@ -2,10 +2,15 @@
 
 #include "Scene.h"
 
+#include <json/json.h>
+
 #include <algorithm>
+#include <fstream>
 
 #include "../Game.h"
+#include "../exceptions/FileSystemException.h"
 #include "../managers/Input.h"
+#include "../utils/DebugAssert.h"
 #include "../utils/TimePool.h"
 #include "SDL.h"
 
@@ -63,6 +68,31 @@ void Scene::onEnd() noexcept {
 
   for (auto* entry : gameObjects_) delete entry;
   gameObjects_.clear();
+}
+
+void Scene::load() {
+  std::string path = "./assets/scenes/" + name_ + ".json";
+  Json::Value root;
+  Json::CharReaderBuilder builder;
+  std::ifstream stream(path, std::ifstream::binary);
+  std::string errors;
+  if (!Json::parseFromStream(builder, stream, &root, &errors)) {
+    throw FileSystemException("Could not parse JSON body from '" + path +
+                              "'. Reason: " + errors);
+  }
+
+  DEBUG_PRINT("Loading Scene: '%s'\n", root["name"].asCString())
+  const auto rawGameObjects = root["game_objects"];
+  for (auto object : rawGameObjects) {
+    DEBUG_PRINT("Loading GameObject: '%s'.\n", object["name"].asCString())
+    auto* gameObject = new GameObject();
+    gameObjects_.emplace_back(gameObject);
+  }
+
+  DEBUG_PRINT("Successfully loaded Scene '%s' with %zi GameObjects.\n",
+              name_.c_str(), gameObjects_.size())
+
+  onStart();
 }
 
 void Scene::run() noexcept {

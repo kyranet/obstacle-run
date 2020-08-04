@@ -27,6 +27,7 @@ class Scene final {
   void addGameObject(GameObject* gameObject) noexcept;
   void removeGameObject(GameObject* gameObject) noexcept;
 
+  void load();
   void run() noexcept;
   void stop() noexcept;
   void end() noexcept;
