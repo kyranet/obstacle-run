@@ -5,6 +5,7 @@
 #include <cmath>
 #include <iostream>
 #include <type_traits>
+#include <json/json.h>
 
 /**
  * \brief The Vector2D class that manages all vectors in the game.
@@ -99,6 +100,19 @@ class Vector2D final {
   Vector2D<T> operator*(T d) const { return Vector2D(x_ * d, y_ * d); }
 
   Vector2D<T> operator/(T d) const { return Vector2D(x_ / d, y_ / d); }
+
+  static Vector2D<T> fromJson(const Json::Value& json) {
+    const auto x = json[0U].asInt();
+    const auto y = json[1U].asInt();
+    return Vector2D(x, y);
+  }
+
+  Json::Value toJson() {
+    Json::Value out(Json::arrayValue);
+    out.append(Json::Value(x_));
+    out.append(Json::Value(y_));
+    return out;
+  }
 
   friend std::ostream& operator<<(std::ostream& os, const Vector2D<T>& v) {
     os << "(" << v.getX() << ", " << v.getY() << ")";

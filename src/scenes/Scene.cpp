@@ -81,16 +81,17 @@ void Scene::load() {
                               "'. Reason: " + errors);
   }
 
-  DEBUG_PRINT("Loading Scene: '%s'\n", root["name"].asCString())
+  debug_print("Loading Scene: '%s'.\n", root["name"].asCString());
   const auto rawGameObjects = root["game_objects"];
-  for (auto object : rawGameObjects) {
-    DEBUG_PRINT("Loading GameObject: '%s'.\n", object["name"].asCString())
+  for (const auto& object : rawGameObjects) {
+    debug_print("Loading GameObject: '%s'.\n", object["name"].asCString());
     auto* gameObject = new GameObject();
     gameObjects_.emplace_back(gameObject);
+    gameObject->load(object);
   }
 
-  DEBUG_PRINT("Successfully loaded Scene '%s' with %zi GameObjects.\n",
-              name_.c_str(), gameObjects_.size())
+  debug_print("Successfully loaded Scene '%s' with %zi GameObjects.\n",
+              name_.c_str(), gameObjects_.size());
 
   onStart();
 }

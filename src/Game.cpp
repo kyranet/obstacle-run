@@ -7,6 +7,9 @@
 #include "SDL_mixer.h"
 #include "SDL_net.h"
 #include "SDL_ttf.h"
+#include "factories/RendererFactory.h"
+#include "factories/TransformFactory.h"
+#include "managers/ComponentManager.h"
 #include "managers/SceneManager.h"
 #include "scenes/Scene.h"
 
@@ -70,6 +73,10 @@ bool Game::init() noexcept {
     std::cerr << "Error initializing NET.\nReason: " << SDLNet_GetError();
     return false;
   }
+
+  ComponentManager::getInstance()
+      ->add(new TransformFactory())
+      ->add(new RendererFactory());
 
   return true;
 }

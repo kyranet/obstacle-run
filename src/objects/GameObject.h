@@ -1,16 +1,22 @@
 // Copyright (c) 2020 Antonio Román. All rights reserved.
 
 #pragma once
+#include <json/json.h>
+
 #include <vector>
 
 #include "../utils/Vector2D.h"
 #include "SDL.h"
 
+class Component;
+
 class GameObject final {
   bool active_ = false;
   bool destroyed_ = false;
   bool transparent_ = false;
+  std::string name_{};
   std::vector<GameObject*> children_{};
+  std::vector<Component*> components_{};
 
   Vector2D<int> position_{0, 0};
   Vector2D<int> size_{0, 0};
@@ -18,6 +24,9 @@ class GameObject final {
  public:
   GameObject() noexcept;
   ~GameObject() noexcept;
+
+  std::string getName() const noexcept;
+  void setName(std::string name) noexcept;
 
   bool getActive() const noexcept;
   void setActive(bool active) noexcept;
@@ -32,9 +41,11 @@ class GameObject final {
 
   GameObject* clickScan(SDL_Point point) const noexcept;
   std::vector<GameObject*> getChildren() const noexcept;
+  std::vector<Component*> getComponents() const noexcept;
 
-  virtual void onAwake() noexcept;
-  virtual void onUpdate() noexcept;
-  virtual void onRender() noexcept;
-  virtual void onDestroy() noexcept;
+  void load(const Json::Value& value);
+  void onAwake() noexcept;
+  void onUpdate() noexcept;
+  void onRender() noexcept;
+  void onDestroy() noexcept;
 };

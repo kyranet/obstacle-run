@@ -6,9 +6,6 @@
 
 #include "../scenes/Scene.h"
 #include "../utils/DebugAssert.h"
-#if _DEBUG
-#include "../exceptions/PointerException.h"
-#endif
 
 std::vector<std::pair<std::string, Scene*>> SceneManager::scenes_ = {};
 size_t SceneManager::invalidIndex_ = ~(size_t)0;
@@ -38,9 +35,9 @@ Scene* SceneManager::getSceneByName(const std::string& name) noexcept {
 }
 
 void SceneManager::loadScene(Scene* scene) {
-  ASSERT_NOT_NULL(
+  assert_not_null(
       scene,
-      "'scene' from SceneManager::loadScene(Scene*) must not be nullptr.")
+      "'scene' from SceneManager::loadScene(Scene*) must not be nullptr.");
   scene->load();
 }
 
@@ -49,14 +46,14 @@ void SceneManager::loadScene(const std::string& name) {
 }
 
 void SceneManager::moveGameObjectToScene(GameObject* object, Scene* scene) {
-  ASSERT_NOT_NULL(
+  assert_not_null(
       object,
       "'object' from SceneManager::moveGameObjectToScene(GameObject*, "
-      "Scene*) must not be nullptr.")
-  ASSERT_NOT_NULL(
+      "Scene*) must not be nullptr.");
+  assert_not_null(
       scene,
       "'scene' from SceneManager::moveGameObjectToScene(GameObject*, Scene*) "
-      "must not be nullptr.")
+      "must not be nullptr.");
   scene->addGameObject(object);
 }
 
