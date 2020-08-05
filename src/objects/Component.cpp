@@ -47,4 +47,5 @@ T* Component::getComponentInParent() const noexcept {
 
 void Component::destroy() noexcept {}
 
+void Component::onAwake() noexcept { setEnabled(true); }
 void Component::onUpdate() noexcept {}

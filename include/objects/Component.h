@@ -36,5 +36,6 @@ class Component {
 
   void destroy() noexcept;
 
-  void onUpdate() noexcept;
+  virtual void onAwake() noexcept;
+  virtual void onUpdate() noexcept;
 };

@@ -90,7 +90,17 @@ void GameObject::load(const Json::Value& value) {
       getName().c_str(), getChildren().size(), getComponents().size());
 }
 
-void GameObject::onAwake() noexcept { setActive(true); }
+void GameObject::onAwake() noexcept {
+  setActive(true);
+
+  for (const auto& child : getChildren()) {
+    child->onAwake();
+  }
+
+  for (const auto& component : getComponents()) {
+    component->onAwake();
+  }
+}
 
 void GameObject::onUpdate() const noexcept {
   for (const auto& child : getChildren()) {

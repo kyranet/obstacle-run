@@ -17,6 +17,7 @@ int main(int, char*[]) {
   game->start();
   try {
     game->run();
+    game->end();
     return 0;
   } catch (const std::exception& exception) {
     std::cerr << exception.what();
