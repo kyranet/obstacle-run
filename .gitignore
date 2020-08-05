@@ -507,5 +507,6 @@ build_*/
 
 # Ignore dependency folder
 deps/
+!deps/CMakeLists.txt
 
 # End of https://www.gitignore.io/api/c++,cmake,clion,visualstudio,visualstudiocode

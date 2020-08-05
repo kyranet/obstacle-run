@@ -1,20 +1,3 @@
-message("CMAKE_MODULE_PATH = ${CMAKE_MODULE_PATH}")
-
-# If the generator is MSVC and a deps folder exists, try to link the libraries.
-if (BUILD_LOCAL EQUAL 1)
-  file(GLOB SDL2_DIR "${CMAKE_SOURCE_DIR}/deps/SDL2-*")
-  file(GLOB SDL2_IMAGE_DIR "${CMAKE_SOURCE_DIR}/deps/SDL2_image-*")
-  file(GLOB SDL2_TTF_DIR "${CMAKE_SOURCE_DIR}/deps/SDL2_ttf-*")
-  file(GLOB SDL2_MIXER_DIR "${CMAKE_SOURCE_DIR}/deps/SDL2_mixer-*")
-  file(GLOB SDL2_NET_DIR "${CMAKE_SOURCE_DIR}/deps/SDL2_net-*")
-
-  message("SDL2_DIR = ${SDL2_DIR}")
-  message("SDL2_IMAGE_DIR = ${SDL2_IMAGE_DIR}")
-  message("SDL2_TTF_DIR = ${SDL2_TTF_DIR}")
-  message("SDL2_MIXER_DIR = ${SDL2_MIXER_DIR}")
-  message("SDL2_NET_DIR = ${SDL2_NET_DIR}")
-endif ()
-
 # Find all SDL2 libraries.
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
@@ -22,19 +5,6 @@ find_package(SDL2_ttf REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 find_package(SDL2_net REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR} ${SDL2_NET_INCLUDE_DIR} third-party/jsoncpp)
-
-# If a deps folder was used, it is most likely that OS' scoped libraries will be tried to be used even if they are not
-# available, so we copy the .dll files.
-if (BUILD_LOCAL EQUAL 1)
-  file(GLOB_RECURSE DEPENDENCY_DLLS
-    "${SDL2_TTF_DIR}/*.dll"
-    "${SDL2_MIXER_DIR}/*.dll"
-    "${SDL2_IMAGE_DIR}/*.dll"
-    "${SDL2_NET_DIR}/*.dll"
-    "${SDL2_DIR}/*.dll"
-    )
-  file(COPY ${DEPENDENCY_DLLS} DESTINATION "${CMAKE_BINARY_DIR}/src")
-endif ()
 
 set(GAME_SOURCES
   main.cpp
@@ -68,3 +38,45 @@ add_custom_command(
   $<TARGET_FILE_DIR:Assets>
   $<TARGET_FILE_DIR:Game>/assets
 )
+
+add_custom_command(
+  TARGET Game POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+  $<TARGET_FILE_DIR:Dependencies>
+  $<TARGET_FILE_DIR:Game>
+)
+
+if (MSVC)
+  target_compile_options(Game
+    PRIVATE
+    /W4
+    /WX
+    )
+  get_target_property(opts Game COMPILE_OPTIONS)
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(Game
+    PRIVATE
+    -pedantic
+    -pedantic-errors
+    -Wall
+    -Wextra
+    -Werror
+    -Wno-float-equal
+    -Wno-padded
+    )
+else ()
+  target_compile_options(Game
+    PRIVATE
+    -pedantic
+    -pedantic-errors
+    -Wall
+    -Wextra
+    -Werror
+    -Wconversion
+    -Wno-c++98-compat
+    -Wno-c++98-compat-pedantic
+    -Wno-float-equal
+    -Wno-padded
+    -Wno-reserved-id-macro
+    )
+endif()
