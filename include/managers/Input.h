@@ -3,9 +3,9 @@
 #pragma once
 #include <array>
 
+#include "SDL.h"
 #include "utils/Constants.h"
 #include "utils/Vector2D.h"
-#include "SDL.h"
 
 class GameObject;
 

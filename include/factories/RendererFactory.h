@@ -2,9 +2,10 @@
 
 #pragma once
 
+#include <json/json.h>
+
 #include "components/Renderer.h"
 #include "interfaces/ComponentFactory.h"
-#include <json/json.h>
 
 class RendererFactory final : public ComponentFactory<Renderer*> {
  public:

@@ -2,10 +2,10 @@
 
 #include "managers/Input.h"
 
+#include "SDL.h"
 #include "managers/SceneManager.h"
 #include "objects/GameObject.h"
 #include "scenes/Scene.h"
-#include "SDL.h"
 
 Input::Input() : mousePosition_(0, 0) {}
 Input::~Input() = default;

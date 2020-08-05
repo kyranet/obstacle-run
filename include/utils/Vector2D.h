@@ -1,11 +1,12 @@
 // Copyright (c) 2020 Antonio Román. All rights reserved.
 
 #pragma once
+#include <json/json.h>
+
 #include <cassert>
 #include <cmath>
 #include <iostream>
 #include <type_traits>
-#include <json/json.h>
 
 /**
  * \brief The Vector2D class that manages all vectors in the game.

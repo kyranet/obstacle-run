@@ -14,7 +14,8 @@ class ComponentFactory : public JsonConvertible<T> {
   std::string name_;
 
  public:
-  explicit ComponentFactory(std::string name) noexcept : name_(std::move(name)) {}
+  explicit ComponentFactory(std::string name) noexcept
+      : name_(std::move(name)) {}
   virtual ~ComponentFactory() noexcept = default;
   std::string getName() const noexcept { return name_; }
 };

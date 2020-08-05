@@ -41,45 +41,45 @@ add_custom_command(
 )
 
 if (BUILD_LOCAL)
-  add_custom_command(
-    TARGET Game POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    $<TARGET_FILE_DIR:Dependencies>
-    $<TARGET_FILE_DIR:Game>
-  )
+    add_custom_command(
+      TARGET Game POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_directory
+      $<TARGET_FILE_DIR:Dependencies>
+      $<TARGET_FILE_DIR:Game>
+    )
 endif ()
 
 if (MSVC)
-  target_compile_options(Game
-    PRIVATE
-    /W4
-    /WX
-    )
-  get_target_property(opts Game COMPILE_OPTIONS)
+    target_compile_options(Game
+      PRIVATE
+      /W4
+      /WX
+      )
+    get_target_property(opts Game COMPILE_OPTIONS)
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-  target_compile_options(Game
-    PRIVATE
-    -pedantic
-    -pedantic-errors
-    -Wall
-    -Wextra
-    -Werror
-    -Wno-float-equal
-    -Wno-padded
-    )
+    target_compile_options(Game
+      PRIVATE
+      -pedantic
+      -pedantic-errors
+      -Wall
+      -Wextra
+      -Werror
+      -Wno-float-equal
+      -Wno-padded
+      )
 else ()
-  target_compile_options(Game
-    PRIVATE
-    -pedantic
-    -pedantic-errors
-    -Wall
-    -Wextra
-    -Werror
-    -Wconversion
-    -Wno-c++98-compat
-    -Wno-c++98-compat-pedantic
-    -Wno-float-equal
-    -Wno-padded
-    -Wno-reserved-id-macro
-    )
+    target_compile_options(Game
+      PRIVATE
+      -pedantic
+      -pedantic-errors
+      -Wall
+      -Wextra
+      -Werror
+      -Wconversion
+      -Wno-c++98-compat
+      -Wno-c++98-compat-pedantic
+      -Wno-float-equal
+      -Wno-padded
+      -Wno-reserved-id-macro
+      )
 endif ()

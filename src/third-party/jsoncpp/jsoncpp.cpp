@@ -2426,7 +2426,7 @@ static inline bool InRange(double d, T min, U max) {
   // an approximate range. Might fail on edge cases though. ~cdunn
   return d >= static_cast<double>(min) && d <= static_cast<double>(max);
 }
-#else  // if !defined(JSON_USE_INT64_DOUBLE_CONVERSION)
+#else   // if !defined(JSON_USE_INT64_DOUBLE_CONVERSION)
 static inline double integerToDouble(Json::UInt64 value) {
   return static_cast<double>(Int64(value / 2)) * 2.0 +
          static_cast<double>(Int64(value & 1));
@@ -2517,7 +2517,7 @@ static inline void releaseStringValue(char* value, unsigned length) {
   memset(value, 0, size);
   free(value);
 }
-#else  // !JSONCPP_USING_SECURE_MEMORY
+#else   // !JSONCPP_USING_SECURE_MEMORY
 static inline void releasePrefixedStringValue(char* value) { free(value); }
 static inline void releaseStringValue(char* value, unsigned) { free(value); }
 #endif  // JSONCPP_USING_SECURE_MEMORY
@@ -3084,7 +3084,7 @@ double Value::asDouble() const {
     case uintValue:
 #if !defined(JSON_USE_INT64_DOUBLE_CONVERSION)
       return static_cast<double>(value_.uint_);
-#else  // if !defined(JSON_USE_INT64_DOUBLE_CONVERSION)
+#else   // if !defined(JSON_USE_INT64_DOUBLE_CONVERSION)
       return integerToDouble(value_.uint_);
 #endif  // if !defined(JSON_USE_INT64_DOUBLE_CONVERSION)
     case realValue:
@@ -3106,7 +3106,7 @@ float Value::asFloat() const {
     case uintValue:
 #if !defined(JSON_USE_INT64_DOUBLE_CONVERSION)
       return static_cast<float>(value_.uint_);
-#else  // if !defined(JSON_USE_INT64_DOUBLE_CONVERSION)
+#else   // if !defined(JSON_USE_INT64_DOUBLE_CONVERSION)
       // This can fail (silently?) if the value is bigger than MAX_FLOAT.
       return static_cast<float>(integerToDouble(value_.uint_));
 #endif  // if !defined(JSON_USE_INT64_DOUBLE_CONVERSION)
@@ -4070,9 +4070,8 @@ String valueToString(double value, bool useSpecialFloats,
   if (!isfinite(value)) {
     static const char* const reps[2][3] = {{"NaN", "-Infinity", "Infinity"},
                                            {"null", "-1e+9999", "1e+9999"}};
-    return reps[useSpecialFloats ? 0 : 1][isnan(value)  ? 0
-                                          : (value < 0) ? 1
-                                                        : 2];
+    return reps[useSpecialFloats ? 0 : 1]
+               [isnan(value) ? 0 : (value < 0) ? 1 : 2];
   }
 
   String buffer(size_t(36), '\0');
