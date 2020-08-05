@@ -9,6 +9,7 @@
 #include "utils/Vector2D.h"
 
 class Component;
+class Transform;
 
 class GameObject final {
   bool active_ = false;
@@ -16,6 +17,7 @@ class GameObject final {
   bool transparent_ = false;
   std::string name_{};
   GameObject* parent_ = nullptr;
+  Transform* transform_ = nullptr;
   std::vector<GameObject*> children_{};
   std::vector<Component*> components_{};
 
@@ -31,6 +33,7 @@ class GameObject final {
   void setName(std::string name) noexcept;
 
   [[nodiscard]] GameObject* getParent() const noexcept;
+  [[nodiscard]] Transform* getTransform() const noexcept;
 
   [[nodiscard]] bool getActive() const noexcept;
   void setActive(bool active) noexcept;
@@ -46,6 +49,15 @@ class GameObject final {
   [[nodiscard]] GameObject* clickScan(SDL_Point point) const noexcept;
   [[nodiscard]] std::vector<GameObject*> getChildren() const noexcept;
   [[nodiscard]] std::vector<Component*> getComponents() const noexcept;
+
+  template <class T>
+  [[nodiscard]] T getComponent() const noexcept;
+
+  template <class T>
+  [[nodiscard]] T getComponentInChildren() const noexcept;
+
+  template <class T>
+  [[nodiscard]] T getComponentInParent() const noexcept;
 
   void load(const Json::Value& value);
   void onAwake() noexcept;

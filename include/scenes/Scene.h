@@ -14,7 +14,7 @@ class Scene final {
   bool stop_ = false;
 
   ~Scene() noexcept;
-  void onStart() noexcept;
+  void onStart() const noexcept;
   void onCreate() noexcept;
   void onEvents() noexcept;
   void onUpdate() noexcept;
@@ -32,6 +32,6 @@ class Scene final {
   void stop() noexcept;
   void end() noexcept;
 
-  std::vector<GameObject*> getGameObjects() const noexcept;
-  std::string getName() const noexcept;
+  [[nodiscard]] std::vector<GameObject*> getGameObjects() const noexcept;
+  [[nodiscard]] std::string getName() const noexcept;
 };

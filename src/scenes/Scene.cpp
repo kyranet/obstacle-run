@@ -15,7 +15,11 @@
 Scene::Scene(const std::string& name) noexcept { name_ = name; }
 Scene::~Scene() noexcept { end(); }
 
-void Scene::onStart() noexcept {}
+void Scene::onStart() const noexcept {
+  for (const auto& gameObject : getGameObjects()) {
+    gameObject->onAwake();
+  }
+}
 
 void Scene::onCreate() noexcept {
   size_t last = gameObjects_.size();

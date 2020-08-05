@@ -22,17 +22,14 @@ class Component {
   [[nodiscard]] GameObject* getGameObject() const noexcept;
   void setGameObject() noexcept;
 
-  template <typename T, typename = typename std::enable_if<
-                            std::is_convertible<T, Component*>::value, T>::type>
-  [[nodiscard]] T* getComponent() const noexcept;
+  template <class T>
+  [[nodiscard]] T getComponent() const noexcept;
 
-  template <typename T, typename = typename std::enable_if<
-                            std::is_convertible<T, Component*>::value, T>::type>
-  [[nodiscard]] T* getComponentInChildren() const noexcept;
+  template <class T>
+  [[nodiscard]] T getComponentInChildren() const noexcept;
 
-  template <typename T, typename = typename std::enable_if<
-                            std::is_convertible<T, Component*>::value, T>::type>
-  [[nodiscard]] T* getComponentInParent() const noexcept;
+  template <class T>
+  [[nodiscard]] T getComponentInParent() const noexcept;
 
   void destroy() noexcept;
 

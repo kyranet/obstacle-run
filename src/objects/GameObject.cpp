@@ -4,6 +4,7 @@
 
 #include <utility>
 
+#include "components/Transform.h"
 #include "managers/ComponentManager.h"
 #include "objects/Component.h"
 #include "utils/DebugAssert.h"
@@ -20,6 +21,7 @@ std::string GameObject::getName() const noexcept { return name_; }
 void GameObject::setName(std::string name) noexcept { name_ = std::move(name); }
 
 GameObject* GameObject::getParent() const noexcept { return parent_; }
+Transform* GameObject::getTransform() const noexcept { return transform_; }
 
 bool GameObject::getActive() const noexcept { return active_; }
 void GameObject::setActive(bool active) noexcept { active_ = active; }
@@ -56,6 +58,33 @@ std::vector<GameObject*> GameObject::getChildren() const noexcept {
 
 std::vector<Component*> GameObject::getComponents() const noexcept {
   return components_;
+}
+
+template <class T>
+T GameObject::getComponent() const noexcept {
+  for (const auto& component : getComponents()) {
+    T casted = dynamic_cast<T>(component);
+    if (casted) return casted;
+  }
+
+  return nullptr;
+}
+
+template <class T>
+T GameObject::getComponentInChildren() const noexcept {
+  for (const auto& child : getChildren()) {
+    const auto* component = child->getComponent<T>();
+    if (component) return component;
+  }
+
+  return nullptr;
+}
+template <class T>
+T GameObject::getComponentInParent() const noexcept {
+  const auto* parent = getParent();
+  if (parent == nullptr) return nullptr;
+
+  return parent->getComponent<T>();
 }
 
 void GameObject::load(const Json::Value& value) {
@@ -100,6 +129,8 @@ void GameObject::onAwake() noexcept {
   for (const auto& component : getComponents()) {
     component->onAwake();
   }
+
+  transform_ = getComponent<Transform*>();
 }
 
 void GameObject::onUpdate() const noexcept {

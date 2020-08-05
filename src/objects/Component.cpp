@@ -14,35 +14,19 @@ void Component::setEnabled(bool enabled) noexcept { enabled_ = enabled; }
 GameObject* Component::getGameObject() const noexcept { return gameObject_; }
 void Component::setGameObject() noexcept { gameObject_ = nullptr; }
 
-template <typename T, typename>
-T* Component::getComponent() const noexcept {
-  for (const auto& component : getGameObject()->getComponents()) {
-    if (dynamic_cast<T>(component)) return component;
-  }
-
-  return nullptr;
+template <class T>
+T Component::getComponent() const noexcept {
+  return getGameObject()->getComponent<T>();
 }
 
-template <typename T, typename>
-T* Component::getComponentInChildren() const noexcept {
-  for (const auto& child : getGameObject()->getChildren()) {
-    for (const auto& component : child->getComponents()) {
-      if (dynamic_cast<T>(component)) return component;
-    }
-  }
-
-  return nullptr;
+template <class T>
+T Component::getComponentInChildren() const noexcept {
+  return getGameObject()->getComponentInChildren<T>();
 }
-template <typename T, typename>
-T* Component::getComponentInParent() const noexcept {
-  const auto* parent = getGameObject()->getParent();
-  if (parent == nullptr) return nullptr;
 
-  for (const auto& component : parent->getComponents()) {
-    if (dynamic_cast<T>(component)) return component;
-  }
-
-  return nullptr;
+template <class T>
+T Component::getComponentInParent() const noexcept {
+  return getGameObject()->getComponentInParent<T>();
 }
 
 void Component::destroy() noexcept {}
