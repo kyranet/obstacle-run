@@ -9,7 +9,9 @@ RendererFactory::~RendererFactory() noexcept = default;
 //   "name": "Renderer"
 // }
 
-Renderer* RendererFactory::fromJson(const Json::Value&) { return {}; }
+Renderer* RendererFactory::fromJson(const Json::Value&) {
+  return new Renderer();
+}
 
 Json::Value RendererFactory::toJson(Renderer*) {
   Json::Value json(Json::objectValue);

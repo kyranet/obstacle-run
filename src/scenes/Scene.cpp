@@ -1,18 +1,16 @@
 // Copyright (c) 2020 Antonio Román. All rights reserved.
 
-#include "../../include/scenes/Scene.h"
-
-#include <json/json.h>
+#include "scenes/Scene.h"
 
 #include <algorithm>
 #include <fstream>
 
 #include "Game.h"
+#include "SDL.h"
 #include "exceptions/FileSystemException.h"
 #include "managers/Input.h"
 #include "utils/DebugAssert.h"
 #include "utils/TimePool.h"
-#include "SDL.h"
 
 Scene::Scene(const std::string& name) noexcept { name_ = name; }
 Scene::~Scene() noexcept { end(); }
@@ -22,9 +20,9 @@ void Scene::onStart() noexcept {}
 void Scene::onCreate() noexcept {
   size_t last = gameObjects_.size();
   gameObjects_.resize(last + newGameObjects_.size());
-  for (auto* object : newGameObjects_) {
-    gameObjects_[last++] = object;
-    object->onAwake();
+  for (auto* gameObject : newGameObjects_) {
+    gameObjects_[last++] = gameObject;
+    gameObject->onAwake();
   }
 
   newGameObjects_.clear();

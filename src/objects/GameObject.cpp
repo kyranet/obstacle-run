@@ -5,10 +5,11 @@
 #include <utility>
 
 #include "managers/ComponentManager.h"
-#include "utils/DebugAssert.h"
 #include "objects/Component.h"
+#include "utils/DebugAssert.h"
 
-GameObject::GameObject() noexcept {}
+GameObject::GameObject() noexcept : parent_(nullptr) {}
+GameObject::GameObject(GameObject* parent) noexcept : parent_(parent) {}
 GameObject::~GameObject() noexcept {
   for (auto* child : getChildren()) {
     delete child;
@@ -17,6 +18,8 @@ GameObject::~GameObject() noexcept {
 
 std::string GameObject::getName() const noexcept { return name_; }
 void GameObject::setName(std::string name) noexcept { name_ = std::move(name); }
+
+GameObject* GameObject::getParent() const noexcept { return parent_; }
 
 bool GameObject::getActive() const noexcept { return active_; }
 void GameObject::setActive(bool active) noexcept { active_ = active; }
@@ -61,7 +64,7 @@ void GameObject::load(const Json::Value& value) {
   const auto children = value["children"];
   for (const auto& child : children) {
     debug_print("Loading GameObject: '%s'.\n", child["name"].asCString());
-    auto* gameObject = new GameObject();
+    auto* gameObject = new GameObject(this);
     children_.emplace_back(gameObject);
     gameObject->load(child);
   }
@@ -74,7 +77,11 @@ void GameObject::load(const Json::Value& value) {
     assert_not_null(factory,
                     "'factory' from GameObject::load(const Json::Value&) "
                     "must not be nullptr.");
-    components_.emplace_back(factory->fromJson(child));
+    auto* component = factory->fromJson(child);
+    assert_not_null(component,
+                    "'component' from GameObject::load(const Json::Value&) "
+                    "must not be nullptr.");
+    components_.emplace_back(component);
   }
 
   debug_print(
@@ -85,8 +92,16 @@ void GameObject::load(const Json::Value& value) {
 
 void GameObject::onAwake() noexcept { setActive(true); }
 
-void GameObject::onUpdate() noexcept {}
+void GameObject::onUpdate() const noexcept {
+  for (const auto& child : getChildren()) {
+    if (child->getActive()) child->onUpdate();
+  }
+
+  for (const auto& component : getComponents()) {
+    if (component->getEnabled()) component->onUpdate();
+  }
+}
 
 void GameObject::onRender() noexcept {}
 
-void GameObject::onDestroy() noexcept {}
+void GameObject::onDestroy() noexcept { setActive(false); }

@@ -19,7 +19,8 @@ set(GAME_SOURCES
   components/Transform.cpp
   factories/TransformFactory.cpp
   components/Renderer.cpp
-  factories/RendererFactory.cpp)
+  factories/RendererFactory.cpp
+  objects/Component.cpp)
 
 add_executable(Game ${GAME_SOURCES})
 target_compile_features(Game PUBLIC cxx_std_17)

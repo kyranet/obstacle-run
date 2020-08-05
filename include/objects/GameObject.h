@@ -5,8 +5,8 @@
 
 #include <vector>
 
-#include "utils/Vector2D.h"
 #include "SDL.h"
+#include "utils/Vector2D.h"
 
 class Component;
 
@@ -15,6 +15,7 @@ class GameObject final {
   bool destroyed_ = false;
   bool transparent_ = false;
   std::string name_{};
+  GameObject* parent_ = nullptr;
   std::vector<GameObject*> children_{};
   std::vector<Component*> components_{};
 
@@ -23,29 +24,32 @@ class GameObject final {
 
  public:
   GameObject() noexcept;
+  explicit GameObject(GameObject* parent) noexcept;
   ~GameObject() noexcept;
 
-  std::string getName() const noexcept;
+  [[nodiscard]] std::string getName() const noexcept;
   void setName(std::string name) noexcept;
 
-  bool getActive() const noexcept;
+  [[nodiscard]] GameObject* getParent() const noexcept;
+
+  [[nodiscard]] bool getActive() const noexcept;
   void setActive(bool active) noexcept;
 
-  bool getTransparent() const noexcept;
+  [[nodiscard]] bool getTransparent() const noexcept;
   void setTransparent(bool transparent) noexcept;
 
-  bool getDestroy() const noexcept;
+  [[nodiscard]] bool getDestroy() const noexcept;
   void setDestroy(bool destroy) noexcept;
 
-  SDL_Rect getRectangle() const noexcept;
+  [[nodiscard]] SDL_Rect getRectangle() const noexcept;
 
-  GameObject* clickScan(SDL_Point point) const noexcept;
-  std::vector<GameObject*> getChildren() const noexcept;
-  std::vector<Component*> getComponents() const noexcept;
+  [[nodiscard]] GameObject* clickScan(SDL_Point point) const noexcept;
+  [[nodiscard]] std::vector<GameObject*> getChildren() const noexcept;
+  [[nodiscard]] std::vector<Component*> getComponents() const noexcept;
 
   void load(const Json::Value& value);
   void onAwake() noexcept;
-  void onUpdate() noexcept;
+  void onUpdate() const noexcept;
   void onRender() noexcept;
   void onDestroy() noexcept;
 };
