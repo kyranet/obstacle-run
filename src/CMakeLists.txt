@@ -39,7 +39,6 @@ add_custom_command(
   $<TARGET_FILE_DIR:Game>/assets
 )
 
-get_target_property(opts Dependencies BUILD_LOCAL)
 if (BUILD_LOCAL)
   add_custom_command(
     TARGET Game POST_BUILD
