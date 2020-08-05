@@ -2,6 +2,6 @@
 
 #pragma once
 
-#include "../objects/Component.h"
+#include "objects/Component.h"
 
 class Renderer final : public Component {};

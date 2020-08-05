@@ -1,5 +1,5 @@
 // Copyright (c) 2020 Antonio Román. All rights reserved.
-#include "Transform.h"
+#include "components/Transform.h"
 
 Transform::Transform(Vector2D<int> position, Vector2D<int> scale) noexcept
     : position_(position), scale_(scale) {}

@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "../interfaces/JsonConvertible.h"
-#include "../objects/Component.h"
-#include "../utils/Vector2D.h"
+#include "interfaces/JsonConvertible.h"
+#include "objects/Component.h"
+#include "utils/Vector2D.h"
 
 class Transform : public Component {
   Vector2D<int> position_;

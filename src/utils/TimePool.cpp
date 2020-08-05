@@ -1,5 +1,5 @@
 // Copyright (c) 2020 Antonio Román. All rights reserved.
-#include "TimePool.h"
+#include "utils/TimePool.h"
 
 TimePool::TimePool(const uint32_t ticksInterval, const uint32_t now)
     : ticksInterval_(ticksInterval), ticksLast_(now) {}

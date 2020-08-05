@@ -1,18 +1,22 @@
 // Copyright (c) 2020 Antonio Román. All rights reserved.
 
 #pragma once
-#include "../exceptions/PointerException.h"
+#include "exceptions/PointerException.h"
 
 template <typename... Args>
+#if NDEBUG
+void debug_print(Args...) {
+#else
 void debug_print(Args... args) {
-#if _DEBUG
   printf(args...);
 #endif
 }
 
 template <typename Value>
+#if NDEBUG
+void assert_not_null(Value, const std::string&) {
+#else
 void assert_not_null(Value value, const std::string& message) {
-#if _DEBUG
   if (value == nullptr) throw PointerException(message);
 #endif
 }

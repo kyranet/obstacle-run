@@ -1,11 +1,11 @@
 // Copyright (c) 2020 Antonio Román. All rights reserved.
 
-#include "SceneManager.h"
+#include "managers/SceneManager.h"
 
 #include <json/json.h>
 
-#include "../scenes/Scene.h"
-#include "../utils/DebugAssert.h"
+#include "scenes/Scene.h"
+#include "utils/DebugAssert.h"
 
 std::vector<std::pair<std::string, Scene*>> SceneManager::scenes_ = {};
 size_t SceneManager::invalidIndex_ = ~(size_t)0;

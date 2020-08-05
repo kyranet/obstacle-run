@@ -1,17 +1,17 @@
 // Copyright (c) 2020 Antonio Román. All rights reserved.
 
-#include "Scene.h"
+#include "../../include/scenes/Scene.h"
 
 #include <json/json.h>
 
 #include <algorithm>
 #include <fstream>
 
-#include "../Game.h"
-#include "../exceptions/FileSystemException.h"
-#include "../managers/Input.h"
-#include "../utils/DebugAssert.h"
-#include "../utils/TimePool.h"
+#include "Game.h"
+#include "exceptions/FileSystemException.h"
+#include "managers/Input.h"
+#include "utils/DebugAssert.h"
+#include "utils/TimePool.h"
 #include "SDL.h"
 
 Scene::Scene(const std::string& name) noexcept { name_ = name; }

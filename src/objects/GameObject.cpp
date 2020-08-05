@@ -1,12 +1,12 @@
 // Copyright (c) 2020 Antonio Román. All rights reserved.
 
-#include "GameObject.h"
+#include "objects/GameObject.h"
 
 #include <utility>
 
-#include "../managers/ComponentManager.h"
-#include "../utils/DebugAssert.h"
-#include "Component.h"
+#include "managers/ComponentManager.h"
+#include "utils/DebugAssert.h"
+#include "objects/Component.h"
 
 GameObject::GameObject() noexcept {}
 GameObject::~GameObject() noexcept {

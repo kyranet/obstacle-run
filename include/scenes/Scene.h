@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "../objects/GameObject.h"
+#include "objects/GameObject.h"
 
 class Scene final {
  private:

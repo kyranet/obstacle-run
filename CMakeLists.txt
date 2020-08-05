@@ -1,11 +1,11 @@
-cmake_minimum_required(VERSION 3.12)
-project(obstaclerun)
+cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
+project(ObstacleRun
+        VERSION 0.0.1
+        DESCRIPTION "A 2D multiplayer game built with SDL2."
+        HOMEPAGE_URL "https://github.com/kyranet/obstacle-run"
+        LANGUAGES C CXX)
 
-set(CMAKE_CXX_STANDARD 14)
-
-if (NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release)
-endif ()
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 # Bump up warning levels appropriately for clang, gcc & msvc and build in debug mode
 message("CMAKE_CXX_COMPILER_ID = ${CMAKE_CXX_COMPILER_ID}")
@@ -27,7 +27,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     # Workaround for MSVC development libraries in the University's laboratories, where access to
     # C:\ or C:\MinGW are forbidden. This serves to let anybody compile under restricted access.
     if (NOT BUILD_LOCAL)
-        if (EXISTS "${obstaclerun_SOURCE_DIR}/deps" AND IS_DIRECTORY "${obstaclerun_SOURCE_DIR}/deps")
+        if (EXISTS "${CMAKE_SOURCE_DIR}/deps" AND IS_DIRECTORY "${CMAKE_SOURCE_DIR}/deps")
             set(__DEPS_FOLDER 1)
         else ()
             set(__DEPS_FOLDER 0)
@@ -43,49 +43,5 @@ message("CMAKE_CXX_FLAGS = ${CMAKE_CXX_FLAGS}")
 message("CMAKE_CXX_FLAGS_DEBUG = ${CMAKE_CXX_FLAGS_DEBUG}")
 message("CMAKE_CXX_FLAGS_RELEASE = ${CMAKE_CXX_FLAGS_RELEASE}")
 
-# Set the cmake module path.
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${obstaclerun_SOURCE_DIR}/cmake/")
-set(BIN_DIR ${obstaclerun_SOURCE_DIR}/cmake-build-debug)
-
-# If the generator is MSVC and a deps folder exists, try to link the libraries.
-if (BUILD_LOCAL EQUAL 1)
-    file(GLOB SDL2_DIR "${obstaclerun_SOURCE_DIR}/deps/SDL2-*")
-    file(GLOB SDL2_IMAGE_DIR "${obstaclerun_SOURCE_DIR}/deps/SDL2_image-*")
-    file(GLOB SDL2_TTF_DIR "${obstaclerun_SOURCE_DIR}/deps/SDL2_ttf-*")
-    file(GLOB SDL2_MIXER_DIR "${obstaclerun_SOURCE_DIR}/deps/SDL2_mixer-*")
-    file(GLOB SDL2_NET_DIR "${obstaclerun_SOURCE_DIR}/deps/SDL2_net-*")
-
-    message("SDL2_DIR = ${SDL2_DIR}")
-    message("SDL2_IMAGE_DIR = ${SDL2_IMAGE_DIR}")
-    message("SDL2_TTF_DIR = ${SDL2_TTF_DIR}")
-    message("SDL2_MIXER_DIR = ${SDL2_MIXER_DIR}")
-    message("SDL2_NET_DIR = ${SDL2_NET_DIR}")
-endif ()
-
-# Find all SDL2 libraries.
-find_package(SDL2 REQUIRED)
-find_package(SDL2_image REQUIRED)
-find_package(SDL2_ttf REQUIRED)
-find_package(SDL2_mixer REQUIRED)
-find_package(SDL2_net REQUIRED)
-include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR} ${SDL2_NET_INCLUDE_DIR} src/third-party/jsoncpp)
-
-file(COPY assets DESTINATION .)
-add_executable(obstaclerun src/main.cpp src/Game.cpp src/Game.h src/exceptions/SDLException.h src/scenes/Scene.cpp src/scenes/Scene.h src/objects/GameObject.cpp src/objects/GameObject.h src/managers/Input.cpp src/managers/Input.h src/utils/Vector2D.h src/utils/Constants.h src/managers/SceneManager.cpp src/managers/SceneManager.h src/exceptions/PointerException.h src/utils/TimePool.cpp src/utils/TimePool.h src/third-party/jsoncpp/jsoncpp.cpp src/utils/DebugAssert.h src/exceptions/FileSystemException.h src/objects/Component.h src/managers/ComponentManager.cpp src/managers/ComponentManager.h src/components/Transform.cpp src/components/Transform.h src/interfaces/JsonConvertible.h src/interfaces/ComponentFactory.h src/factories/TransformFactory.cpp src/factories/TransformFactory.h src/components/Renderer.cpp src/components/Renderer.h src/factories/RendererFactory.cpp src/factories/RendererFactory.h)
-
-# If a deps folder was used, it is most likely that OS' scoped libraries will be tried to be used even if they are not
-# available, so we copy the .dll files.
-if (BUILD_LOCAL EQUAL 1)
-    file(GLOB_RECURSE DEPENDENCY_DLLS
-            "${SDL2_TTF_DIR}/*.dll"
-            "${SDL2_MIXER_DIR}/*.dll"
-            "${SDL2_IMAGE_DIR}/*.dll"
-            "${SDL2_NET_DIR}/*.dll"
-            "${SDL2_DIR}/*.dll"
-            )
-    file(COPY ${DEPENDENCY_DLLS} DESTINATION "${BIN_DIR}")
-endif ()
-
-# Link the libraries and install them.
-target_link_libraries(obstaclerun PUBLIC ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SDL2_MIXER_LIBRARIES} ${SDL2_NET_LIBRARY})
-install(TARGETS obstaclerun RUNTIME DESTINATION ${BIN_DIR})
+add_subdirectory(src)
+add_subdirectory(assets)

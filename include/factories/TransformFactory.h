@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "../components/Transform.h"
-#include "../interfaces/ComponentFactory.h"
+#include "components/Transform.h"
+#include "interfaces/ComponentFactory.h"
 
 class TransformFactory final : public ComponentFactory<Transform*> {
  public:

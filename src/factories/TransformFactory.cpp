@@ -1,5 +1,5 @@
 // Copyright (c) 2020 Antonio Román. All rights reserved.
-#include "TransformFactory.h"
+#include "factories/TransformFactory.h"
 
 TransformFactory::TransformFactory() noexcept : ComponentFactory("Transform") {}
 TransformFactory::~TransformFactory() noexcept = default;
