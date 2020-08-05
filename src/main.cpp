@@ -7,7 +7,9 @@
 #undef main
 
 int main(int, char*[]) {
-#if !NDEBUG
+#if _DEBUG  // Non-standard _DEBUG is used because crtdbg.h is a MSVC-specific
+            // header, it is also not included because MSVC imports it in all
+            // programs.
   _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF |
                  _CRTDBG_LEAK_CHECK_DF);  // Check Memory Leaks
 #endif
