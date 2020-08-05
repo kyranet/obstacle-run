@@ -1,8 +1,7 @@
 # Workaround for MSVC development libraries in the University's laboratories, where access to
 # C:\ or C:\MinGW are forbidden. This serves to let anybody compile under restricted access.
 if (NOT DEFINED BUILD_LOCAL)
-  message("Hi!")
-  if (EXISTS "${CMAKE_SOURCE_DIR}/deps" AND IS_DIRECTORY "${CMAKE_SOURCE_DIR}/deps")
+  if (MSVC AND EXISTS "${CMAKE_SOURCE_DIR}/deps" AND IS_DIRECTORY "${CMAKE_SOURCE_DIR}/deps")
     set(__DEPS_FOLDER ON)
   else ()
     set(__DEPS_FOLDER OFF)
@@ -42,3 +41,4 @@ endif ()
 
 add_executable(Dependencies IMPORTED GLOBAL)
 set_target_properties(Dependencies PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/dependencies/DO_NOT_USE)
+set_target_properties(Dependencies PROPERTIES BUILD_LOCAL ${BUILD_LOCAL})

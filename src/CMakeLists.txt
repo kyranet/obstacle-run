@@ -39,12 +39,15 @@ add_custom_command(
   $<TARGET_FILE_DIR:Game>/assets
 )
 
-add_custom_command(
-  TARGET Game POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory
-  $<TARGET_FILE_DIR:Dependencies>
-  $<TARGET_FILE_DIR:Game>
-)
+get_target_property(opts Dependencies BUILD_LOCAL)
+if (BUILD_LOCAL)
+  add_custom_command(
+    TARGET Game POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    $<TARGET_FILE_DIR:Dependencies>
+    $<TARGET_FILE_DIR:Game>
+  )
+endif ()
 
 if (MSVC)
   target_compile_options(Game
@@ -79,4 +82,4 @@ else ()
     -Wno-padded
     -Wno-reserved-id-macro
     )
-endif()
+endif ()
