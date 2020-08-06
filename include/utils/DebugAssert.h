@@ -5,9 +5,9 @@
 
 template <typename... Args>
 #if NDEBUG
-void debug_print(Args...) {
+void debug_print(Args...) {}
 #else
-void debug_print(Args... args) {
-  printf(args...);
-#endif
+void debug_print(const char* fmt, Args... args) {
+  printf(fmt, args...);
 }
+#endif
