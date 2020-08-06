@@ -19,7 +19,7 @@ class ComponentManager {
   template <typename T, typename = typename std::enable_if<
                             std::is_convertible<T, Component*>::value, T>::type>
   ComponentManager* add(ComponentFactory<T>* factory) {
-    components_[factory->getName()] =
+    components_[factory->name()] =
         reinterpret_cast<ComponentFactory<Component*>*>(factory);
     return this;
   }

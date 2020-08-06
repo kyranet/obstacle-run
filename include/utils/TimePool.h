@@ -30,18 +30,18 @@ class TimePool {
    * next interval to run.
    * \param now The current time in milliseconds.
    */
-  TimePool(uint32_t ticksInterval, uint32_t now);
+  TimePool(uint32_t ticksInterval, uint32_t now) noexcept;
   /**
    * \brief Checks if the interval has already happened. This mutates the
    * instance setting up all its internal properties.
    * \param now The current time in milliseconds
    * \return Whether or not the interval is ready to run.
    */
-  bool next(uint32_t now);
+  [[nodiscard]] bool next(uint32_t now) noexcept;
   /**
    * \brief Get the remaining time from the last time next() was called to the
    * next interval.
    * \return The remaining time in milliseconds for the next interval.
    */
-  uint32_t getRemaining() const;
+  [[nodiscard]] uint32_t getRemaining() const noexcept;
 };

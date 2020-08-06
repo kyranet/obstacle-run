@@ -12,5 +12,5 @@ class RendererFactory final : public ComponentFactory<Renderer*> {
   RendererFactory() noexcept;
   ~RendererFactory() noexcept override;
   Renderer* fromJson(const Json::Value&) override;
-  Json::Value toJson(Renderer* value) override;
+  Json::Value toJson(Renderer* value) const override;
 };

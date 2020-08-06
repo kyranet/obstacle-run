@@ -10,5 +10,5 @@ class TransformFactory final : public ComponentFactory<Transform*> {
   TransformFactory() noexcept;
   ~TransformFactory() noexcept override;
   Transform* fromJson(const Json::Value&) override;
-  Json::Value toJson(Transform* value) override;
+  Json::Value toJson(Transform* value) const override;
 };

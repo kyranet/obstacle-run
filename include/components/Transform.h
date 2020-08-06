@@ -14,10 +14,13 @@ class Transform : public Component {
   Transform(Vector2D<int> position, Vector2D<int> scale) noexcept;
   ~Transform() noexcept;
 
-  Vector2D<int> getPosition() const noexcept;
-  void setPosition(int x, int y) noexcept;
-  void setPosition(Vector2D<int> position) noexcept;
+  [[nodiscard]] inline const Vector2D<int>& position() const noexcept {
+    return position_;
+  }
+  inline Vector2D<int>& position() noexcept { return position_; }
 
-  Vector2D<int> getScale() const noexcept;
-  void setScale(Vector2D<int> scale) noexcept;
+  [[nodiscard]] inline const Vector2D<int>& scale() const noexcept {
+    return scale_;
+  }
+  inline Vector2D<int>& scale() noexcept { return scale_; }
 };

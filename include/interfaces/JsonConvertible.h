@@ -7,5 +7,5 @@ template <class T>
 class JsonConvertible {
  public:
   virtual T fromJson(const Json::Value& json) = 0;
-  virtual Json::Value toJson(T value) = 0;
+  virtual Json::Value toJson(T value) const = 0;
 };

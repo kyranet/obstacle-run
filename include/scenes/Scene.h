@@ -32,6 +32,11 @@ class Scene final {
   void stop() noexcept;
   void end() noexcept;
 
-  [[nodiscard]] std::vector<GameObject*> getGameObjects() const noexcept;
-  [[nodiscard]] std::string getName() const noexcept;
+  [[nodiscard]] inline const std::vector<GameObject*>& gameObjects()
+      const noexcept {
+    return gameObjects_;
+  }
+  [[nodiscard]] inline const std::string& name() const noexcept {
+    return name_;
+  }
 };

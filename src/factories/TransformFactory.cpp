@@ -15,10 +15,10 @@ Transform* TransformFactory::fromJson(const Json::Value& json) {
                        Vector2D<int>::fromJson(json["scale"]));
 }
 
-Json::Value TransformFactory::toJson(Transform* value) {
+Json::Value TransformFactory::toJson(Transform* value) const {
   Json::Value json(Json::objectValue);
-  json["name"] = getName();
-  json["position"] = value->getPosition().toJson();
-  json["scale"] = value->getScale().toJson();
+  json["name"] = name();
+  json["position"] = value->position().toJson();
+  json["scale"] = value->scale().toJson();
   return json;
 }

@@ -16,11 +16,13 @@ class Component {
   explicit Component(GameObject* gameObject) noexcept;
   ~Component() noexcept;
 
-  [[nodiscard]] bool getEnabled() const noexcept;
-  void setEnabled(bool enabled) noexcept;
+  [[nodiscard]] inline const bool& enabled() const noexcept { return enabled_; }
+  inline bool& enabled() noexcept { return enabled_; }
 
-  [[nodiscard]] GameObject* getGameObject() const noexcept;
-  void setGameObject() noexcept;
+  [[nodiscard]] inline const GameObject* gameObject() const noexcept {
+    return gameObject_;
+  }
+  inline GameObject*& gameObject() noexcept { return gameObject_; }
 
   template <class T>
   [[nodiscard]] T getComponent() const noexcept;

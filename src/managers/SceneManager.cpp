@@ -15,7 +15,7 @@ size_t SceneManager::getSceneCount() noexcept { return scenes_.size(); }
 
 Scene* SceneManager::createScene(const std::string& name) noexcept {
   auto* scene = new Scene(name);
-  scenes_.emplace_back(scene->getName(), scene);
+  scenes_.emplace_back(scene->name(), scene);
   return scene;
 }
 

@@ -13,8 +13,8 @@ Renderer* RendererFactory::fromJson(const Json::Value&) {
   return new Renderer();
 }
 
-Json::Value RendererFactory::toJson(Renderer*) {
+Json::Value RendererFactory::toJson(Renderer*) const {
   Json::Value json(Json::objectValue);
-  json["name"] = getName();
+  json["name"] = name();
   return json;
 }

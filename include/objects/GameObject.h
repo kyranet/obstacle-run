@@ -29,26 +29,45 @@ class GameObject final {
   explicit GameObject(GameObject* parent) noexcept;
   ~GameObject() noexcept;
 
-  [[nodiscard]] std::string getName() const noexcept;
-  void setName(std::string name) noexcept;
+  [[nodiscard]] inline const std::string& name() const noexcept {
+    return name_;
+  }
+  inline std::string& name() noexcept { return name_; }
 
-  [[nodiscard]] GameObject* getParent() const noexcept;
-  [[nodiscard]] Transform* getTransform() const noexcept;
+  [[nodiscard]] inline const GameObject* parent() const noexcept {
+    return parent_;
+  }
+  [[nodiscard]] inline const Transform* transform() const noexcept {
+    return transform_;
+  }
 
-  [[nodiscard]] bool getActive() const noexcept;
-  void setActive(bool active) noexcept;
+  [[nodiscard]] inline const bool& active() const noexcept { return active_; }
+  inline bool& active() noexcept { return active_; }
 
-  [[nodiscard]] bool getTransparent() const noexcept;
-  void setTransparent(bool transparent) noexcept;
+  [[nodiscard]] inline const bool& transparent() const noexcept {
+    return transparent_;
+  }
+  inline bool& transparent() noexcept { return transparent_; }
 
-  [[nodiscard]] bool getDestroy() const noexcept;
-  void setDestroy(bool destroy) noexcept;
+  [[nodiscard]] inline const bool& destroy() const noexcept {
+    return destroyed_;
+  }
+  inline bool& destroy() noexcept { return destroyed_; }
 
-  [[nodiscard]] SDL_Rect getRectangle() const noexcept;
+  [[nodiscard]] inline SDL_Rect rectangle() const noexcept {
+    return {position_.x() - size_.x() / 2, position_.y() - size_.y() / 2,
+            size_.x(), size_.y()};
+  }
 
   [[nodiscard]] GameObject* clickScan(SDL_Point point) const noexcept;
-  [[nodiscard]] std::vector<GameObject*> getChildren() const noexcept;
-  [[nodiscard]] std::vector<Component*> getComponents() const noexcept;
+  [[nodiscard]] inline const std::vector<GameObject*>& children()
+      const noexcept {
+    return children_;
+  }
+  [[nodiscard]] inline const std::vector<Component*>& components()
+      const noexcept {
+    return components_;
+  }
 
   template <class T>
   [[nodiscard]] T getComponent() const noexcept;

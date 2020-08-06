@@ -19,7 +19,7 @@ Input* Input::instance() {
   return instance_;
 }
 
-void Input::clear() {
+void Input::clear() noexcept {
   for (auto i = 0, max = static_cast<int>(KeyboardKey::kKeyLimit); i < max;
        i++) {
     keyDown_[i] = false;
@@ -36,7 +36,7 @@ void Input::clear() {
   casted_ = nullptr;
 }
 
-void Input::update(const SDL_Event event) {
+void Input::update(const SDL_Event event) noexcept {
   switch (event.type) {
     case SDL_KEYDOWN: {
       keyboard_ = SDL_GetKeyboardState(nullptr);
@@ -49,7 +49,7 @@ void Input::update(const SDL_Event event) {
       break;
     }
     case SDL_MOUSEMOTION: {
-      mousePosition_ = {event.motion.x, event.motion.y};
+      mousePosition_.set({event.motion.x, event.motion.y});
       casted_ = nullptr;
       break;
     }
@@ -92,53 +92,55 @@ void Input::update(const SDL_Event event) {
   }
 }
 
-Vector2D<int> Input::getMousePosition() { return instance()->mousePosition_; }
+Vector2D<int> Input::getMousePosition() noexcept {
+  return instance()->mousePosition_;
+}
 
-bool Input::isKeyPressed(KeyboardKey key) {
+bool Input::isKeyPressed(KeyboardKey key) noexcept {
   const auto input = instance();
   if (!input->keyboard_) return false;
   return input->keyboard_[static_cast<int>(key)];
 }
 
-bool Input::isKeyDown(KeyboardKey key) {
+bool Input::isKeyDown(KeyboardKey key) noexcept {
   return instance()->keyDown_[static_cast<int>(key)];
 }
-bool Input::isKeyUp(KeyboardKey key) {
+bool Input::isKeyUp(KeyboardKey key) noexcept {
   return instance()->keyUp_[static_cast<int>(key)];
 }
 
-bool Input::isMouseButtonDown(MouseKey button) {
+bool Input::isMouseButtonDown(MouseKey button) noexcept {
   return instance()->mouseDown_[static_cast<int>(button)];
 }
-bool Input::isMouseButtonUp(MouseKey button) {
+bool Input::isMouseButtonUp(MouseKey button) noexcept {
   return instance()->mouseUp_[static_cast<int>(button)];
 }
 
-bool Input::getShift() {
+bool Input::getShift() noexcept {
   const auto input = instance();
   return input->isKeyPressed(KeyboardKey::LEFT_SHIFT) ||
          input->isKeyPressed(KeyboardKey::RIGHT_SHIFT);
 }
 
-bool Input::getCtrl() {
+bool Input::getCtrl() noexcept {
   const auto input = instance();
   return input->isKeyPressed(KeyboardKey::LEFT_CTRL) ||
          input->isKeyPressed(KeyboardKey::RIGHT_CTRL);
 }
 
-bool Input::getAlt() {
+bool Input::getAlt() noexcept {
   const auto input = instance();
   return input->isKeyPressed(KeyboardKey::LEFT_ALT) ||
          input->isKeyPressed(KeyboardKey::RIGHT_ALT);
 }
 
-GameObject* Input::screenMouseToRay() {
+GameObject* Input::screenMouseToRay() noexcept {
   const auto input = instance();
   if (input->casted_) return input->casted_;
   const auto position = input->mousePosition_;
-  const auto point = SDL_Point{position.getX(), position.getY()};
+  const auto point = SDL_Point{position.x(), position.y()};
   const auto scene = SceneManager::getActiveScene();
-  const auto gameObjects = scene->getGameObjects();
+  const auto& gameObjects = scene->gameObjects();
   for (auto it = gameObjects.rbegin(); it != gameObjects.rend(); ++it) {
     const auto gameObject = *it;
     const auto scanned = gameObject->clickScan(point);
@@ -150,10 +152,10 @@ GameObject* Input::screenMouseToRay() {
   return nullptr;
 }
 
-bool Input::isMouseInside(const SDL_Rect* rectangle) {
+bool Input::isMouseInside(const SDL_Rect* rectangle) noexcept {
   const auto input = instance();
   const auto position = input->mousePosition_;
-  const auto point = SDL_Point{position.getX(), position.getY()};
+  const auto point = SDL_Point{position.x(), position.y()};
   return SDL_PointInRect(&point, rectangle);
 }
 

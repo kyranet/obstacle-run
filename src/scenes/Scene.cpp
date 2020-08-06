@@ -16,7 +16,7 @@ Scene::Scene(const std::string& name) noexcept { name_ = name; }
 Scene::~Scene() noexcept { end(); }
 
 void Scene::onStart() const noexcept {
-  for (const auto& gameObject : getGameObjects()) {
+  for (const auto& gameObject : gameObjects()) {
     gameObject->onAwake();
   }
 }
@@ -50,7 +50,7 @@ void Scene::onUpdate() noexcept {
   while (i < gameObjects_.size()) {
     auto* entry = gameObjects_[i];
     entry->onUpdate();
-    if (entry->getDestroy()) {
+    if (entry->destroy()) {
       gameObjects_.erase(gameObjects_.begin() + i);
       entry->onDestroy();
       delete entry;
@@ -130,11 +130,5 @@ void Scene::addGameObject(GameObject* gameObject) noexcept {
 }
 
 void Scene::removeGameObject(GameObject* gameObject) noexcept {
-  gameObject->setDestroy(true);
+  gameObject->destroy() = true;
 }
-
-std::vector<GameObject*> Scene::getGameObjects() const noexcept {
-  return gameObjects_;
-}
-
-std::string Scene::getName() const noexcept { return name_; }

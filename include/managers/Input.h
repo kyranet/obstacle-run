@@ -41,7 +41,7 @@ class Input final {
   /**
    * \brief The current mouse position.
    */
-  Vector2D<int> mousePosition_;
+  Vector2D<int> mousePosition_{0, 0};
 
   /**
    * \brief The keys that are currently down.
@@ -82,26 +82,26 @@ class Input final {
   /**
    * \brief Cleans up the states, must be called before the event loop.
    */
-  void clear();
+  void clear() noexcept;
 
   /**
    * \brief Update this instance from the event loop.
    * \param event The event to handle.
    */
-  void update(SDL_Event event);
+  void update(SDL_Event event) noexcept;
 
   /**
    * \brief Gets the current mouse's position.
    * \return The current mouse's position.
    */
-  static Vector2D<int> getMousePosition();
+  [[nodiscard]] static Vector2D<int> getMousePosition() noexcept;
 
   /**
    * \brief Checks if a key if currently pressed.
    * \param key The keyboard key to check if it is currently pressed.
    * \return Whether or not the specified key is currently pressed.
    */
-  static bool isKeyPressed(KeyboardKey key);
+  [[nodiscard]] static bool isKeyPressed(KeyboardKey key) noexcept;
 
   /**
    * \brief Checks if a key was pressed in this tick cycle.
@@ -109,7 +109,7 @@ class Input final {
    * \return Whether or not the specified keyboard key was pressed in this tick
    * cycle.
    */
-  static bool isKeyDown(KeyboardKey key);
+  [[nodiscard]] static bool isKeyDown(KeyboardKey key) noexcept;
 
   /**
    * \brief Checks if a key was released in this tick cycle.
@@ -117,7 +117,7 @@ class Input final {
    * \return Whether or not the specified keyboard key was released in this tick
    * cycle.
    */
-  static bool isKeyUp(KeyboardKey key);
+  [[nodiscard]] static bool isKeyUp(KeyboardKey key) noexcept;
 
   /**
    * \brief Checks if a mouse button was pressed in this tick cycle.
@@ -126,7 +126,7 @@ class Input final {
    * \return Whether or not the specified mouse key was pressed in this
    * tick cycle.
    */
-  static bool isMouseButtonDown(MouseKey button);
+  [[nodiscard]] static bool isMouseButtonDown(MouseKey button) noexcept;
 
   /**
    * \brief Checks if a mouse button was released in this tick cycle.
@@ -135,34 +135,34 @@ class Input final {
    * \return Whether or not the specified mouse key was released in this
    * tick cycle.
    */
-  static bool isMouseButtonUp(MouseKey button);
+  [[nodiscard]] static bool isMouseButtonUp(MouseKey button) noexcept;
 
   /**
    * \brief Checks if the mouse is inside a rectangle.
    * \param rectangle The area to check against.
    * \return Whether or not the mouse is inside the specified rectangle.
    */
-  static bool isMouseInside(const SDL_Rect* rectangle);
+  [[nodiscard]] static bool isMouseInside(const SDL_Rect* rectangle) noexcept;
 
   /**
    * \brief Checks if either the right or left shift keys are being pressed.
    * \return Whether or not any shift key is being pressed.
    */
-  static bool getShift();
+  [[nodiscard]] static bool getShift() noexcept;
 
   /**
    * \brief Checks if either the right or left control keys are being pressed.
    * \return Whether or not any control key is being pressed.
    */
-  static bool getCtrl();
+  [[nodiscard]] static bool getCtrl() noexcept;
 
   /**
    * \brief Checks if either the right or left alt keys are being pressed.
    * \return Whether or not any alt key is being pressed.
    */
-  static bool getAlt();
+  [[nodiscard]] static bool getAlt() noexcept;
 
-  static GameObject* screenMouseToRay();
+  [[nodiscard]] static GameObject* screenMouseToRay() noexcept;
 
   /**
    * \brief Destroys this Input instance, freeing memory.
