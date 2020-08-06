@@ -35,9 +35,9 @@ Scene* SceneManager::getSceneByName(const std::string& name) noexcept {
 }
 
 void SceneManager::loadScene(Scene* scene) {
-  assert_not_null(
-      scene,
-      "'scene' from SceneManager::loadScene(Scene*) must not be nullptr.");
+  assert((
+      (void)"'scene' from SceneManager::loadScene(Scene*) must not be nullptr.",
+      scene));
   scene->load();
 }
 
@@ -46,14 +46,14 @@ void SceneManager::loadScene(const std::string& name) {
 }
 
 void SceneManager::moveGameObjectToScene(GameObject* object, Scene* scene) {
-  assert_not_null(
-      object,
-      "'object' from SceneManager::moveGameObjectToScene(GameObject*, "
-      "Scene*) must not be nullptr.");
-  assert_not_null(
-      scene,
-      "'scene' from SceneManager::moveGameObjectToScene(GameObject*, Scene*) "
-      "must not be nullptr.");
+  assert(
+      ((void)"'object' from SceneManager::moveGameObjectToScene(GameObject*, "
+             "Scene*) must not be nullptr.",
+       object));
+  assert(((void)"'scene' from SceneManager::moveGameObjectToScene(GameObject*, "
+                "Scene*) "
+                "must not be nullptr.",
+          scene));
   scene->addGameObject(object);
 }
 
