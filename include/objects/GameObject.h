@@ -54,10 +54,7 @@ class GameObject final {
   }
   inline bool& destroy() noexcept { return destroyed_; }
 
-  [[nodiscard]] inline SDL_Rect rectangle() const noexcept {
-    return {position_.x() - size_.x() / 2, position_.y() - size_.y() / 2,
-            size_.x(), size_.y()};
-  }
+  [[nodiscard]] SDL_Rect rectangle() const noexcept;
 
   [[nodiscard]] GameObject* clickScan(SDL_Point point) const noexcept;
   [[nodiscard]] inline const std::vector<GameObject*>& children()
@@ -70,13 +67,31 @@ class GameObject final {
   }
 
   template <class T>
-  [[nodiscard]] T getComponent() const noexcept;
+  [[nodiscard]] inline T getComponent() const noexcept {
+    for (const auto& component : components()) {
+      T casted = dynamic_cast<T>(component);
+      if (casted) return casted;
+    }
+
+    return nullptr;
+  }
 
   template <class T>
-  [[nodiscard]] T getComponentInChildren() const noexcept;
+  [[nodiscard]] inline T getComponentInChildren() const noexcept {
+    for (const auto& child : children()) {
+      const auto* component = child->getComponent<T>();
+      if (component) return component;
+    }
+
+    return nullptr;
+  }
 
   template <class T>
-  [[nodiscard]] T getComponentInParent() const noexcept;
+  [[nodiscard]] inline T getComponentInParent() const noexcept {
+    if (parent() == nullptr) return nullptr;
+
+    return parent()->getComponent<T>();
+  }
 
   void load(const Json::Value& value);
   void onAwake() noexcept;

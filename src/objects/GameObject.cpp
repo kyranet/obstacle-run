@@ -26,30 +26,13 @@ GameObject* GameObject::clickScan(SDL_Point point) const noexcept {
              : nullptr;
 }
 
-template <class T>
-T GameObject::getComponent() const noexcept {
-  for (const auto& component : components()) {
-    T casted = dynamic_cast<T>(component);
-    if (casted) return casted;
-  }
+SDL_Rect GameObject::rectangle() const noexcept {
+  const auto& tf = transform();
+  assert(((void)"'tf' must not be null!", tf));
 
-  return nullptr;
-}
-
-template <class T>
-T GameObject::getComponentInChildren() const noexcept {
-  for (const auto& child : children()) {
-    const auto* component = child->getComponent<T>();
-    if (component) return component;
-  }
-
-  return nullptr;
-}
-template <class T>
-T GameObject::getComponentInParent() const noexcept {
-  if (parent() == nullptr) return nullptr;
-
-  return parent()->getComponent<T>();
+  const auto& ps = tf->position();
+  const auto& sz = tf->scale();
+  return {ps.x(), ps.y(), sz.x(), sz.y()};
 }
 
 void GameObject::load(const Json::Value& value) {
@@ -75,6 +58,7 @@ void GameObject::load(const Json::Value& value) {
     assert(((void)"'component' from GameObject::load(const Json::Value&) "
                   "must not be nullptr.",
             component));
+    component->gameObject() = this;
     components_.emplace_back(component);
   }
 

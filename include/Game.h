@@ -8,8 +8,8 @@ const unsigned int SCREEN_HEIGHT = 480;
 
 class Game final {
   static Game* instance_;
-  SDL_Window* window_ = nullptr;
-  SDL_Renderer* renderer_ = nullptr;
+  static SDL_Window* window_;
+  static SDL_Renderer* renderer_;
   bool stop_ = false;
 
   bool init() noexcept;
@@ -20,6 +20,12 @@ class Game final {
   bool start() noexcept;
   bool end() noexcept;
   void run();
+
+  [[nodiscard]] inline static SDL_Window* window() noexcept { return window_; }
+
+  [[nodiscard]] inline static SDL_Renderer* renderer() noexcept {
+    return renderer_;
+  }
 
   static Game* getInstance();
 };

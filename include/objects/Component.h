@@ -24,15 +24,6 @@ class Component {
   }
   inline GameObject*& gameObject() noexcept { return gameObject_; }
 
-  template <class T>
-  [[nodiscard]] T getComponent() const noexcept;
-
-  template <class T>
-  [[nodiscard]] T getComponentInChildren() const noexcept;
-
-  template <class T>
-  [[nodiscard]] T getComponentInParent() const noexcept;
-
   void destroy() noexcept;
 
   virtual void onAwake() noexcept;

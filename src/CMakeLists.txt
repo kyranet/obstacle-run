@@ -8,8 +8,10 @@ include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${SDL2_TTF_INC
 
 set(GAME_SOURCES
   components/Renderer.cpp
+  components/TextRenderer.cpp
   components/Transform.cpp
   factories/RendererFactory.cpp
+  factories/TextRendererFactory.cpp
   factories/TransformFactory.cpp
   Game.cpp
   main.cpp

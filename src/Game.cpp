@@ -8,6 +8,7 @@
 #include "SDL_net.h"
 #include "SDL_ttf.h"
 #include "factories/RendererFactory.h"
+#include "factories/TextRendererFactory.h"
 #include "factories/TransformFactory.h"
 #include "managers/ComponentManager.h"
 #include "managers/FontManager.h"
@@ -18,6 +19,8 @@ Game::Game() noexcept = default;
 Game::~Game() noexcept { end(); }
 
 Game* Game::instance_ = nullptr;
+SDL_Window* Game::window_ = nullptr;
+SDL_Renderer* Game::renderer_ = nullptr;
 
 bool Game::start() noexcept {
   if (!init()) return false;
@@ -77,7 +80,8 @@ bool Game::init() noexcept {
 
   ComponentManager::getInstance()
       ->add(new TransformFactory())
-      ->add(new RendererFactory());
+      ->add(new RendererFactory())
+      ->add(new TextRendererFactory());
 
   return true;
 }
