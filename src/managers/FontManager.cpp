@@ -26,7 +26,7 @@ void FontManager::init() {
                               "'. Reason: " + errors);
   }
 
-  debug_print("Loading Fonts...\n");
+  debug_print("%s", "Loading Fonts...\n");
   for (const auto& object : root) {
     const auto& name = object["name"].asCString();
     const auto& path = object["path"].asCString();
