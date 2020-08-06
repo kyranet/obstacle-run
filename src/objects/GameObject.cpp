@@ -79,8 +79,8 @@ void GameObject::load(const Json::Value& value) {
   }
 
   debug_print(
-      "Successfully loaded GameObject '%s' with %zi Children and %zi "
-      "Components.\n",
+      "Successfully loaded GameObject '%s' with %zi Child(ren) and %zi "
+      "Component(s).\n",
       name().c_str(), children().size(), components().size());
 }
 

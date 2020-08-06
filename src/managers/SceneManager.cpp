@@ -51,8 +51,7 @@ void SceneManager::moveGameObjectToScene(GameObject* object, Scene* scene) {
              "Scene*) must not be nullptr.",
        object));
   assert(((void)"'scene' from SceneManager::moveGameObjectToScene(GameObject*, "
-                "Scene*) "
-                "must not be nullptr.",
+                "Scene*) must not be nullptr.",
           scene));
   scene->addGameObject(object);
 }

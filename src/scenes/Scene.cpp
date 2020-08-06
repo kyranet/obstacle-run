@@ -92,7 +92,7 @@ void Scene::load() {
     gameObject->load(object);
   }
 
-  debug_print("Successfully loaded Scene '%s' with %zi GameObjects.\n",
+  debug_print("Successfully loaded Scene '%s' with %zi GameObject(s).\n",
               name_.c_str(), gameObjects_.size());
 
   onStart();

@@ -1,5 +1,7 @@
 set(ASSET_FILES
-        scenes/menu.json)
+  fonts/all.json
+  fonts/PaperWorks.ttf
+  scenes/menu.json)
 
 foreach(resource ${ASSET_FILES})
     configure_file(${resource} assets/${resource} COPYONLY)

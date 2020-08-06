@@ -10,6 +10,7 @@
 #include "factories/RendererFactory.h"
 #include "factories/TransformFactory.h"
 #include "managers/ComponentManager.h"
+#include "managers/FontManager.h"
 #include "managers/SceneManager.h"
 #include "scenes/Scene.h"
 
@@ -82,6 +83,7 @@ bool Game::init() noexcept {
 }
 
 void Game::run() {
+  FontManager::instance()->init();
   auto* scene = SceneManager::createScene("menu");
   SceneManager::loadScene(scene);
   SceneManager::setActiveScene(scene);

@@ -7,20 +7,22 @@ find_package(SDL2_net REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR} ${SDL2_NET_INCLUDE_DIR} third-party/jsoncpp)
 
 set(GAME_SOURCES
-  main.cpp
+  components/Renderer.cpp
+  components/Transform.cpp
+  factories/RendererFactory.cpp
+  factories/TransformFactory.cpp
   Game.cpp
-  scenes/Scene.cpp
-  objects/GameObject.cpp
+  main.cpp
+  managers/ComponentManager.cpp
+  managers/FontManager.cpp
   managers/Input.cpp
   managers/SceneManager.cpp
-  utils/TimePool.cpp
+  objects/Component.cpp
+  objects/Font.cpp
+  objects/GameObject.cpp
+  scenes/Scene.cpp
   third-party/jsoncpp/jsoncpp.cpp
-  managers/ComponentManager.cpp
-  components/Transform.cpp
-  factories/TransformFactory.cpp
-  components/Renderer.cpp
-  factories/RendererFactory.cpp
-  objects/Component.cpp)
+  utils/TimePool.cpp)
 
 add_executable(Game ${GAME_SOURCES})
 target_compile_features(Game PUBLIC cxx_std_17)
