@@ -15,7 +15,7 @@ TextRenderer::TextRenderer(std::string font, std::string text, int size,
       text_(std::move(text)),
       size_(size),
       color_(color) {}
-TextRenderer::~TextRenderer() noexcept = default;
+TextRenderer::~TextRenderer() noexcept { SDL_DestroyTexture(texture_); }
 
 void TextRenderer::onAwake() noexcept {
   Component::onAwake();

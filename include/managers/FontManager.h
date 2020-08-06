@@ -1,8 +1,6 @@
 // Copyright (c) 2020 Antonio Román. All rights reserved.
 
 #pragma once
-#include <SDL_ttf.h>
-
 #include <map>
 #include <string>
 

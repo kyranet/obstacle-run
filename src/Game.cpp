@@ -7,11 +7,12 @@
 #include "SDL_mixer.h"
 #include "SDL_net.h"
 #include "SDL_ttf.h"
-#include "factories/RendererFactory.h"
+#include "factories/ImageRendererFactory.h"
 #include "factories/TextRendererFactory.h"
 #include "factories/TransformFactory.h"
 #include "managers/ComponentManager.h"
 #include "managers/FontManager.h"
+#include "managers/ImageManager.h"
 #include "managers/SceneManager.h"
 #include "scenes/Scene.h"
 
@@ -80,13 +81,14 @@ bool Game::init() noexcept {
 
   ComponentManager::getInstance()
       ->add(new TransformFactory())
-      ->add(new RendererFactory())
+      ->add(new ImageRendererFactory())
       ->add(new TextRendererFactory());
 
   return true;
 }
 
 void Game::run() {
+  ImageManager::instance()->init();
   FontManager::instance()->init();
   auto* scene = SceneManager::createScene("menu");
   SceneManager::loadScene(scene);

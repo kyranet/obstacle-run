@@ -7,21 +7,23 @@ find_package(SDL2_net REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR} ${SDL2_NET_INCLUDE_DIR} third-party/jsoncpp)
 
 set(GAME_SOURCES
-  components/Renderer.cpp
+  components/ImageRenderer.cpp
   components/TextRenderer.cpp
   components/Transform.cpp
-  factories/RendererFactory.cpp
+  factories/ImageRendererFactory.cpp
   factories/TextRendererFactory.cpp
   factories/TransformFactory.cpp
   Game.cpp
   main.cpp
   managers/ComponentManager.cpp
   managers/FontManager.cpp
+  managers/ImageManager.cpp
   managers/Input.cpp
   managers/SceneManager.cpp
   objects/Component.cpp
   objects/Font.cpp
   objects/GameObject.cpp
+  objects/Image.cpp
   scenes/Scene.cpp
   third-party/jsoncpp/jsoncpp.cpp
   utils/TimePool.cpp)

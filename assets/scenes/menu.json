@@ -2,6 +2,33 @@
   "name": "menu",
   "game_objects": [
     {
+      "name": "Background",
+      "components": [
+        {
+          "name": "Transform",
+          "position": [0, 0],
+          "scale": [0, 0]
+        },
+        {
+          "name": "ImageRenderer",
+          "image": "ForestBackground",
+          "fit": "contain"
+        }
+      ],
+      "children": []
+    },
+    {
+      "name": "Player",
+      "components": [
+        {
+          "name": "Transform",
+          "position": [0, 0],
+          "scale": [1, 1]
+        }
+      ],
+      "children": []
+    },
+    {
       "name": "GUI",
       "components": [
         {
@@ -17,20 +44,6 @@
           "color": { "red": 255, "green": 255, "blue": 255, "alpha": 255 }
         }
       ]
-    },
-    {
-      "name": "Player",
-      "components": [
-        {
-          "name": "Transform",
-          "position": [0, 0],
-          "scale": [1, 1]
-        },
-        {
-          "name": "Renderer"
-        }
-      ],
-      "children": []
     }
   ]
 }

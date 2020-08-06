@@ -1,6 +1,8 @@
 set(ASSET_FILES
   fonts/all.json
   fonts/PaperWorks.ttf
+  images/all.json
+  images/ForestBackground.jpg
   scenes/menu.json)
 
 foreach(resource ${ASSET_FILES})
