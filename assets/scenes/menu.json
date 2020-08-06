@@ -7,13 +7,14 @@
         {
           "name": "Transform",
           "position": [0, 0],
-          "scale": [200, 200]
+          "scale": [0, 0]
         },
         {
           "name": "TextRenderer",
           "font": "PaperWorks",
-          "size": 16,
-          "text": "Something nice!"
+          "size": 80,
+          "text": "Something nice!",
+          "color": { "red": 255, "green": 255, "blue": 255, "alpha": 255 }
         }
       ]
     },

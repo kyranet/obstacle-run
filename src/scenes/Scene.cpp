@@ -101,12 +101,12 @@ void Scene::load() {
 void Scene::run() noexcept {
   stop_ = false;
 
-  // Clear the screen
-  SDL_RenderClear(Game::renderer());
-
   const static uint32_t gameFrameRate = 60;
   TimePool timePool(1000 / gameFrameRate, SDL_GetTicks());
   while (!stop_) {
+    // Clear the screen
+    SDL_RenderClear(Game::renderer());
+
     onCreate();
     onEvents();
     onUpdate();

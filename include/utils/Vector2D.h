@@ -55,6 +55,12 @@ class Vector2D final {
    */
   ~Vector2D() = default;
 
+  Vector2D& operator=(const Vector2D<T>& other) {
+    x() = other.x();
+    y() = other.y();
+    return *this;
+  }
+
   /**
    * \brief Get the x coordinate value for this instance.
    * \return The value for the x coordinate.

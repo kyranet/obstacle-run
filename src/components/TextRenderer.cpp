@@ -9,9 +9,12 @@
 #include "objects/Font.h"
 #include "objects/GameObject.h"
 
-TextRenderer::TextRenderer(std::string font, std::string text,
-                           int size) noexcept
-    : font_(std::move(font)), text_(std::move(text)), size_(size) {}
+TextRenderer::TextRenderer(std::string font, std::string text, int size,
+                           SDL_Color color) noexcept
+    : font_(std::move(font)),
+      text_(std::move(text)),
+      size_(size),
+      color_(color) {}
 TextRenderer::~TextRenderer() noexcept = default;
 
 void TextRenderer::onAwake() noexcept {
@@ -19,7 +22,8 @@ void TextRenderer::onAwake() noexcept {
   ttfFont_ = FontManager::instance()->get(font(), size());
   transform_ = gameObject()->getComponent<Transform*>();
 
-  auto surface = ttfFont_->render(text().c_str(), {255, 255, 255}, 2000);
+  auto surface = ttfFont_->render(text().c_str(), color_, 2000);
+  transform_->scale() = {surface->w, surface->h};
   texture_ = SDL_CreateTextureFromSurface(Game::renderer(), surface);
   SDL_FreeSurface(surface);
 }
