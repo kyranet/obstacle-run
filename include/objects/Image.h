@@ -18,4 +18,8 @@ class Image {
   [[nodiscard]] inline const Vector2D<int>& size() const noexcept {
     return size_;
   }
+
+  [[nodiscard]] inline SDL_Rect rectangle() const noexcept {
+    return {0, 0, size().x(), size().y()};
+  }
 };

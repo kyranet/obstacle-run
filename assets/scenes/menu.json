@@ -12,7 +12,7 @@
         {
           "name": "ImageRenderer",
           "image": "ForestBackground",
-          "fit": "contain"
+          "fit": "cover"
         }
       ],
       "children": []

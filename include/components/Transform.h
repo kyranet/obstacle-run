@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <SDL.h>
+
 #include "interfaces/JsonConvertible.h"
 #include "objects/Component.h"
 #include "utils/Vector2D.h"
@@ -23,4 +25,8 @@ class Transform : public Component {
     return scale_;
   }
   inline Vector2D<int>& scale() noexcept { return scale_; }
+
+  [[nodiscard]] inline SDL_Rect rectangle() const noexcept {
+    return {position().x(), position().y(), scale().x(), scale().y()};
+  }
 };

@@ -8,6 +8,9 @@
 #include "interfaces/ComponentFactory.h"
 
 class ImageRendererFactory final : public ComponentFactory<ImageRenderer*> {
+  static std::string getNameFromImageFit(ImageFit value) noexcept;
+  static ImageFit getImageFitFromName(const std::string& value) noexcept;
+
  public:
   ImageRendererFactory() noexcept;
   ~ImageRendererFactory() noexcept override;
