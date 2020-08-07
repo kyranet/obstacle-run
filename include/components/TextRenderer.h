@@ -14,6 +14,7 @@ class TextRenderer final : public Component {
   std::string text_;
   int size_;
   SDL_Color color_;
+  SDL_Rect rectangle_{0, 0, 0, 0};
   const Font* ttfFont_ = nullptr;
   Transform* transform_ = nullptr;
   SDL_Texture* texture_ = nullptr;
@@ -24,7 +25,7 @@ class TextRenderer final : public Component {
   ~TextRenderer() noexcept;
 
   void onAwake() noexcept override;
-  void onUpdate() noexcept override;
+  void onRender() noexcept override;
 
   [[nodiscard]] inline const std::string& font() const noexcept {
     return font_;
@@ -43,4 +44,8 @@ class TextRenderer final : public Component {
     return color_;
   }
   inline SDL_Color& color() noexcept { return color_; }
+
+  [[nodiscard]] inline const SDL_Rect& rectangle() const noexcept {
+    return rectangle_;
+  }
 };

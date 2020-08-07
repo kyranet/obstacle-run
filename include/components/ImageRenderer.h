@@ -53,7 +53,7 @@ class ImageRenderer final : public Component {
   ~ImageRenderer() noexcept;
 
   void onAwake() noexcept override;
-  void onUpdate() noexcept override;
+  void onRender() noexcept override;
 
   [[nodiscard]] inline const std::string& path() const noexcept {
     return path_;

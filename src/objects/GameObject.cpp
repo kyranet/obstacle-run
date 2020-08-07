@@ -92,6 +92,14 @@ void GameObject::onUpdate() const noexcept {
   }
 }
 
-void GameObject::onRender() noexcept {}
+void GameObject::onRender() const noexcept {
+  for (const auto& child : children()) {
+    if (child->active()) child->onRender();
+  }
+
+  for (const auto& component : components()) {
+    if (component->enabled()) component->onRender();
+  }
+}
 
 void GameObject::onDestroy() noexcept { active() = false; }

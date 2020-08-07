@@ -12,3 +12,4 @@ void Component::destroy() noexcept {}
 
 void Component::onAwake() noexcept { enabled() = true; }
 void Component::onUpdate() noexcept {}
+void Component::onRender() noexcept {}

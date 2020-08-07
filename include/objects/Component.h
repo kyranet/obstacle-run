@@ -28,4 +28,5 @@ class Component {
 
   virtual void onAwake() noexcept;
   virtual void onUpdate() noexcept;
+  virtual void onRender() noexcept;
 };

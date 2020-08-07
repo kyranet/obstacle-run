@@ -96,6 +96,6 @@ class GameObject final {
   void load(const Json::Value& value);
   void onAwake() noexcept;
   void onUpdate() const noexcept;
-  void onRender() noexcept;
+  void onRender() const noexcept;
   void onDestroy() noexcept;
 };

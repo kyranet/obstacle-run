@@ -24,18 +24,16 @@ void TextRenderer::onAwake() noexcept {
 
   auto surface = ttfFont_->render(text().c_str(), color_, 2000);
   transform_->scale() = {surface->w, surface->h};
+  rectangle_ = {0, 0, surface->w, surface->h};
   texture_ = SDL_CreateTextureFromSurface(Game::renderer(), surface);
   SDL_FreeSurface(surface);
 }
 
-void TextRenderer::onUpdate() noexcept {
-  Component::onUpdate();
+void TextRenderer::onRender() noexcept {
+  Component::onRender();
 
-  const auto& pt = transform_->position();
-  const auto& sz = transform_->scale();
-
-  const SDL_Rect src{0, 0, sz.x(), sz.y()};
-  const SDL_Rect rect{pt.x(), pt.y(), sz.x(), sz.y()};
+  const auto& src = rectangle();
+  const auto& rect = transform_->rectangle();
   const auto& renderer = Game::renderer();
   SDL_RenderCopy(renderer, texture_, &src, &rect);
 }

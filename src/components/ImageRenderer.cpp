@@ -24,8 +24,8 @@ void ImageRenderer::onAwake() noexcept {
   updateImageFit();
 }
 
-void ImageRenderer::onUpdate() noexcept {
-  Component::onUpdate();
+void ImageRenderer::onRender() noexcept {
+  Component::onRender();
 
   const auto& src = image()->rectangle();
   const auto& rect = transform_->rectangle();
