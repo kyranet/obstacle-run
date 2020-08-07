@@ -96,6 +96,11 @@ Vector2D<int> Input::getMousePosition() noexcept {
   return instance()->mousePosition_;
 }
 
+SDL_Point Input::getRawMousePosition() noexcept {
+  const auto& position = getMousePosition();
+  return {position.x(), position.y()};
+}
+
 bool Input::isKeyPressed(KeyboardKey key) noexcept {
   const auto input = instance();
   if (!input->keyboard_) return false;

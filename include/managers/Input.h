@@ -97,6 +97,12 @@ class Input final {
   [[nodiscard]] static Vector2D<int> getMousePosition() noexcept;
 
   /**
+   * \brief Gets the current mouse's position as a SDL object.
+   * @return The current mouse's position.
+   */
+  [[nodiscard]] static SDL_Point getRawMousePosition() noexcept;
+
+  /**
    * \brief Checks if a key if currently pressed.
    * \param key The keyboard key to check if it is currently pressed.
    * \return Whether or not the specified key is currently pressed.

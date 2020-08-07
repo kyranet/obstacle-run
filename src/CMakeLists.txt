@@ -7,6 +7,7 @@ find_package(SDL2_net REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR} ${SDL2_NET_INCLUDE_DIR} third-party/jsoncpp)
 
 set(GAME_SOURCES
+  components/Button.cpp
   components/ImageRenderer.cpp
   components/TextRenderer.cpp
   components/Transform.cpp
@@ -26,7 +27,7 @@ set(GAME_SOURCES
   objects/Image.cpp
   scenes/Scene.cpp
   third-party/jsoncpp/jsoncpp.cpp
-  utils/TimePool.cpp)
+  utils/TimePool.cpp factories/ButtonFactory.cpp ../include/factories/ButtonFactory.h)
 
 add_executable(Game ${GAME_SOURCES})
 target_compile_features(Game PUBLIC cxx_std_17)

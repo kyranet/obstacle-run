@@ -42,6 +42,9 @@
           "size": 80,
           "text": "Something nice!",
           "color": { "red": 255, "green": 255, "blue": 255, "alpha": 255 }
+        },
+        {
+          "name": "Button"
         }
       ]
     }

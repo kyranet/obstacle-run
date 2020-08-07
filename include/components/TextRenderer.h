@@ -48,4 +48,6 @@ class TextRenderer final : public Component {
   [[nodiscard]] inline const SDL_Rect& rectangle() const noexcept {
     return rectangle_;
   }
+
+  void refresh() noexcept;
 };

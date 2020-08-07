@@ -7,6 +7,7 @@
 #include "SDL_mixer.h"
 #include "SDL_net.h"
 #include "SDL_ttf.h"
+#include "factories/ButtonFactory.h"
 #include "factories/ImageRendererFactory.h"
 #include "factories/TextRendererFactory.h"
 #include "factories/TransformFactory.h"
@@ -82,6 +83,7 @@ bool Game::init() noexcept {
   ComponentManager::getInstance()
       ->add(new TransformFactory())
       ->add(new ImageRendererFactory())
+      ->add(new ButtonFactory())
       ->add(new TextRendererFactory());
 
   return true;

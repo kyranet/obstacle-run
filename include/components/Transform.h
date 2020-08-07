@@ -8,7 +8,7 @@
 #include "objects/Component.h"
 #include "utils/Vector2D.h"
 
-class Transform : public Component {
+class Transform final : public Component {
   Vector2D<int> position_;
   Vector2D<int> scale_;
 
