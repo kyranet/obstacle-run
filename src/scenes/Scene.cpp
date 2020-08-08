@@ -4,6 +4,7 @@
 
 #include <SDL.h>
 
+#include <chrono>
 #include <fstream>
 
 #include "Game.h"
@@ -11,7 +12,6 @@
 #include "managers/Input.h"
 #include "objects/GameObject.h"
 #include "utils/DebugAssert.h"
-#include "utils/TimePool.h"
 
 Scene::Scene(const std::string& name) noexcept { name_ = name; }
 Scene::~Scene() noexcept { end(); }
@@ -108,16 +108,24 @@ void Scene::load() {
 void Scene::run() noexcept {
   stop_ = false;
 
-  const static uint32_t gameFrameRate = 60;
-  TimePool timePool(1000 / gameFrameRate, SDL_GetTicks());
+  const constexpr static int32_t gameFrameRate = 60;
+  const constexpr static int32_t ticksPerFrame = 1000 / gameFrameRate;
+
+  size_t frame{0};
   while (!stop_) {
+    const auto& start = std::chrono::steady_clock::now();
     onCreate();
     onEvents();
     onUpdate();
     onRender();
 
-    if (timePool.next(SDL_GetTicks())) {
-      SDL_Delay(timePool.getRemaining());
+    const auto& end = std::chrono::steady_clock::now();
+    const auto elapsed = (end - start).count() / 1'000'000;
+    const auto remaining = ticksPerFrame - elapsed;
+    if (remaining > 0) {
+      debug_print("[Frame: %zi] Delaying for %zi milliseconds.\n", frame++,
+                  remaining);
+      SDL_Delay(static_cast<uint32_t>(remaining));
     }
   }
 }

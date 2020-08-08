@@ -140,15 +140,15 @@ bool Input::getAlt() noexcept {
 }
 
 GameObject* Input::screenMouseToRay() noexcept {
-  const auto input = instance();
+  auto* input = instance();
   if (input->casted_) return input->casted_;
-  const auto position = input->mousePosition_;
-  const auto point = SDL_Point{position.x(), position.y()};
-  const auto scene = SceneManager::getActiveScene();
+  const auto* scene = SceneManager::getActiveScene();
   const auto& gameObjects = scene->gameObjects();
+  const auto& position = input->mousePosition_;
+  const auto point = SDL_Point{position.x(), position.y()};
   for (auto it = gameObjects.rbegin(); it != gameObjects.rend(); ++it) {
-    const auto gameObject = *it;
-    const auto scanned = gameObject->clickScan(point);
+    const auto& gameObject = *it;
+    const auto& scanned = gameObject->clickScan(point);
     if (scanned) {
       input->casted_ = scanned;
       return scanned;
@@ -158,8 +158,8 @@ GameObject* Input::screenMouseToRay() noexcept {
 }
 
 bool Input::isMouseInside(const SDL_Rect* rectangle) noexcept {
-  const auto input = instance();
-  const auto position = input->mousePosition_;
+  const auto* input = instance();
+  const auto& position = input->mousePosition_;
   const auto point = SDL_Point{position.x(), position.y()};
   return SDL_PointInRect(&point, rectangle);
 }

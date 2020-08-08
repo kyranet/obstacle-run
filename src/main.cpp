@@ -1,5 +1,6 @@
 // Copyright (c) 2020 Antonio Román. All rights reserved.
 
+#include <cstdlib>
 #include <iostream>
 
 #include "Game.h"
@@ -18,10 +19,10 @@ int main(int, char*[]) {
   try {
     game->run();
     game->end();
-    return 0;
+    return EXIT_SUCCESS;
   } catch (const std::exception& exception) {
     std::cerr << exception.what();
     game->end();
-    return 1;
+    return EXIT_FAILURE;
   }
 }
