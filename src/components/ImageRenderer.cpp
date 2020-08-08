@@ -54,7 +54,7 @@ void ImageRenderer::updateImageFit() noexcept {
 
   // ImageFit::Fill: image must fill the window, does not keep ratio:
   if (fit() == ImageFit::Fill || imageRatio == windowRatio) {
-    transform_->scale() = {windowWidth, windowHeight};
+    transform_->scale() = Vector2{windowWidth, windowHeight};
     return;
   }
 
@@ -63,7 +63,7 @@ void ImageRenderer::updateImageFit() noexcept {
     // Image is wider than window
     if (imageRatio > windowRatio) {
       // Width must be window's width, calculate height keeping proportions
-      transform_->scale() = {
+      transform_->scale() = Vector2{
           windowWidth,
           static_cast<int>(imageHeight * static_cast<float>(windowWidth) /
                            static_cast<float>(imageWidth))};
@@ -71,10 +71,10 @@ void ImageRenderer::updateImageFit() noexcept {
     }
 
     // Image is taller than window
-    transform_->scale() = {
-        static_cast<int>(imageWidth * static_cast<float>(windowHeight) /
-                         static_cast<float>(imageHeight)),
-        windowHeight};
+    transform_->scale() =
+        Vector2{static_cast<int>(imageWidth * static_cast<float>(windowHeight) /
+                                 static_cast<float>(imageHeight)),
+                windowHeight};
     return;
   }
 
@@ -82,16 +82,16 @@ void ImageRenderer::updateImageFit() noexcept {
   // Image is wider than window, rescale height to fill:
   if (imageRatio > windowRatio) {
     // Height must be window's height, calculate width keeping proportions
-    transform_->scale() = {
-        static_cast<int>(imageWidth * static_cast<float>(windowHeight) /
-                         static_cast<float>(imageHeight)),
-        windowHeight};
+    transform_->scale() =
+        Vector2{static_cast<int>(imageWidth * static_cast<float>(windowHeight) /
+                                 static_cast<float>(imageHeight)),
+                windowHeight};
     return;
   }
 
   // Width must be window's width, calculate height keeping proportions
-  transform_->scale() = {
-      windowWidth,
-      static_cast<int>(imageHeight * static_cast<float>(windowWidth) /
-                       static_cast<float>(imageWidth))};
+  transform_->scale() =
+      Vector2{windowWidth,
+              static_cast<int>(imageHeight * static_cast<float>(windowWidth) /
+                               static_cast<float>(imageWidth))};
 }

@@ -6,13 +6,13 @@
 
 #include <cstdint>
 
-#include "utils/Vector2D.h"
+#include "utils/Vector2.h"
 
 struct SDL_Texture;
 
 class Image {
   SDL_Texture* texture_ = nullptr;
-  Vector2D<int32_t> size_{};
+  Vector2<int32_t> size_{};
 
  public:
   explicit Image(const char* path) noexcept;
@@ -20,7 +20,7 @@ class Image {
 
   [[nodiscard]] inline SDL_Texture* render() noexcept { return texture_; }
 
-  [[nodiscard]] inline const Vector2D<int32_t>& size() const noexcept {
+  [[nodiscard]] inline const Vector2<int32_t>& size() const noexcept {
     return size_;
   }
 

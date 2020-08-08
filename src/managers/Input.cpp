@@ -8,7 +8,7 @@
 
 const uint8_t* Input::keyboard_{nullptr};
 uint32_t Input::mouse_{0};
-Vector2D<int32_t> Input::mousePosition_{0, 0};
+Vector2<int32_t> Input::mousePosition_{0, 0};
 std::array<bool, static_cast<size_t>(KeyboardKey::kKeyLimit)> Input::keyDown_{};
 std::array<bool, static_cast<size_t>(KeyboardKey::kKeyLimit)> Input::keyUp_{};
 std::array<bool, static_cast<size_t>(MouseKey::kKeyLimit)> Input::mouseDown_{};

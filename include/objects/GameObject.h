@@ -6,7 +6,7 @@
 #include <cstdint>
 #include <vector>
 
-#include "utils/Vector2D.h"
+#include "utils/Vector2.h"
 
 struct SDL_Rect;
 struct SDL_Point;
@@ -23,8 +23,8 @@ class GameObject final {
   std::vector<GameObject*> children_{};
   std::vector<Component*> components_{};
 
-  Vector2D<int32_t> position_{0, 0};
-  Vector2D<int32_t> size_{0, 0};
+  Vector2<int32_t> position_{0, 0};
+  Vector2<int32_t> size_{0, 0};
 
  public:
   GameObject() noexcept;

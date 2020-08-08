@@ -12,7 +12,7 @@ Image::Image(const char* path) noexcept {
   assert(((void)"'surface' from Image::Image(const char*) must not be nullptr.",
           surface));
 
-  size_ = {surface->w, surface->h};
+  size_ = Vector2{surface->w, surface->h};
   texture_ = SDL_CreateTextureFromSurface(Game::renderer(), surface);
   assert(((void)"'texture' from Image::Image(const char*) must not be nullptr.",
           texture_));

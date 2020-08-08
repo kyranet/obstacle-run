@@ -3,7 +3,7 @@
 #pragma once
 
 #include "objects/Component.h"
-#include "utils/Vector2D.h"
+#include "utils/Vector2.h"
 
 class Image;
 class Transform;

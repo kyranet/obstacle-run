@@ -7,7 +7,7 @@
 #include <cstdint>
 
 #include "utils/Constants.h"
-#include "utils/Vector2D.h"
+#include "utils/Vector2.h"
 
 struct SDL_Point;
 struct SDL_Rect;
@@ -39,7 +39,7 @@ class Input final {
   /**
    * \brief The current mouse position.
    */
-  static Vector2D<int32_t> mousePosition_;
+  static Vector2<int32_t> mousePosition_;
 
   /**
    * \brief The keys that are currently down.
@@ -92,8 +92,7 @@ class Input final {
    * \brief Gets the current mouse's position.
    * \return The current mouse's position.
    */
-  [[nodiscard]] inline static const Vector2D<int32_t>&
-  mousePosition() noexcept {
+  [[nodiscard]] inline static const Vector2<int32_t>& mousePosition() noexcept {
     return mousePosition_;
   }
 
