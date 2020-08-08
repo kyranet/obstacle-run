@@ -2,17 +2,21 @@
 
 #pragma once
 
-#include <SDL.h>
+#include <SDL_pixels.h>
+#include <SDL_rect.h>
+
+#include <cstdint>
 
 #include "objects/Component.h"
 
+struct SDL_Texture;
 class Font;
 class Transform;
 
 class TextRenderer final : public Component {
   std::string font_;
   std::string text_;
-  int size_;
+  uint16_t size_;
   SDL_Color color_;
   SDL_Rect rectangle_{0, 0, 0, 0};
   const Font* ttfFont_ = nullptr;
@@ -20,7 +24,7 @@ class TextRenderer final : public Component {
   SDL_Texture* texture_ = nullptr;
 
  public:
-  TextRenderer(std::string font, std::string text, int size,
+  TextRenderer(std::string font, std::string text, uint16_t size,
                SDL_Color color) noexcept;
   ~TextRenderer() noexcept;
 
@@ -37,8 +41,8 @@ class TextRenderer final : public Component {
   }
   inline std::string& text() noexcept { return text_; }
 
-  [[nodiscard]] inline const int& size() const noexcept { return size_; }
-  inline int& size() noexcept { return size_; }
+  [[nodiscard]] inline const uint16_t& size() const noexcept { return size_; }
+  inline uint16_t& size() noexcept { return size_; }
 
   [[nodiscard]] inline const SDL_Color& color() const noexcept {
     return color_;

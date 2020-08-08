@@ -11,6 +11,7 @@ set(GAME_SOURCES
   components/ImageRenderer.cpp
   components/TextRenderer.cpp
   components/Transform.cpp
+  factories/ButtonFactory.cpp
   factories/ImageRendererFactory.cpp
   factories/TextRendererFactory.cpp
   factories/TransformFactory.cpp
@@ -27,7 +28,7 @@ set(GAME_SOURCES
   objects/Image.cpp
   scenes/Scene.cpp
   third-party/jsoncpp/jsoncpp.cpp
-  utils/TimePool.cpp factories/ButtonFactory.cpp ../include/factories/ButtonFactory.h)
+  utils/TimePool.cpp)
 
 add_executable(Game ${GAME_SOURCES})
 target_compile_features(Game PUBLIC cxx_std_17)

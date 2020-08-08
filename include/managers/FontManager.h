@@ -1,6 +1,7 @@
 // Copyright (c) 2020 Antonio Román. All rights reserved.
 
 #pragma once
+#include <cstdint>
 #include <map>
 #include <string>
 
@@ -8,7 +9,7 @@ class Font;
 
 class FontManager {
   static FontManager* instance_;
-  std::map<std::string, std::map<unsigned int, Font*>> cache_{};
+  std::map<std::string, std::map<uint16_t, Font*>> cache_{};
 
   FontManager();
 
@@ -17,7 +18,7 @@ class FontManager {
   void init();
 
   [[nodiscard]] inline const Font* get(const std::string& name,
-                                       unsigned int size) noexcept {
+                                       uint16_t size) noexcept {
     return cache_[name][size];
   }
 

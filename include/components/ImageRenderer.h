@@ -2,8 +2,6 @@
 
 #pragma once
 
-#include <SDL.h>
-
 #include "objects/Component.h"
 #include "utils/Vector2D.h"
 
@@ -38,6 +36,8 @@ enum class ImageFit {
    */
   Cover
 };
+
+struct SDL_Texture;
 
 class ImageRenderer final : public Component {
   std::string path_;

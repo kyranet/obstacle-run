@@ -11,8 +11,8 @@ TransformFactory::~TransformFactory() noexcept = default;
 // }
 
 Transform* TransformFactory::fromJson(const Json::Value& json) {
-  return new Transform(Vector2D<int>::fromJson(json["position"]),
-                       Vector2D<int>::fromJson(json["scale"]));
+  return new Transform(Vector2D<int32_t>::fromJson(json["position"]),
+                       Vector2D<int32_t>::fromJson(json["scale"]));
 }
 
 Json::Value TransformFactory::toJson(Transform* value) const {

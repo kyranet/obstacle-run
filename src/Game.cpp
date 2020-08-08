@@ -2,11 +2,12 @@
 
 #include "Game.h"
 
+#include <SDL_mixer.h>
+#include <SDL_net.h>
+#include <SDL_ttf.h>
+
 #include <iostream>
 
-#include "SDL_mixer.h"
-#include "SDL_net.h"
-#include "SDL_ttf.h"
 #include "factories/ButtonFactory.h"
 #include "factories/ImageRendererFactory.h"
 #include "factories/TextRendererFactory.h"

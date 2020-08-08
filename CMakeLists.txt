@@ -3,7 +3,7 @@ project(ObstacleRun
         VERSION 0.0.1
         DESCRIPTION "A 2D multiplayer game built with SDL2."
         HOMEPAGE_URL "https://github.com/kyranet/obstacle-run"
-        LANGUAGES C CXX)
+        LANGUAGES CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 

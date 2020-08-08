@@ -15,12 +15,12 @@ TextRendererFactory::~TextRendererFactory() noexcept = default;
 
 TextRenderer* TextRendererFactory::fromJson(const Json::Value& json) {
   const auto& rawColor = json["color"];
-  return new TextRenderer(
-      json["font"].asString(), json["text"].asString(), json["size"].asInt(),
-      {static_cast<unsigned char>(rawColor["red"].asUInt()),
-       static_cast<unsigned char>(rawColor["green"].asUInt()),
-       static_cast<unsigned char>(rawColor["blue"].asUInt()),
-       static_cast<unsigned char>(rawColor["alpha"].asUInt())});
+  return new TextRenderer(json["font"].asString(), json["text"].asString(),
+                          static_cast<uint16_t>(json["size"].asUInt()),
+                          {static_cast<uint8_t>(rawColor["red"].asUInt()),
+                           static_cast<uint8_t>(rawColor["green"].asUInt()),
+                           static_cast<uint8_t>(rawColor["blue"].asUInt()),
+                           static_cast<uint8_t>(rawColor["alpha"].asUInt())});
 }
 
 Json::Value TextRendererFactory::toJson(TextRenderer* value) const {

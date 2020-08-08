@@ -1,7 +1,9 @@
 // Copyright (c) 2020 Antonio Román. All rights reserved.
 
 #pragma once
-#include "SDL.h"
+
+struct SDL_Window;
+struct SDL_Renderer;
 
 const unsigned int SCREEN_WIDTH = 640;
 const unsigned int SCREEN_HEIGHT = 480;

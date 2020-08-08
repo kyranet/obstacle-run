@@ -30,7 +30,7 @@ void FontManager::init() {
   for (const auto& object : root) {
     const auto& name = object["name"].asCString();
     const auto& path = object["path"].asCString();
-    const auto& size = object["size"].asInt();
+    const auto& size = static_cast<uint16_t>(object["size"].asUInt());
     debug_print("Loading Font: '%s' named '%s' with size '%zi'.\n", path, name,
                 size);
 

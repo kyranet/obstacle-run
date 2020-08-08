@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "objects/GameObject.h"
+class GameObject;
 
 class Scene final {
  private:
@@ -36,6 +36,7 @@ class Scene final {
       const noexcept {
     return gameObjects_;
   }
+
   [[nodiscard]] inline const std::string& name() const noexcept {
     return name_;
   }

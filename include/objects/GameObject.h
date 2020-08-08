@@ -3,11 +3,13 @@
 #pragma once
 #include <json/json.h>
 
+#include <cstdint>
 #include <vector>
 
-#include "SDL.h"
 #include "utils/Vector2D.h"
 
+struct SDL_Rect;
+struct SDL_Point;
 class Component;
 class Transform;
 
@@ -21,8 +23,8 @@ class GameObject final {
   std::vector<GameObject*> children_{};
   std::vector<Component*> components_{};
 
-  Vector2D<int> position_{0, 0};
-  Vector2D<int> size_{0, 0};
+  Vector2D<int32_t> position_{0, 0};
+  Vector2D<int32_t> size_{0, 0};
 
  public:
   GameObject() noexcept;

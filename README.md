@@ -1,6 +1,6 @@
 # obstacle-run
 
-A multiplayergame built on top of SDL2.
+A multiplayer videogame built on top of SDL2.
 
 ---
 

@@ -2,7 +2,6 @@
 
 #include "managers/Input.h"
 
-#include "SDL.h"
 #include "managers/SceneManager.h"
 #include "objects/GameObject.h"
 #include "scenes/Scene.h"
@@ -20,13 +19,14 @@ Input* Input::instance() {
 }
 
 void Input::clear() noexcept {
-  for (auto i = 0, max = static_cast<int>(KeyboardKey::kKeyLimit); i < max;
-       i++) {
+  for (uint16_t i = 0, max = static_cast<uint16_t>(KeyboardKey::kKeyLimit);
+       i < max; i++) {
     keyDown_[i] = false;
     keyUp_[i] = false;
   }
 
-  for (auto i = 0, max = static_cast<int>(MouseKey::kKeyLimit); i < max; i++) {
+  for (uint16_t i = 0, max = static_cast<uint16_t>(MouseKey::kKeyLimit);
+       i < max; i++) {
     mouseDown_[i] = false;
     mouseUp_[i] = false;
   }
@@ -36,7 +36,7 @@ void Input::clear() noexcept {
   casted_ = nullptr;
 }
 
-void Input::update(const SDL_Event event) noexcept {
+void Input::update(const SDL_Event& event) noexcept {
   switch (event.type) {
     case SDL_KEYDOWN: {
       keyboard_ = SDL_GetKeyboardState(nullptr);
@@ -57,13 +57,13 @@ void Input::update(const SDL_Event event) noexcept {
       mouse_ = SDL_GetMouseState(nullptr, nullptr);
       switch (event.button.button) {
         case SDL_BUTTON_LEFT:
-          mouseDown_[static_cast<int>(MouseKey::LEFT)] = true;
+          mouseDown_[static_cast<size_t>(MouseKey::LEFT)] = true;
           break;
         case SDL_BUTTON_MIDDLE:
-          mouseDown_[static_cast<int>(MouseKey::MIDDLE)] = true;
+          mouseDown_[static_cast<size_t>(MouseKey::MIDDLE)] = true;
           break;
         case SDL_BUTTON_RIGHT:
-          mouseDown_[static_cast<int>(MouseKey::RIGHT)] = true;
+          mouseDown_[static_cast<size_t>(MouseKey::RIGHT)] = true;
           break;
         default:
           break;
@@ -74,13 +74,13 @@ void Input::update(const SDL_Event event) noexcept {
       mouse_ = SDL_GetMouseState(nullptr, nullptr);
       switch (event.button.button) {
         case SDL_BUTTON_LEFT:
-          mouseUp_[static_cast<int>(MouseKey::LEFT)] = true;
+          mouseUp_[static_cast<size_t>(MouseKey::LEFT)] = true;
           break;
         case SDL_BUTTON_MIDDLE:
-          mouseUp_[static_cast<int>(MouseKey::MIDDLE)] = true;
+          mouseUp_[static_cast<size_t>(MouseKey::MIDDLE)] = true;
           break;
         case SDL_BUTTON_RIGHT:
-          mouseUp_[static_cast<int>(MouseKey::RIGHT)] = true;
+          mouseUp_[static_cast<size_t>(MouseKey::RIGHT)] = true;
           break;
         default:
           break;
@@ -92,7 +92,7 @@ void Input::update(const SDL_Event event) noexcept {
   }
 }
 
-Vector2D<int> Input::getMousePosition() noexcept {
+Vector2D<int32_t> Input::getMousePosition() noexcept {
   return instance()->mousePosition_;
 }
 
@@ -104,21 +104,21 @@ SDL_Point Input::getRawMousePosition() noexcept {
 bool Input::isKeyPressed(KeyboardKey key) noexcept {
   const auto input = instance();
   if (!input->keyboard_) return false;
-  return input->keyboard_[static_cast<int>(key)];
+  return input->keyboard_[static_cast<size_t>(key)];
 }
 
 bool Input::isKeyDown(KeyboardKey key) noexcept {
-  return instance()->keyDown_[static_cast<int>(key)];
+  return instance()->keyDown_[static_cast<size_t>(key)];
 }
 bool Input::isKeyUp(KeyboardKey key) noexcept {
-  return instance()->keyUp_[static_cast<int>(key)];
+  return instance()->keyUp_[static_cast<size_t>(key)];
 }
 
 bool Input::isMouseButtonDown(MouseKey button) noexcept {
-  return instance()->mouseDown_[static_cast<int>(button)];
+  return instance()->mouseDown_[static_cast<size_t>(button)];
 }
 bool Input::isMouseButtonUp(MouseKey button) noexcept {
-  return instance()->mouseUp_[static_cast<int>(button)];
+  return instance()->mouseUp_[static_cast<size_t>(button)];
 }
 
 bool Input::getShift() noexcept {

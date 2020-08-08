@@ -2,13 +2,14 @@
 
 #include "scenes/Scene.h"
 
-#include <algorithm>
+#include <SDL.h>
+
 #include <fstream>
 
 #include "Game.h"
-#include "SDL.h"
 #include "exceptions/FileSystemException.h"
 #include "managers/Input.h"
+#include "objects/GameObject.h"
 #include "utils/DebugAssert.h"
 #include "utils/TimePool.h"
 
@@ -61,7 +62,13 @@ void Scene::onUpdate() noexcept {
 }
 
 void Scene::onRender() noexcept {
+  // Clear the screen
+  SDL_RenderClear(Game::renderer());
+
   for (auto* entry : gameObjects_) entry->onRender();
+
+  // Render the new frame
+  SDL_RenderPresent(Game::renderer());
 }
 
 void Scene::onEnd() noexcept {
@@ -104,16 +111,10 @@ void Scene::run() noexcept {
   const static uint32_t gameFrameRate = 60;
   TimePool timePool(1000 / gameFrameRate, SDL_GetTicks());
   while (!stop_) {
-    // Clear the screen
-    SDL_RenderClear(Game::renderer());
-
     onCreate();
     onEvents();
     onUpdate();
     onRender();
-
-    // Render the new frame
-    SDL_RenderPresent(Game::renderer());
 
     if (timePool.next(SDL_GetTicks())) {
       SDL_Delay(timePool.getRemaining());

@@ -1,7 +1,7 @@
 // Copyright (c) 2020 Antonio Román. All rights reserved.
 
 #pragma once
-#include "SDL.h"
+#include <cstdint>
 
 /**
  * \brief The TimePool utility that assists interval-running loops by checking

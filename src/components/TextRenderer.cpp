@@ -1,6 +1,8 @@
 // Copyright (c) 2020 Antonio Román. All rights reserved.
 #include "components/TextRenderer.h"
 
+#include <SDL.h>
+
 #include <utility>
 
 #include "Game.h"
@@ -9,7 +11,7 @@
 #include "objects/Font.h"
 #include "objects/GameObject.h"
 
-TextRenderer::TextRenderer(std::string font, std::string text, int size,
+TextRenderer::TextRenderer(std::string font, std::string text, uint16_t size,
                            SDL_Color color) noexcept
     : font_(std::move(font)),
       text_(std::move(text)),

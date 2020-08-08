@@ -4,6 +4,8 @@
 
 #include <json/json.h>
 
+#include <cassert>
+
 #include "scenes/Scene.h"
 #include "utils/DebugAssert.h"
 

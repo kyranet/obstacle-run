@@ -1,13 +1,18 @@
 // Copyright (c) 2020 Antonio Román. All rights reserved.
 
 #pragma once
-#include <SDL.h>
+
+#include <SDL_rect.h>
+
+#include <cstdint>
 
 #include "utils/Vector2D.h"
 
+struct SDL_Texture;
+
 class Image {
   SDL_Texture* texture_ = nullptr;
-  Vector2D<int> size_{};
+  Vector2D<int32_t> size_{};
 
  public:
   explicit Image(const char* path) noexcept;
@@ -15,7 +20,7 @@ class Image {
 
   [[nodiscard]] inline SDL_Texture* render() noexcept { return texture_; }
 
-  [[nodiscard]] inline const Vector2D<int>& size() const noexcept {
+  [[nodiscard]] inline const Vector2D<int32_t>& size() const noexcept {
     return size_;
   }
 

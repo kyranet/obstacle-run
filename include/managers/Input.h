@@ -1,11 +1,16 @@
 // Copyright (c) 2020 Antonio Román. All rights reserved.
 
 #pragma once
-#include <array>
+#include <SDL_events.h>
 
-#include "SDL.h"
+#include <array>
+#include <cstdint>
+
 #include "utils/Constants.h"
 #include "utils/Vector2D.h"
+
+struct SDL_Point;
+struct SDL_Rect;
 
 class GameObject;
 
@@ -31,17 +36,17 @@ class Input final {
   /**
    * \brief Internal SDL keyboard state.
    */
-  const Uint8* keyboard_{};
+  const uint8_t* keyboard_{};
 
   /**
    * \brief Internal SDL mouse state.
    */
-  Uint32 mouse_{};
+  uint32_t mouse_{};
 
   /**
    * \brief The current mouse position.
    */
-  Vector2D<int> mousePosition_{0, 0};
+  Vector2D<int32_t> mousePosition_{0, 0};
 
   /**
    * \brief The keys that are currently down.
@@ -88,13 +93,13 @@ class Input final {
    * \brief Update this instance from the event loop.
    * \param event The event to handle.
    */
-  void update(SDL_Event event) noexcept;
+  void update(const SDL_Event& event) noexcept;
 
   /**
    * \brief Gets the current mouse's position.
    * \return The current mouse's position.
    */
-  [[nodiscard]] static Vector2D<int> getMousePosition() noexcept;
+  [[nodiscard]] static Vector2D<int32_t> getMousePosition() noexcept;
 
   /**
    * \brief Gets the current mouse's position as a SDL object.
