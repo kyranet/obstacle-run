@@ -8,9 +8,9 @@
 void Button::onUpdate() noexcept {
   Component::onUpdate();
 
-  if (!Input::isMouseButtonDown(MouseKey::LEFT)) return;
+  if (!Input::mouseButtonDown(MouseKey::LEFT)) return;
 
-  const auto& clicked = gameObject()->clickScan(Input::getRawMousePosition());
+  const auto& clicked = gameObject()->clickScan(Input::rawMousePosition());
   if (clicked != gameObject()) return;
 
   // TODO: Do action

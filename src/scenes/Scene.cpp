@@ -35,14 +35,14 @@ void Scene::onCreate() noexcept {
 
 void Scene::onEvents() noexcept {
   // Clear the Input's cache
-  Input::instance()->clear();
+  Input::clear();
 
   // Handle all events
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
     if (event.type == SDL_QUIT) return end();
 
-    Input::instance()->update(event);
+    Input::update(event);
   }
 }
 
