@@ -24,7 +24,7 @@ void SolidRenderer::onRender() noexcept {
   const auto destination = calculatedRectangle();
   SDL_SetRenderDrawColor(Game::renderer(), color().x(), color().y(),
                          color().z(), color().a());
-  SDL_RenderDrawRect(Game::renderer(), &destination);
+  SDL_RenderFillRect(Game::renderer(), &destination);
 }
 
 SDL_Rect SolidRenderer::calculatedRectangle() const noexcept {

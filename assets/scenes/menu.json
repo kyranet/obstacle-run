@@ -22,8 +22,13 @@
       "components": [
         {
           "name": "Transform",
-          "position": [0, 0],
+          "position": [50, 50],
           "scale": [1, 1]
+        },
+        {
+          "name": "SolidRenderer",
+          "rectangle": [0, 0, 50, 50],
+          "color": [255, 255, 0, 255]
         }
       ],
       "children": []

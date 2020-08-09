@@ -16,7 +16,7 @@ SolidRendererFactory::~SolidRendererFactory() noexcept = default;
 
 SolidRenderer* SolidRendererFactory::fromJson(const Json::Value& json) {
   return new SolidRenderer(Vector4<int32_t>(json["rectangle"]),
-                           Vector4<uint8_t>("color"));
+                           Vector4<uint8_t>(json["color"]));
 }
 
 Json::Value SolidRendererFactory::toJson(SolidRenderer* value) const {
