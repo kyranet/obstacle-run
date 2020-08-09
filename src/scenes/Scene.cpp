@@ -111,8 +111,8 @@ void Scene::run() noexcept {
   stop_ = false;
 
   const constexpr static int32_t gameFrameRate = 60;
-  const constexpr static double_t frameTime =
-      1000.0 / static_cast<double_t>(gameFrameRate);
+  const constexpr static double frameTime =
+      1000.0 / static_cast<double>(gameFrameRate);
 
   size_t frame{0};
   while (!stop_) {

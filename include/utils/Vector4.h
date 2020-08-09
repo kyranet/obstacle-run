@@ -53,12 +53,12 @@ class Vector4 final {
   Vector4(T x, T y, T z, T a) noexcept : x_(x), y_(y), z_(z), a_(a) {}
 
   explicit Vector4(const Json::Value& json) noexcept {
-    if constexpr (std::is_same_v<T, float_t>) {
+    if constexpr (std::is_same_v<T, float>) {
       x_ = json[0U].asFloat();
       y_ = json[1U].asFloat();
       z_ = json[2U].asFloat();
       a_ = json[3U].asFloat();
-    } else if constexpr (std::is_same_v<T, double_t>) {
+    } else if constexpr (std::is_same_v<T, double>) {
       x_ = json[0U].asDouble();
       y_ = json[1U].asDouble();
       z_ = json[2U].asDouble();

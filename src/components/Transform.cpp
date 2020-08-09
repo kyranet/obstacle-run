@@ -3,7 +3,7 @@
 
 #include <utility>
 
-Transform::Transform(Vector2<float_t> position, Vector2<int32_t> scale) noexcept
+Transform::Transform(Vector2<float> position, Vector2<int32_t> scale) noexcept
     : position_(std::move(position)), scale_(std::move(scale)) {}
 
 Transform::~Transform() noexcept = default;

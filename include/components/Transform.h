@@ -11,17 +11,17 @@
 #include "utils/Vector2.h"
 
 class Transform final : public Component {
-  Vector2<float_t> position_;
+  Vector2<float> position_;
   Vector2<int32_t> scale_;
 
  public:
-  Transform(Vector2<float_t> position, Vector2<int32_t> scale) noexcept;
+  Transform(Vector2<float> position, Vector2<int32_t> scale) noexcept;
   ~Transform() noexcept;
 
-  [[nodiscard]] inline const Vector2<float_t>& position() const noexcept {
+  [[nodiscard]] inline const Vector2<float>& position() const noexcept {
     return position_;
   }
-  inline Vector2<float_t>& position() noexcept { return position_; }
+  inline Vector2<float>& position() noexcept { return position_; }
 
   [[nodiscard]] inline const Vector2<int32_t>& scale() const noexcept {
     return scale_;

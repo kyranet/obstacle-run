@@ -41,10 +41,10 @@ class Vector2 final {
   Vector2(T x, T y) noexcept : x_(x), y_(y) {}
 
   explicit Vector2(const Json::Value& json) noexcept {
-    if constexpr (std::is_same_v<T, float_t>) {
+    if constexpr (std::is_same_v<T, float>) {
       x_ = json[0U].asFloat();
       y_ = json[1U].asFloat();
-    } else if constexpr (std::is_same_v<T, double_t>) {
+    } else if constexpr (std::is_same_v<T, double>) {
       x_ = json[0U].asDouble();
       y_ = json[1U].asDouble();
     } else if constexpr (std::is_same_v<T, int>) {
