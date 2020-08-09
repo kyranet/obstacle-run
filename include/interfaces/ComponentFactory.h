@@ -8,11 +8,7 @@
 #include "JsonConvertible.h"
 class Component;
 
-template <typename T,
-          typename = typename std::enable_if<
-              std::is_convertible<std::shared_ptr<T>,
-                                  std::shared_ptr<Component>>::value,
-              T>::type>
+template <typename T>
 class ComponentFactory : public JsonConvertible<std::shared_ptr<T>> {
   std::string name_;
 

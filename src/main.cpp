@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "Game.h"
+#include "managers/ComponentManager.h"
 
 #undef main
 
@@ -14,6 +15,8 @@ int main(int, char*[]) {
   _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF |
                  _CRTDBG_LEAK_CHECK_DF);  // Check Memory Leaks
 #endif
+  ComponentManager::create();
+
   auto* game = Game::getInstance();
   game->start();
   try {

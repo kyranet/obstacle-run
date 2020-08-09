@@ -55,7 +55,7 @@ void GameObject::load(const Json::Value& value) {
   for (const auto& child : jsonComponents) {
     debug_print("Loading Component: '%s'.\n", child["name"].asCString());
 
-    auto* factory = ComponentManager::get(child["name"].asString());
+    auto factory = ComponentManager::get(child["name"].asString());
     assert(((void)"'factory' from GameObject::load(const Json::Value&) "
                   "must not be nullptr.",
             factory));

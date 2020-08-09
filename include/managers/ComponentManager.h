@@ -1,9 +1,11 @@
 // Copyright (c) 2020 Antonio Román. All rights reserved.
 
 #pragma once
+#include <cassert>
 #include <map>
 #include <memory>
 #include <string>
+#include <thread>
 #include <utility>
 
 #include "interfaces/ComponentFactory.h"
@@ -12,24 +14,27 @@ class Component;
 
 class ComponentManager {
  private:
-  std::map<std::string, ComponentFactory<Component>*> components_;
-  static ComponentManager* instance_;
+  std::map<std::string, std::shared_ptr<ComponentFactory<Component>>>
+      components_;
+  static std::unique_ptr<ComponentManager> instance_;
 
  public:
-  template <typename T, typename = typename std::enable_if<
-                            std::is_convertible<T, Component>::value, T>::type>
-  ComponentManager* add(ComponentFactory<T>* factory) {
-    components_[factory->name()] =
-        reinterpret_cast<ComponentFactory<Component>*>(factory);
-    return this;
+  template <typename T>
+  static void add(std::shared_ptr<ComponentFactory<T>> factory) {
+    const auto& name = factory->name();
+    instance_->components_.emplace(
+        name, std::reinterpret_pointer_cast<ComponentFactory<Component>>(
+                  std::move(factory)));
   }
 
-  static ComponentFactory<Component>* get(const std::string& name) {
-    return getInstance()->components_[name];
+  [[nodiscard]] static const std::shared_ptr<ComponentFactory<Component>>& get(
+      const std::string& name) {
+    return instance_->components_[name];
   }
 
-  static ComponentManager* getInstance() {
-    if (instance_ == nullptr) instance_ = new ComponentManager();
-    return instance_;
+  static void create() {
+    assert(((void)"ComponentManager::create() must be called only once",
+            !instance_));
+    instance_ = std::make_unique<ComponentManager>();
   }
 };

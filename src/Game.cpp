@@ -83,13 +83,15 @@ bool Game::init() noexcept {
     return false;
   }
 
-  ComponentManager::getInstance()
-      ->add(new TransformFactory())
-      ->add(new ImageRendererFactory())
-      ->add(new PlayerControllerFactory())
-      ->add(new SolidRendererFactory())
-      ->add(new ButtonFactory())
-      ->add(new TextRendererFactory());
+  ComponentManager::add<Transform>(std::make_shared<TransformFactory>());
+  ComponentManager::add<ImageRenderer>(
+      std::make_shared<ImageRendererFactory>());
+  ComponentManager::add<PlayerController>(
+      std::make_shared<PlayerControllerFactory>());
+  ComponentManager::add<SolidRenderer>(
+      std::make_shared<SolidRendererFactory>());
+  ComponentManager::add<Button>(std::make_shared<ButtonFactory>());
+  ComponentManager::add<TextRenderer>(std::make_shared<TextRendererFactory>());
 
   return true;
 }
