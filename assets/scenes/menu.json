@@ -27,7 +27,7 @@
         },
         {
           "name": "PlayerController",
-          "speed": 3
+          "speed": 100
         },
         {
           "name": "SolidRenderer",

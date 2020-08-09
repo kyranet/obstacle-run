@@ -176,34 +176,52 @@ class Vector4 final {
             static_cast<Q>(a())};
   }
 
+  template <typename Q, typename = typename std::enable_if<
+                            std::is_arithmetic<Q>::value, Q>::type>
   [[nodiscard]] inline Vector4<T> operator-(
-      const Vector4<T>& v) const noexcept {
-    return Vector4(x() - v.x(), y() - v.y(), z() - v.z(), a() - v.a());
+      const Vector4<Q>& v) const noexcept {
+    return Vector4(x() - static_cast<T>(v.x()), y() - static_cast<T>(v.y()),
+                   z() - static_cast<T>(v.z()), a() - static_cast<T>(v.a()));
   }
 
+  template <typename Q, typename = typename std::enable_if<
+                            std::is_arithmetic<Q>::value, Q>::type>
   [[nodiscard]] inline Vector4<T> operator-(
-      const Vector2<T>& v) const noexcept {
-    return Vector4(x() - v.x(), y() - v.y(), z(), a());
+      const Vector2<Q>& v) const noexcept {
+    return Vector4(x() - static_cast<T>(v.x()), y() - static_cast<T>(v.y()),
+                   z(), a());
   }
 
+  template <typename Q, typename = typename std::enable_if<
+                            std::is_arithmetic<Q>::value, Q>::type>
   [[nodiscard]] inline Vector4<T> operator+(
-      const Vector4<T>& v) const noexcept {
-    return Vector4(x() + v.x(), y() + v.y(), z() + v.z(), a() + v.a());
+      const Vector4<Q>& v) const noexcept {
+    return Vector4(x() + static_cast<T>(v.x()), y() + static_cast<T>(v.y()),
+                   z() + static_cast<T>(v.z()), a() + static_cast<T>(v.a()));
   }
 
+  template <typename Q, typename = typename std::enable_if<
+                            std::is_arithmetic<Q>::value, Q>::type>
   [[nodiscard]] inline Vector4<T> operator+(
-      const Vector2<T>& v) const noexcept {
-    return Vector4(x() + v.x(), y() + v.y(), z(), a());
+      const Vector2<Q>& v) const noexcept {
+    return Vector4(x() + static_cast<T>(v.x()), y() + static_cast<T>(v.y()),
+                   z(), a());
   }
 
+  template <typename Q, typename = typename std::enable_if<
+                            std::is_arithmetic<Q>::value, Q>::type>
   [[nodiscard]] inline Vector4<T> operator*(
-      const Vector4<T>& d) const noexcept {
-    return Vector4(x() * d.x(), y() * d.y(), z() * d.z(), a() * d.a());
+      const Vector4<Q>& d) const noexcept {
+    return Vector4(x() * static_cast<T>(d.x()), y() * static_cast<T>(d.y()),
+                   z() * static_cast<T>(d.z()), a() * static_cast<T>(d.a()));
   }
 
+  template <typename Q, typename = typename std::enable_if<
+                            std::is_arithmetic<Q>::value, Q>::type>
   [[nodiscard]] inline Vector4<T> operator*(
-      const Vector2<T>& d) const noexcept {
-    return Vector4(x() * d.x(), y() * d.y(), z(), a());
+      const Vector2<Q>& d) const noexcept {
+    return Vector4(x() * static_cast<T>(d.x()), y() * static_cast<T>(d.y()),
+                   z(), a());
   }
 
   [[nodiscard]] inline Vector4<T> operator*(T d) const noexcept {

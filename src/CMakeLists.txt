@@ -31,7 +31,7 @@ set(GAME_SOURCES
   objects/GameObject.cpp
   objects/Image.cpp
   scenes/Scene.cpp
-  third-party/jsoncpp/jsoncpp.cpp)
+  third-party/jsoncpp/jsoncpp.cpp utils/Time.cpp)
 
 add_executable(Game ${GAME_SOURCES})
 target_compile_features(Game PUBLIC cxx_std_17)

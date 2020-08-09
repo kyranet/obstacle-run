@@ -147,10 +147,41 @@ class Vector2 final {
     return Vector2(x() / d, y() / d);
   }
 
-  [[nodiscard]] static Vector2<T> from(const Json::Value& json) noexcept {
-    const auto x = json[0U].asInt();
-    const auto y = json[1U].asInt();
-    return Vector2(x, y);
+  [[nodiscard]] inline static Vector2<T> from(
+      const Json::Value& json) noexcept {
+    if constexpr (std::is_same_v<T, float_t>) {
+      const auto x = json[0U].asFloat();
+      const auto y = json[1U].asFloat();
+      return Vector2(x, y);
+    } else if constexpr (std::is_same_v<T, double_t>) {
+      const auto x = json[0U].asDouble();
+      const auto y = json[1U].asDouble();
+      return Vector2(x, y);
+    } else if constexpr (std::is_same_v<T, int>) {
+      const auto x = json[0U].asInt();
+      const auto y = json[1U].asInt();
+      return Vector2(x, y);
+    } else if constexpr (std::is_same_v<T, unsigned int>) {
+      const auto x = json[0U].asUInt();
+      const auto y = json[1U].asUInt();
+      return Vector2(x, y);
+    } else if constexpr (std::is_same_v<T, int64_t>) {
+      const auto x = json[0U].asInt64();
+      const auto y = json[1U].asInt64();
+      return Vector2(x, y);
+    } else if constexpr (std::is_same_v<T, uint64_t>) {
+      const auto x = json[0U].asUInt64();
+      const auto y = json[1U].asUInt64();
+      return Vector2(x, y);
+    } else if constexpr (std::is_same_v<T, uint32_t>) {
+      const auto x = json[0U].asUInt();
+      const auto y = json[1U].asUInt();
+      return Vector2(x, y);
+    } else {
+      const auto x = json[0U].asInt();
+      const auto y = json[1U].asInt();
+      return Vector2(x, y);
+    }
   }
 
   [[nodiscard]] Json::Value toJson() const noexcept {

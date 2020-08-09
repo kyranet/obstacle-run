@@ -11,17 +11,17 @@
 #include "utils/Vector2.h"
 
 class Transform final : public Component {
-  Vector2<int32_t> position_;
+  Vector2<float_t> position_;
   Vector2<int32_t> scale_;
 
  public:
-  Transform(Vector2<int32_t> position, Vector2<int32_t> scale) noexcept;
+  Transform(Vector2<float_t> position, Vector2<int32_t> scale) noexcept;
   ~Transform() noexcept;
 
-  [[nodiscard]] inline const Vector2<int32_t>& position() const noexcept {
+  [[nodiscard]] inline const Vector2<float_t>& position() const noexcept {
     return position_;
   }
-  inline Vector2<int32_t>& position() noexcept { return position_; }
+  inline Vector2<float_t>& position() noexcept { return position_; }
 
   [[nodiscard]] inline const Vector2<int32_t>& scale() const noexcept {
     return scale_;
@@ -29,6 +29,7 @@ class Transform final : public Component {
   inline Vector2<int32_t>& scale() noexcept { return scale_; }
 
   [[nodiscard]] inline SDL_Rect rectangle() const noexcept {
-    return {position().x(), position().y(), scale().x(), scale().y()};
+    return {static_cast<int32_t>(position().x()),
+            static_cast<int32_t>(position().y()), scale().x(), scale().y()};
   }
 };

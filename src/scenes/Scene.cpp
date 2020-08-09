@@ -12,6 +12,7 @@
 #include "managers/Input.h"
 #include "objects/GameObject.h"
 #include "utils/DebugAssert.h"
+#include "utils/Time.h"
 
 Scene::Scene(const std::string& name) noexcept { name_ = name; }
 Scene::~Scene() noexcept { end(); }
@@ -109,23 +110,28 @@ void Scene::run() noexcept {
   stop_ = false;
 
   const constexpr static int32_t gameFrameRate = 60;
-  const constexpr static int32_t ticksPerFrame = 1000 / gameFrameRate;
+  const constexpr static double_t frameTime =
+      1000.0 / static_cast<double_t>(gameFrameRate);
 
   size_t frame{0};
   while (!stop_) {
-    const auto& start = std::chrono::steady_clock::now();
+    const auto& start = Time::now();
     onCreate();
     onEvents();
     onUpdate();
     onRender();
 
-    const auto& end = std::chrono::steady_clock::now();
-    const auto elapsed = (end - start).count() / 1'000'000;
-    const auto remaining = ticksPerFrame - elapsed;
+    Time::measure(start, frameTime);
+    const auto remaining =
+        static_cast<int64_t>(frameTime) - Time::elapsedMilliSeconds();
+
     if (remaining > 0) {
-      debug_print("[Frame: %zi] Delaying for %zi milliseconds.\n", frame++,
-                  remaining);
+      debug_print(
+          "[Frame: %zi] Delaying for %zi milliseconds. Delta time: %f\n",
+          frame++, remaining, Time::delta());
       SDL_Delay(static_cast<uint32_t>(remaining));
+    } else {
+      debug_print("[Frame: %zi] Delta time: %f\n", frame++, Time::delta());
     }
   }
 }

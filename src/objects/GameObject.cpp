@@ -32,7 +32,7 @@ SDL_Rect GameObject::rectangle() const noexcept {
 
   const auto& ps = tf->position();
   const auto& sz = tf->scale();
-  return {ps.x(), ps.y(), sz.x(), sz.y()};
+  return {static_cast<int>(ps.x()), static_cast<int>(ps.y()), sz.x(), sz.y()};
 }
 
 void GameObject::load(const Json::Value& value) {
