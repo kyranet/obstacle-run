@@ -52,11 +52,50 @@ class Vector4 final {
    */
   Vector4(T x, T y, T z, T a) noexcept : x_(x), y_(y), z_(z), a_(a) {}
 
-  explicit Vector4(const Json::Value& json) noexcept
-      : x_(static_cast<T>(json[0U].asInt())),
-        y_(static_cast<T>(json[1U].asInt())),
-        z_(static_cast<T>(json[2U].asInt())),
-        a_(static_cast<T>(json[3U].asInt())) {}
+  explicit Vector4(const Json::Value& json) noexcept {
+    if constexpr (std::is_same_v<T, float_t>) {
+      x_ = json[0U].asFloat();
+      y_ = json[1U].asFloat();
+      z_ = json[2U].asFloat();
+      a_ = json[3U].asFloat();
+    } else if constexpr (std::is_same_v<T, double_t>) {
+      x_ = json[0U].asDouble();
+      y_ = json[1U].asDouble();
+      z_ = json[2U].asDouble();
+      a_ = json[3U].asDouble();
+    } else if constexpr (std::is_same_v<T, int>) {
+      x_ = json[0U].asInt();
+      y_ = json[1U].asInt();
+      z_ = json[2U].asInt();
+      a_ = json[3U].asInt();
+    } else if constexpr (std::is_same_v<T, unsigned int>) {
+      x_ = json[0U].asUInt();
+      y_ = json[1U].asUInt();
+      z_ = json[2U].asUInt();
+      a_ = json[3U].asUInt();
+    } else if constexpr (std::is_same_v<T, int64_t>) {
+      x_ = json[0U].asInt64();
+      y_ = json[1U].asInt64();
+      z_ = json[2U].asInt64();
+      a_ = json[3U].asInt64();
+    } else if constexpr (std::is_same_v<T, uint64_t>) {
+      x_ = json[0U].asUInt64();
+      y_ = json[1U].asUInt64();
+      z_ = json[2U].asUInt64();
+      a_ = json[3U].asUInt64();
+    } else if constexpr (std::is_same_v<T, uint32_t>) {
+      x_ = json[0U].asUInt();
+      y_ = json[1U].asUInt();
+      z_ = json[2U].asUInt();
+      a_ = json[3U].asUInt();
+    } else {
+      x_ = static_cast<T>(json[0U].asDouble());
+      y_ = static_cast<T>(json[1U].asDouble());
+      z_ = static_cast<T>(json[2U].asDouble());
+      a_ = static_cast<T>(json[3U].asDouble());
+    }
+  }
+
   explicit Vector4(const SDL_Rect& point) noexcept
       : x_(static_cast<T>(point.x)),
         y_(static_cast<T>(point.y)),
@@ -167,13 +206,6 @@ class Vector4 final {
     y_ = v.y();
     z_ = v.z();
     a_ = v.a();
-  }
-
-  template <typename Q, typename = typename std::enable_if<
-                            std::is_arithmetic<Q>::value, Q>::type>
-  [[nodiscard]] inline Vector4<Q> toJson() const noexcept {
-    return {static_cast<Q>(x()), static_cast<Q>(y()), static_cast<Q>(z()),
-            static_cast<Q>(a())};
   }
 
   template <typename Q, typename = typename std::enable_if<
