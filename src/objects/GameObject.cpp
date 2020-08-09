@@ -15,8 +15,8 @@ GameObject::GameObject(const Json::Value& json, std::weak_ptr<Scene> scene,
 }
 
 GameObject::~GameObject() noexcept {
-  for (auto& child : children()) {
-    delete child.get();
+  for (auto& child : children_) {
+    child.reset();
   }
 }
 

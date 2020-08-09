@@ -94,7 +94,7 @@ class GameObject final : public std::enable_shared_from_this<GameObject> {
   [[nodiscard]] inline std::shared_ptr<T> getComponentInChildren()
       const noexcept {
     for (const auto& child : children()) {
-      auto component = child.get()->getComponent<T>();
+      auto component = child->getComponent<T>();
       if (component) return component;
     }
 
