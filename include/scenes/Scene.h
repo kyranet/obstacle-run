@@ -1,19 +1,19 @@
 // Copyright (c) 2020 Antonio Román. All rights reserved.
 
 #pragma once
+#include <memory>
 #include <string>
 #include <vector>
 
 class GameObject;
 
-class Scene final {
+class Scene final : public std::enable_shared_from_this<Scene> {
  private:
   std::string name_;
-  std::vector<GameObject*> newGameObjects_{};
-  std::vector<GameObject*> gameObjects_{};
+  std::vector<std::unique_ptr<GameObject>> newGameObjects_{};
+  std::vector<std::unique_ptr<GameObject>> gameObjects_{};
   bool stop_ = false;
 
-  ~Scene() noexcept;
   void onStart() const noexcept;
   void onCreate() noexcept;
   void onEvents() noexcept;
@@ -23,6 +23,7 @@ class Scene final {
 
  public:
   explicit Scene(const std::string& name) noexcept;
+  ~Scene() noexcept;
 
   void addGameObject(GameObject* gameObject) noexcept;
   void removeGameObject(GameObject* gameObject) noexcept;
@@ -32,8 +33,8 @@ class Scene final {
   void stop() noexcept;
   void end() noexcept;
 
-  [[nodiscard]] inline const std::vector<GameObject*>& gameObjects()
-      const noexcept {
+  [[nodiscard]] inline const std::vector<std::unique_ptr<GameObject>>&
+  gameObjects() const noexcept {
     return gameObjects_;
   }
 

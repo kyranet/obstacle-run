@@ -11,7 +11,6 @@ class Transform;
 class SolidRenderer final : public Component {
   Vector4<int32_t> rectangle_;
   Vector4<uint8_t> color_;
-  Transform* transform_ = nullptr;
 
  public:
   SolidRenderer(const Vector4<int32_t>& rectangle,

@@ -14,22 +14,22 @@ class Scene;
 class Component;
 class Transform;
 
-class GameObject final {
+class GameObject final : public std::enable_shared_from_this<GameObject> {
   bool active_ = false;
   bool destroyed_ = false;
   bool transparent_ = false;
   std::string name_{};
-  Scene* scene_ = nullptr;
-  GameObject* parent_ = nullptr;
-  Transform* transform_ = nullptr;
-  std::vector<GameObject*> children_{};
-  std::vector<Component*> components_{};
+  std::weak_ptr<Scene> scene_{};
+  std::weak_ptr<GameObject> parent_{};
+  std::weak_ptr<Transform> transform_{};
+  std::vector<std::unique_ptr<GameObject>> children_{};
+  std::vector<std::shared_ptr<Component>> components_{};
 
-  Vector2<int32_t> position_{0, 0};
-  Vector2<int32_t> size_{0, 0};
+  void load(const Json::Value& value);
 
  public:
-  GameObject() noexcept;
+  GameObject(const Json::Value& json, std::weak_ptr<Scene> scene,
+             std::weak_ptr<GameObject> parent = {}) noexcept;
   ~GameObject() noexcept;
 
   [[nodiscard]] inline const std::string& name() const noexcept {
@@ -37,15 +37,19 @@ class GameObject final {
   }
   inline std::string& name() noexcept { return name_; }
 
-  [[nodiscard]] inline const GameObject* parent() const noexcept {
+  [[nodiscard]] inline const std::weak_ptr<GameObject>& parent()
+      const noexcept {
     return parent_;
   }
-  inline void parent(GameObject* parent) noexcept { parent_ = parent; }
+  inline std::weak_ptr<GameObject>& parent() noexcept { return parent_; }
 
-  [[nodiscard]] inline const Scene* scene() const noexcept { return scene_; }
-  inline void scene(Scene* scene) noexcept { scene_ = scene; }
+  [[nodiscard]] inline const std::weak_ptr<Scene>& scene() const noexcept {
+    return scene_;
+  }
+  inline std::weak_ptr<Scene>& scene() noexcept { return scene_; }
 
-  [[nodiscard]] inline const Transform* transform() const noexcept {
+  [[nodiscard]] inline const std::weak_ptr<Transform>& transform()
+      const noexcept {
     return transform_;
   }
 
@@ -65,43 +69,45 @@ class GameObject final {
   [[nodiscard]] SDL_Rect rectangle() const noexcept;
 
   [[nodiscard]] GameObject* clickScan(SDL_Point point) const noexcept;
-  [[nodiscard]] inline const std::vector<GameObject*>& children()
-      const noexcept {
+
+  [[nodiscard]] inline const std::vector<std::unique_ptr<GameObject>>&
+  children() const noexcept {
     return children_;
   }
-  [[nodiscard]] inline const std::vector<Component*>& components()
-      const noexcept {
+
+  [[nodiscard]] inline const std::vector<std::shared_ptr<Component>>&
+  components() const noexcept {
     return components_;
   }
 
-  template <class T>
-  [[nodiscard]] inline T getComponent() const noexcept {
+  template <typename T>
+  [[nodiscard]] inline std::shared_ptr<T> getComponent() const noexcept {
     for (const auto& component : components()) {
-      T casted = dynamic_cast<T>(component);
+      auto casted = std::dynamic_pointer_cast<T>(component);
       if (casted) return casted;
     }
 
     return nullptr;
   }
 
-  template <class T>
-  [[nodiscard]] inline T getComponentInChildren() const noexcept {
+  template <typename T>
+  [[nodiscard]] inline std::shared_ptr<T> getComponentInChildren()
+      const noexcept {
     for (const auto& child : children()) {
-      const auto* component = child->getComponent<T>();
+      auto component = child.get()->getComponent<T>();
       if (component) return component;
     }
 
     return nullptr;
   }
 
-  template <class T>
-  [[nodiscard]] inline T getComponentInParent() const noexcept {
-    if (parent() == nullptr) return nullptr;
-
-    return parent()->getComponent<T>();
+  template <typename T>
+  [[nodiscard]] inline std::shared_ptr<T> getComponentInParent()
+      const noexcept {
+    if (parent().expired()) return nullptr;
+    return parent().lock()->getComponent<T>();
   }
 
-  void load(const Json::Value& value);
   void onAwake() noexcept;
   void onUpdate() const noexcept;
   void onRender() const noexcept;

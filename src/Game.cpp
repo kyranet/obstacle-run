@@ -97,7 +97,8 @@ bool Game::init() noexcept {
 void Game::run() {
   ImageManager::instance()->init();
   FontManager::instance()->init();
-  auto* scene = SceneManager::createScene("menu");
+
+  auto scene = SceneManager::createScene("menu");
   SceneManager::loadScene(scene);
   SceneManager::setActiveScene(scene);
 

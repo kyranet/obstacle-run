@@ -43,7 +43,6 @@ class ImageRenderer final : public Component {
   std::string path_;
   ImageFit fit_;
   Image* image_ = nullptr;
-  Transform* transform_ = nullptr;
   SDL_Texture* texture_ = nullptr;
 
   void updateImageFit() noexcept;

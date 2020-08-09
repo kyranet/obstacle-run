@@ -14,7 +14,7 @@ void Button::onUpdate() noexcept {
   if (clicked != gameObject()) return;
 
   // TODO: Do action
-  const auto& text = gameObject()->getComponent<TextRenderer*>();
+  const auto& text = gameObject()->getComponent<TextRenderer>();
   if (text == nullptr) return;
 
   if (text->color().g == 0) {

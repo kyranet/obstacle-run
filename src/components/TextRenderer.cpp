@@ -21,7 +21,7 @@ TextRenderer::~TextRenderer() noexcept { SDL_DestroyTexture(texture_); }
 
 void TextRenderer::refresh() noexcept {
   auto surface = ttfFont_->render(text().c_str(), color(), 2000);
-  transform_->scale() = Vector2{surface->w, surface->h};
+  gameObject()->transform().lock()->scale() = Vector2{surface->w, surface->h};
   rectangle_ = {0, 0, surface->w, surface->h};
   texture_ = SDL_CreateTextureFromSurface(Game::renderer(), surface);
   SDL_FreeSurface(surface);
@@ -30,7 +30,6 @@ void TextRenderer::refresh() noexcept {
 void TextRenderer::onAwake() noexcept {
   Component::onAwake();
   ttfFont_ = FontManager::instance()->get(font(), size());
-  transform_ = gameObject()->getComponent<Transform*>();
   refresh();
 }
 
@@ -38,7 +37,7 @@ void TextRenderer::onRender() noexcept {
   Component::onRender();
 
   const auto& src = rectangle();
-  const auto& rect = transform_->rectangle();
+  const auto& rect = gameObject()->rectangle();
   const auto& renderer = Game::renderer();
   SDL_RenderCopy(renderer, texture_, &src, &rect);
 }

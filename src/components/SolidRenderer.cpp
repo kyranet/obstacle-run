@@ -13,10 +13,7 @@ SolidRenderer::SolidRenderer(const Vector4<int32_t>& rectangle,
 
 SolidRenderer::~SolidRenderer() noexcept = default;
 
-void SolidRenderer::onAwake() noexcept {
-  Component::onAwake();
-  transform_ = gameObject()->getComponent<Transform*>();
-}
+void SolidRenderer::onAwake() noexcept { Component::onAwake(); }
 
 void SolidRenderer::onRender() noexcept {
   Component::onRender();
@@ -28,5 +25,6 @@ void SolidRenderer::onRender() noexcept {
 }
 
 SDL_Rect SolidRenderer::calculatedRectangle() const noexcept {
-  return (rectangle() + transform_->position()).toRectangle();
+  return (rectangle() + gameObject()->transform().lock()->position())
+      .toRectangle();
 }

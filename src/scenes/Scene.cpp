@@ -26,8 +26,8 @@ void Scene::onStart() const noexcept {
 void Scene::onCreate() noexcept {
   size_t last = gameObjects_.size();
   gameObjects_.resize(last + newGameObjects_.size());
-  for (auto* gameObject : newGameObjects_) {
-    gameObjects_[last++] = gameObject;
+  for (auto& gameObject : newGameObjects_) {
+    gameObjects_[last++].swap(gameObject);
     gameObject->onAwake();
   }
 
@@ -50,12 +50,12 @@ void Scene::onEvents() noexcept {
 void Scene::onUpdate() noexcept {
   size_t i = 0;
   while (i < gameObjects_.size()) {
-    auto* entry = gameObjects_[i];
+    auto& entry = gameObjects_[i];
     entry->onUpdate();
     if (entry->destroy()) {
       gameObjects_.erase(gameObjects_.begin() + i);
       entry->onDestroy();
-      delete entry;
+      entry.reset();
     } else {
       ++i;
     }
@@ -66,17 +66,17 @@ void Scene::onRender() noexcept {
   // Clear the screen
   SDL_RenderClear(Game::renderer());
 
-  for (auto* entry : gameObjects_) entry->onRender();
+  for (auto& entry : gameObjects_) entry->onRender();
 
   // Render the new frame
   SDL_RenderPresent(Game::renderer());
 }
 
 void Scene::onEnd() noexcept {
-  for (auto* entry : newGameObjects_) delete entry;
+  for (auto& entry : newGameObjects_) entry.reset();
   newGameObjects_.clear();
 
-  for (auto* entry : gameObjects_) delete entry;
+  for (auto& entry : gameObjects_) entry.reset();
   gameObjects_.clear();
 }
 
@@ -95,10 +95,8 @@ void Scene::load() {
   const auto rawGameObjects = root["game_objects"];
   for (const auto& object : rawGameObjects) {
     debug_print("Loading GameObject: '%s'.\n", object["name"].asCString());
-    auto* gameObject = new GameObject();
-    gameObjects_.emplace_back(gameObject);
-    gameObject->scene(this);
-    gameObject->load(object);
+    gameObjects_.emplace_back(
+        std::make_unique<GameObject>(object, shared_from_this()));
   }
 
   debug_print("Successfully loaded Scene '%s' with %zi GameObject(s).\n",

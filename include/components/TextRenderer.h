@@ -20,7 +20,6 @@ class TextRenderer final : public Component {
   SDL_Color color_;
   SDL_Rect rectangle_{0, 0, 0, 0};
   const Font* ttfFont_ = nullptr;
-  Transform* transform_ = nullptr;
   SDL_Texture* texture_ = nullptr;
 
  public:

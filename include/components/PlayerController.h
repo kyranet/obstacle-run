@@ -5,7 +5,6 @@
 #include "objects/Component.h"
 class Transform;
 class PlayerController final : public Component {
-  Transform* transform_ = nullptr;
   uint8_t speed_;
 
  public:

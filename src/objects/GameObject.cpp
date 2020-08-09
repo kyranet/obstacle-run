@@ -2,20 +2,27 @@
 
 #include "objects/GameObject.h"
 
+#include <utility>
+
 #include "components/Transform.h"
 #include "managers/ComponentManager.h"
 #include "utils/DebugAssert.h"
 
-GameObject::GameObject() noexcept : parent_(nullptr) {}
+GameObject::GameObject(const Json::Value& json, std::weak_ptr<Scene> scene,
+                       std::weak_ptr<GameObject> parent) noexcept
+    : scene_(std::move(scene)), parent_(std::move(parent)) {
+  load(json);
+}
+
 GameObject::~GameObject() noexcept {
-  for (auto* child : children()) {
-    delete child;
+  for (auto& child : children()) {
+    delete child.get();
   }
 }
 
 GameObject* GameObject::clickScan(SDL_Point point) const noexcept {
   for (auto it = children().rbegin(); it != children().rend(); ++it) {
-    const auto child = *it;
+    const auto& child = (*it).get();
     if (child->clickScan(point)) return child;
   }
 
@@ -26,7 +33,7 @@ GameObject* GameObject::clickScan(SDL_Point point) const noexcept {
 }
 
 SDL_Rect GameObject::rectangle() const noexcept {
-  const auto& tf = transform();
+  const auto& tf = transform().lock();
   assert(((void)"'tf' must not be null!", tf));
 
   const auto& ps = tf->position();
@@ -40,11 +47,8 @@ void GameObject::load(const Json::Value& value) {
   const auto jsonChildren = value["children"];
   for (const auto& child : jsonChildren) {
     debug_print("Loading GameObject: '%s'.\n", child["name"].asCString());
-    auto* gameObject = new GameObject();
-    gameObject->parent(this);
-    gameObject->scene(scene_);
-    children_.emplace_back(gameObject);
-    gameObject->load(child);
+    children_.emplace_back(
+        std::make_unique<GameObject>(child, scene(), shared_from_this()));
   }
 
   const auto jsonComponents = value["components"];
@@ -71,6 +75,7 @@ void GameObject::load(const Json::Value& value) {
 
 void GameObject::onAwake() noexcept {
   active() = true;
+  transform_ = getComponent<Transform>();
 
   for (const auto& child : children()) {
     child->onAwake();
@@ -79,8 +84,6 @@ void GameObject::onAwake() noexcept {
   for (const auto& component : components()) {
     component->onAwake();
   }
-
-  transform_ = getComponent<Transform*>();
 }
 
 void GameObject::onUpdate() const noexcept {

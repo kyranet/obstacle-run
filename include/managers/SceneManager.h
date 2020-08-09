@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -9,7 +10,7 @@ class Scene;
 class GameObject;
 
 class SceneManager final {
-  static std::vector<std::pair<std::string, Scene*>> scenes_;
+  static std::vector<std::pair<std::string, std::shared_ptr<Scene>>> scenes_;
   static size_t index_;
   static size_t invalidIndex_;
 
@@ -18,12 +19,14 @@ class SceneManager final {
   ~SceneManager() = delete;
 
   [[nodiscard]] static size_t getSceneCount() noexcept;
-  [[nodiscard]] static Scene* createScene(const std::string& name) noexcept;
-  [[nodiscard]] static Scene* getActiveScene() noexcept;
-  [[nodiscard]] static Scene* getSceneAt(size_t position) noexcept;
-  [[nodiscard]] static Scene* getSceneByName(const std::string& name) noexcept;
-  static void loadScene(Scene* scene);
+  [[nodiscard]] static std::shared_ptr<Scene> createScene(
+      const std::string& name) noexcept;
+  [[nodiscard]] static std::shared_ptr<Scene> getActiveScene() noexcept;
+  [[nodiscard]] static std::shared_ptr<Scene> getSceneAt(
+      size_t position) noexcept;
+  [[nodiscard]] static std::shared_ptr<Scene> getSceneByName(
+      const std::string& name) noexcept;
+  static void loadScene(const std::shared_ptr<Scene>& scene);
   static void loadScene(const std::string& name);
-  static void moveGameObjectToScene(GameObject* object, Scene* scene);
-  static void setActiveScene(Scene* scene) noexcept;
+  static void setActiveScene(const std::shared_ptr<Scene>& scene) noexcept;
 };

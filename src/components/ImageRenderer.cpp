@@ -17,7 +17,6 @@ ImageRenderer::~ImageRenderer() noexcept = default;
 
 void ImageRenderer::onAwake() noexcept {
   Component::onAwake();
-  transform_ = gameObject()->getComponent<Transform*>();
 
   image_ = ImageManager::instance()->get(path());
   texture_ = image_->render();
@@ -28,7 +27,7 @@ void ImageRenderer::onRender() noexcept {
   Component::onRender();
 
   const auto& src = image()->rectangle();
-  const auto& rect = transform_->rectangle();
+  const auto& rect = gameObject()->rectangle();
   const auto& renderer = Game::renderer();
   SDL_RenderCopy(renderer, texture_, &src, &rect);
 }
@@ -36,7 +35,7 @@ void ImageRenderer::onRender() noexcept {
 void ImageRenderer::updateImageFit() noexcept {
   // ImageFit::None: image must fill the window, does not keep ratio:
   if (fit() == ImageFit::None) {
-    transform_->scale() = image()->size();
+    gameObject()->transform().lock()->scale() = image()->size();
     return;
   }
 
@@ -54,7 +53,8 @@ void ImageRenderer::updateImageFit() noexcept {
 
   // ImageFit::Fill: image must fill the window, does not keep ratio:
   if (fit() == ImageFit::Fill || imageRatio == windowRatio) {
-    transform_->scale() = Vector2{windowWidth, windowHeight};
+    gameObject()->transform().lock()->scale() =
+        Vector2{windowWidth, windowHeight};
     return;
   }
 
@@ -63,7 +63,7 @@ void ImageRenderer::updateImageFit() noexcept {
     // Image is wider than window
     if (imageRatio > windowRatio) {
       // Width must be window's width, calculate height keeping proportions
-      transform_->scale() = Vector2{
+      gameObject()->transform().lock()->scale() = Vector2{
           windowWidth,
           static_cast<int>(imageHeight * static_cast<float>(windowWidth) /
                            static_cast<float>(imageWidth))};
@@ -71,7 +71,7 @@ void ImageRenderer::updateImageFit() noexcept {
     }
 
     // Image is taller than window
-    transform_->scale() =
+    gameObject()->transform().lock()->scale() =
         Vector2{static_cast<int>(imageWidth * static_cast<float>(windowHeight) /
                                  static_cast<float>(imageHeight)),
                 windowHeight};
@@ -82,7 +82,7 @@ void ImageRenderer::updateImageFit() noexcept {
   // Image is wider than window, rescale height to fill:
   if (imageRatio > windowRatio) {
     // Height must be window's height, calculate width keeping proportions
-    transform_->scale() =
+    gameObject()->transform().lock()->scale() =
         Vector2{static_cast<int>(imageWidth * static_cast<float>(windowHeight) /
                                  static_cast<float>(imageHeight)),
                 windowHeight};
@@ -90,7 +90,7 @@ void ImageRenderer::updateImageFit() noexcept {
   }
 
   // Width must be window's width, calculate height keeping proportions
-  transform_->scale() =
+  gameObject()->transform().lock()->scale() =
       Vector2{windowWidth,
               static_cast<int>(imageHeight * static_cast<float>(windowWidth) /
                                static_cast<float>(imageWidth))};
