@@ -26,6 +26,10 @@
           "scale": [1, 1]
         },
         {
+          "name": "PlayerController",
+          "speed": 3
+        },
+        {
           "name": "SolidRenderer",
           "rectangle": [0, 0, 50, 50],
           "color": [255, 255, 0, 255]

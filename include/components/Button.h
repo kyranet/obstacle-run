@@ -4,7 +4,7 @@
 
 #include "objects/Component.h"
 
-class Button : public Component {
+class Button final : public Component {
  public:
   void onUpdate() noexcept override;
 };

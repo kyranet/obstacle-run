@@ -18,7 +18,6 @@ GameObject* Input::casted_{nullptr};
 void Input::clear() noexcept {
   for (uint16_t i = 0, max = static_cast<uint16_t>(KeyboardKey::kKeyLimit);
        i < max; i++) {
-    keyDown_[i] = false;
     keyUp_[i] = false;
   }
 
@@ -37,11 +36,13 @@ void Input::update(const SDL_Event& event) noexcept {
   switch (event.type) {
     case SDL_KEYDOWN: {
       keyboard_ = SDL_GetKeyboardState(nullptr);
+      keyUp_[event.key.keysym.scancode] = false;
       keyDown_[event.key.keysym.scancode] = true;
       break;
     }
     case SDL_KEYUP: {
       keyboard_ = SDL_GetKeyboardState(nullptr);
+      keyDown_[event.key.keysym.scancode] = false;
       keyUp_[event.key.keysym.scancode] = true;
       break;
     }

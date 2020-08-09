@@ -10,6 +10,7 @@
 
 #include "factories/ButtonFactory.h"
 #include "factories/ImageRendererFactory.h"
+#include "factories/PlayerControllerFactory.h"
 #include "factories/SolidRendererFactory.h"
 #include "factories/TextRendererFactory.h"
 #include "factories/TransformFactory.h"
@@ -85,6 +86,7 @@ bool Game::init() noexcept {
   ComponentManager::getInstance()
       ->add(new TransformFactory())
       ->add(new ImageRendererFactory())
+      ->add(new PlayerControllerFactory())
       ->add(new SolidRendererFactory())
       ->add(new ButtonFactory())
       ->add(new TextRendererFactory());
