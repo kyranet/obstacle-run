@@ -59,7 +59,7 @@ void GameObject::load(const Json::Value& value) {
     assert(((void)"'factory' from GameObject::load(const Json::Value&) "
                   "must not be nullptr.",
             factory));
-    auto* component = factory->fromJson(child);
+    auto component = factory->fromJson(child);
     assert(((void)"'component' from GameObject::load(const Json::Value&) "
                   "must not be nullptr.",
             component));

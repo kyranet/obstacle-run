@@ -14,12 +14,14 @@ ImageRendererFactory::~ImageRendererFactory() noexcept = default;
 //   "fit": "contain"
 // }
 
-ImageRenderer* ImageRendererFactory::fromJson(const Json::Value& json) {
-  return new ImageRenderer(json["image"].asString(),
-                           getImageFitFromName(json["fit"].asString()));
+std::shared_ptr<ImageRenderer> ImageRendererFactory::fromJson(
+    const Json::Value& json) {
+  return std::make_shared<ImageRenderer>(
+      json["image"].asString(), getImageFitFromName(json["fit"].asString()));
 }
 
-Json::Value ImageRendererFactory::toJson(ImageRenderer* value) const {
+Json::Value ImageRendererFactory::toJson(
+    std::shared_ptr<ImageRenderer> value) const {
   Json::Value json(Json::objectValue);
   json["name"] = name();
   json["image"] = value->path();

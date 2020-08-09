@@ -125,7 +125,7 @@ class Vector4 final {
     x() = other.x();
     y() = other.y();
     z() = other.z();
-    a() = other.h();
+    a() = other.a();
     return *this;
   }
 
@@ -278,6 +278,14 @@ class Vector4 final {
     const auto y = static_cast<int>(y_);
     const auto z = static_cast<int>(z_);
     const auto a = static_cast<int>(a_);
+    return {x, y, z, a};
+  }
+
+  [[nodiscard]] SDL_Color toColor() const noexcept {
+    const auto x = static_cast<uint8_t>(x_);
+    const auto y = static_cast<uint8_t>(y_);
+    const auto z = static_cast<uint8_t>(z_);
+    const auto a = static_cast<uint8_t>(a_);
     return {x, y, z, a};
   }
 

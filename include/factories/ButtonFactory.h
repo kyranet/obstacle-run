@@ -5,10 +5,11 @@
 #include "components/Button.h"
 #include "interfaces/ComponentFactory.h"
 
-class ButtonFactory final : public ComponentFactory<Button*> {
+class ButtonFactory final : public ComponentFactory<Button> {
  public:
   ButtonFactory() noexcept;
   ~ButtonFactory() noexcept override;
-  Button* fromJson(const Json::Value&) override;
-  Json::Value toJson(Button* value) const override;
+  [[nodiscard]] std::shared_ptr<Button> fromJson(const Json::Value&) override;
+  [[nodiscard]] Json::Value toJson(
+      std::shared_ptr<Button> value) const override;
 };

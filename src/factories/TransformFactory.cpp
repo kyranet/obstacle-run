@@ -10,12 +10,12 @@ TransformFactory::~TransformFactory() noexcept = default;
 //   "scale": [1, 1]
 // }
 
-Transform* TransformFactory::fromJson(const Json::Value& json) {
-  return new Transform(Vector2<float>(json["position"]),
-                       Vector2<int32_t>(json["scale"]));
+std::shared_ptr<Transform> TransformFactory::fromJson(const Json::Value& json) {
+  return std::make_shared<Transform>(Vector2<float>(json["position"]),
+                                     Vector2<int32_t>(json["scale"]));
 }
 
-Json::Value TransformFactory::toJson(Transform* value) const {
+Json::Value TransformFactory::toJson(std::shared_ptr<Transform> value) const {
   Json::Value json(Json::objectValue);
   json["name"] = name();
   json["position"] = value->position().toJson();

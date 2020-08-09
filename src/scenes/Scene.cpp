@@ -10,7 +10,6 @@
 #include "Game.h"
 #include "exceptions/FileSystemException.h"
 #include "managers/Input.h"
-#include "objects/GameObject.h"
 #include "utils/DebugAssert.h"
 #include "utils/Time.h"
 

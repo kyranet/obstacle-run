@@ -4,9 +4,11 @@
 ButtonFactory::ButtonFactory() noexcept : ComponentFactory("Button") {}
 ButtonFactory::~ButtonFactory() noexcept = default;
 
-Button* ButtonFactory::fromJson(const Json::Value&) { return new Button(); }
+std::shared_ptr<Button> ButtonFactory::fromJson(const Json::Value&) {
+  return std::make_shared<Button>();
+}
 
-Json::Value ButtonFactory::toJson(Button*) const {
+Json::Value ButtonFactory::toJson(std::shared_ptr<Button>) const {
   Json::Value json(Json::objectValue);
   json["name"] = name();
   return json;

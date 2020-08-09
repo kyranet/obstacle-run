@@ -6,10 +6,13 @@
 #include "interfaces/ComponentFactory.h"
 
 class PlayerControllerFactory final
-    : public ComponentFactory<PlayerController*> {
+    : public ComponentFactory<PlayerController> {
  public:
   PlayerControllerFactory() noexcept;
   ~PlayerControllerFactory() noexcept override;
-  PlayerController* fromJson(const Json::Value&) override;
-  Json::Value toJson(PlayerController* value) const override;
+
+  [[nodiscard]] std::shared_ptr<PlayerController> fromJson(
+      const Json::Value& json) override;
+  [[nodiscard]] Json::Value toJson(
+      std::shared_ptr<PlayerController> value) const override;
 };

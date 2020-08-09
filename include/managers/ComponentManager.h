@@ -12,19 +12,19 @@ class Component;
 
 class ComponentManager {
  private:
-  std::map<std::string, ComponentFactory<Component*>*> components_;
+  std::map<std::string, ComponentFactory<Component>*> components_;
   static ComponentManager* instance_;
 
  public:
   template <typename T, typename = typename std::enable_if<
-                            std::is_convertible<T, Component*>::value, T>::type>
+                            std::is_convertible<T, Component>::value, T>::type>
   ComponentManager* add(ComponentFactory<T>* factory) {
     components_[factory->name()] =
-        reinterpret_cast<ComponentFactory<Component*>*>(factory);
+        reinterpret_cast<ComponentFactory<Component>*>(factory);
     return this;
   }
 
-  static ComponentFactory<Component*>* get(const std::string& name) {
+  static ComponentFactory<Component>* get(const std::string& name) {
     return getInstance()->components_[name];
   }
 

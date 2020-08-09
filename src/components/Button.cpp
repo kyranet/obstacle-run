@@ -17,10 +17,10 @@ void Button::onUpdate() noexcept {
   const auto& text = gameObject()->getComponent<TextRenderer>();
   if (text == nullptr) return;
 
-  if (text->color().g == 0) {
-    text->color() = {255, 255, 255, 255};
+  if (text->color().z() == 0) {
+    text->color() = Vector4<uint8_t>{255, 255, 255, 255};
   } else {
-    text->color() = {255, 0, 0, 255};
+    text->color() = Vector4<uint8_t>{255, 0, 0, 255};
   }
 
   text->refresh();
