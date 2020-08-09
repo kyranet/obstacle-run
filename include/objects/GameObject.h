@@ -10,6 +10,7 @@
 
 struct SDL_Rect;
 struct SDL_Point;
+class Scene;
 class Component;
 class Transform;
 
@@ -18,6 +19,7 @@ class GameObject final {
   bool destroyed_ = false;
   bool transparent_ = false;
   std::string name_{};
+  Scene* scene_ = nullptr;
   GameObject* parent_ = nullptr;
   Transform* transform_ = nullptr;
   std::vector<GameObject*> children_{};
@@ -28,7 +30,6 @@ class GameObject final {
 
  public:
   GameObject() noexcept;
-  explicit GameObject(GameObject* parent) noexcept;
   ~GameObject() noexcept;
 
   [[nodiscard]] inline const std::string& name() const noexcept {
@@ -39,6 +40,11 @@ class GameObject final {
   [[nodiscard]] inline const GameObject* parent() const noexcept {
     return parent_;
   }
+  inline void parent(GameObject* parent) noexcept { parent_ = parent; }
+
+  [[nodiscard]] inline const Scene* scene() const noexcept { return scene_; }
+  inline void scene(Scene* scene) noexcept { scene_ = scene; }
+
   [[nodiscard]] inline const Transform* transform() const noexcept {
     return transform_;
   }

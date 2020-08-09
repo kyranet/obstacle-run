@@ -7,7 +7,6 @@
 #include "utils/DebugAssert.h"
 
 GameObject::GameObject() noexcept : parent_(nullptr) {}
-GameObject::GameObject(GameObject* parent) noexcept : parent_(parent) {}
 GameObject::~GameObject() noexcept {
   for (auto* child : children()) {
     delete child;
@@ -41,7 +40,9 @@ void GameObject::load(const Json::Value& value) {
   const auto jsonChildren = value["children"];
   for (const auto& child : jsonChildren) {
     debug_print("Loading GameObject: '%s'.\n", child["name"].asCString());
-    auto* gameObject = new GameObject(this);
+    auto* gameObject = new GameObject();
+    gameObject->parent(this);
+    gameObject->scene(scene_);
     children_.emplace_back(gameObject);
     gameObject->load(child);
   }

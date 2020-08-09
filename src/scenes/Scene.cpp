@@ -97,6 +97,7 @@ void Scene::load() {
     debug_print("Loading GameObject: '%s'.\n", object["name"].asCString());
     auto* gameObject = new GameObject();
     gameObjects_.emplace_back(gameObject);
+    gameObject->scene(this);
     gameObject->load(object);
   }
 
