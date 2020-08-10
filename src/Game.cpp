@@ -50,6 +50,10 @@ bool Game::start() noexcept {
 }
 
 bool Game::end() noexcept {
+  FontManager::close();
+  ImageManager::close();
+  ComponentManager::close();
+
   // Destroy window
   SDL_DestroyWindow(window_);
 
@@ -97,8 +101,8 @@ bool Game::init() noexcept {
 }
 
 void Game::run() {
-  ImageManager::instance()->init();
-  FontManager::instance()->init();
+  ImageManager::init();
+  FontManager::init();
 
   auto scene = SceneManager::createScene("menu");
   SceneManager::loadScene(scene);

@@ -15,8 +15,9 @@ SolidRendererFactory::~SolidRendererFactory() noexcept = default;
 // }
 
 std::shared_ptr<SolidRenderer> SolidRendererFactory::fromJson(
-    const Json::Value& json) {
-  return std::make_shared<SolidRenderer>(Vector4<int32_t>(json["rectangle"]),
+    const Json::Value& json, std::weak_ptr<GameObject> parent) {
+  return std::make_shared<SolidRenderer>(parent,
+                                         Vector4<int32_t>(json["rectangle"]),
                                          Vector4<uint8_t>(json["color"]));
 }
 

@@ -10,10 +10,7 @@
 #include "objects/Image.h"
 #include "utils/DebugAssert.h"
 
-ImageManager* ImageManager::instance_ = nullptr;
-
-ImageManager::ImageManager() = default;
-ImageManager::~ImageManager() = default;
+std::unique_ptr<ImageManager> ImageManager::instance_ = nullptr;
 
 /** {
   "name": "ForestBackground",
@@ -30,18 +27,21 @@ void ImageManager::init() {
                               "'. Reason: " + errors);
   }
 
+  // Hold a reference of the instance's cache
+  auto& cache = instance_->cache_;
+
   debug_print("%s", "Loading Images...\n");
   for (const auto& object : root) {
     const auto& name = object["name"].asCString();
     const auto& path = object["path"].asCString();
     debug_print("Loading Image: '%s' named '%s'.\n", path, name);
+    assert(((void)"Detected duplicated name and size!", !cache[name]));
 
-    auto* image = new Image(path);
-    assert(((void)"Detected duplicated name and size!", !cache_[name]));
-    cache_[name] = image;
+    auto image = std::make_shared<Image>(path);
     debug_print("Successfully loaded Image '%s' with size (%zi, %zi).\n", name,
                 image->size().x(), image->size().y());
+    cache[name] = std::move(image);
   }
 
-  debug_print("Successfully loaded %zi Image(s).\n", cache_.size());
+  debug_print("Successfully loaded %zi Image(s).\n", cache.size());
 }

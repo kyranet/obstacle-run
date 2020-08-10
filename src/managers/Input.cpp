@@ -13,7 +13,7 @@ std::array<bool, static_cast<size_t>(KeyboardKey::kKeyLimit)> Input::keyDown_{};
 std::array<bool, static_cast<size_t>(KeyboardKey::kKeyLimit)> Input::keyUp_{};
 std::array<bool, static_cast<size_t>(MouseKey::kKeyLimit)> Input::mouseDown_{};
 std::array<bool, static_cast<size_t>(MouseKey::kKeyLimit)> Input::mouseUp_{};
-GameObject* Input::casted_{nullptr};
+std::shared_ptr<const GameObject> Input::casted_{};
 
 void Input::clear() noexcept {
   for (uint16_t i = 0, max = static_cast<uint16_t>(KeyboardKey::kKeyLimit);
@@ -95,7 +95,7 @@ SDL_Point Input::rawMousePosition() noexcept {
   return {position.x(), position.y()};
 }
 
-GameObject* Input::screenMouseToRay() noexcept {
+std::shared_ptr<const GameObject> Input::screenMouseToRay() noexcept {
   if (casted_) return casted_;
   const auto& scene = SceneManager::getActiveScene();
   const auto& gameObjects = scene->gameObjects();
@@ -109,6 +109,7 @@ GameObject* Input::screenMouseToRay() noexcept {
       return scanned;
     }
   }
+
   return nullptr;
 }
 

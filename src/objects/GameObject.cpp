@@ -8,11 +8,11 @@
 #include "managers/ComponentManager.h"
 #include "utils/DebugAssert.h"
 
-GameObject::GameObject(const Json::Value& json, std::weak_ptr<Scene> scene,
+GameObject::GameObject(std::weak_ptr<Scene> scene,
                        std::weak_ptr<GameObject> parent) noexcept
-    : scene_(std::move(scene)), parent_(std::move(parent)) {
-  load(json);
-}
+    : std::enable_shared_from_this<GameObject>(),
+      scene_(std::move(scene)),
+      parent_(std::move(parent)) {}
 
 GameObject::~GameObject() noexcept {
   for (auto& child : children_) {
@@ -20,16 +20,16 @@ GameObject::~GameObject() noexcept {
   }
 }
 
-GameObject* GameObject::clickScan(SDL_Point point) const noexcept {
+std::shared_ptr<const GameObject> GameObject::clickScan(
+    SDL_Point point) const noexcept {
   for (auto it = children().rbegin(); it != children().rend(); ++it) {
-    const auto& child = (*it).get();
+    const auto& child = (*it);
     if (child->clickScan(point)) return child;
   }
 
   const auto rect = rectangle();
-  return !transparent() && SDL_PointInRect(&point, &rect)
-             ? const_cast<GameObject*>(this)
-             : nullptr;
+  return !transparent() && SDL_PointInRect(&point, &rect) ? shared_from_this()
+                                                          : nullptr;
 }
 
 SDL_Rect GameObject::rectangle() const noexcept {
@@ -47,8 +47,9 @@ void GameObject::load(const Json::Value& value) {
   const auto jsonChildren = value["children"];
   for (const auto& child : jsonChildren) {
     debug_print("Loading GameObject: '%s'.\n", child["name"].asCString());
-    children_.emplace_back(
-        std::make_unique<GameObject>(child, scene(), shared_from_this()));
+    auto gameObject = std::make_unique<GameObject>(scene(), shared_from_this());
+    gameObject->load(child);
+    children_.emplace_back(std::move(gameObject));
   }
 
   const auto jsonComponents = value["components"];
@@ -59,12 +60,8 @@ void GameObject::load(const Json::Value& value) {
     assert(((void)"'factory' from GameObject::load(const Json::Value&) "
                   "must not be nullptr.",
             factory));
-    auto component = factory->fromJson(child);
-    assert(((void)"'component' from GameObject::load(const Json::Value&) "
-                  "must not be nullptr.",
-            component));
-    component->gameObject() = this;
-    components_.emplace_back(component);
+
+    components_.emplace_back(factory->fromJson(child, shared_from_this()));
   }
 
   debug_print(

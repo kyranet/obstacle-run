@@ -15,7 +15,8 @@ class Transform final : public Component {
   Vector2<int32_t> scale_;
 
  public:
-  Transform(Vector2<float> position, Vector2<int32_t> scale) noexcept;
+  Transform(std::weak_ptr<GameObject> gameObject, Vector2<float> position,
+            Vector2<int32_t> scale) noexcept;
   ~Transform() noexcept;
 
   [[nodiscard]] inline const Vector2<float>& position() const noexcept {

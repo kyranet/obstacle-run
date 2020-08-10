@@ -11,7 +11,7 @@ class Scene final : public std::enable_shared_from_this<Scene> {
  private:
   std::string name_;
   std::vector<std::unique_ptr<GameObject>> newGameObjects_{};
-  std::vector<std::unique_ptr<GameObject>> gameObjects_{};
+  std::vector<std::shared_ptr<GameObject>> gameObjects_{};
   bool stop_ = false;
 
   void onStart() const noexcept;
@@ -33,7 +33,7 @@ class Scene final : public std::enable_shared_from_this<Scene> {
   void stop() noexcept;
   void end() noexcept;
 
-  [[nodiscard]] inline const std::vector<std::unique_ptr<GameObject>>&
+  [[nodiscard]] inline const std::vector<std::shared_ptr<GameObject>>&
   gameObjects() const noexcept {
     return gameObjects_;
   }

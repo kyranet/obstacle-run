@@ -67,7 +67,7 @@ class Input final {
    * Input::screenMouseToRay(), and is assigned to nullptr when the cursor
    * moves.
    */
-  static GameObject* casted_;
+  static std::shared_ptr<const GameObject> casted_;
 
  public:
   Input() = delete;
@@ -188,5 +188,6 @@ class Input final {
            keyPressed(KeyboardKey::RIGHT_ALT);
   }
 
-  [[nodiscard]] static GameObject* screenMouseToRay() noexcept;
+  [[nodiscard]] static std::shared_ptr<const GameObject>
+  screenMouseToRay() noexcept;
 };

@@ -10,10 +10,7 @@
 #include "objects/Font.h"
 #include "utils/DebugAssert.h"
 
-FontManager* FontManager::instance_ = nullptr;
-
-FontManager::FontManager() = default;
-FontManager::~FontManager() = default;
+std::unique_ptr<FontManager> FontManager::instance_{};
 
 void FontManager::init() {
   std::string file = "./assets/fonts/all.json";
@@ -33,12 +30,13 @@ void FontManager::init() {
     const auto& size = static_cast<uint16_t>(object["size"].asUInt());
     debug_print("Loading Font: '%s' named '%s' with size '%zi'.\n", path, name,
                 size);
+    assert(((void)"Detected duplicated name and size!",
+            !instance_->cache_[name][size]));
 
-    auto* font = new Font(path, size);
-    assert(((void)"Detected duplicated name and size!", !cache_[name][size]));
-    cache_[name][size] = font;
+    auto font = std::make_shared<Font>(path, size);
     debug_print("Successfully loaded Font '%s' with size '%zi'.\n", name, size);
+    instance_->cache_[name][size] = font;
   }
 
-  debug_print("Successfully loaded %zi Font(s).\n", cache_.size());
+  debug_print("Successfully loaded %zi Font(s).\n", instance_->cache_.size());
 }

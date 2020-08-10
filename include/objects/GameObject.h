@@ -22,15 +22,14 @@ class GameObject final : public std::enable_shared_from_this<GameObject> {
   std::weak_ptr<Scene> scene_{};
   std::weak_ptr<GameObject> parent_{};
   std::weak_ptr<Transform> transform_{};
-  std::vector<std::unique_ptr<GameObject>> children_{};
+  std::vector<std::shared_ptr<GameObject>> children_{};
   std::vector<std::shared_ptr<Component>> components_{};
 
-  void load(const Json::Value& value);
-
  public:
-  GameObject(const Json::Value& json, std::weak_ptr<Scene> scene,
+  GameObject(std::weak_ptr<Scene> scene,
              std::weak_ptr<GameObject> parent = {}) noexcept;
   ~GameObject() noexcept;
+  void load(const Json::Value& value);
 
   [[nodiscard]] inline const std::string& name() const noexcept {
     return name_;
@@ -68,9 +67,10 @@ class GameObject final : public std::enable_shared_from_this<GameObject> {
 
   [[nodiscard]] SDL_Rect rectangle() const noexcept;
 
-  [[nodiscard]] GameObject* clickScan(SDL_Point point) const noexcept;
+  [[nodiscard]] std::shared_ptr<const GameObject> clickScan(
+      SDL_Point point) const noexcept;
 
-  [[nodiscard]] inline const std::vector<std::unique_ptr<GameObject>>&
+  [[nodiscard]] inline const std::vector<std::shared_ptr<GameObject>>&
   children() const noexcept {
     return children_;
   }

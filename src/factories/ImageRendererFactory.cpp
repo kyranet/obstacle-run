@@ -15,9 +15,10 @@ ImageRendererFactory::~ImageRendererFactory() noexcept = default;
 // }
 
 std::shared_ptr<ImageRenderer> ImageRendererFactory::fromJson(
-    const Json::Value& json) {
+    const Json::Value& json, std::weak_ptr<GameObject> parent) {
   return std::make_shared<ImageRenderer>(
-      json["image"].asString(), getImageFitFromName(json["fit"].asString()));
+      parent, json["image"].asString(),
+      getImageFitFromName(json["fit"].asString()));
 }
 
 Json::Value ImageRendererFactory::toJson(

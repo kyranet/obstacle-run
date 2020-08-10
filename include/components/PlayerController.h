@@ -8,7 +8,8 @@ class PlayerController final : public Component {
   uint8_t speed_;
 
  public:
-  PlayerController(uint8_t speed) noexcept;
+  PlayerController(std::weak_ptr<GameObject> gameObject,
+                   uint8_t speed) noexcept;
   ~PlayerController() noexcept;
   void onAwake() noexcept override;
   void onUpdate() noexcept override;

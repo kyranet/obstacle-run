@@ -6,5 +6,7 @@
 
 class Button final : public Component {
  public:
+  explicit Button(std::weak_ptr<GameObject> gameObject) noexcept;
+
   void onUpdate() noexcept override;
 };

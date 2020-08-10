@@ -14,9 +14,9 @@ class Component;
 
 class ComponentManager {
  private:
+  static std::unique_ptr<ComponentManager> instance_;
   std::map<std::string, std::shared_ptr<ComponentFactory<Component>>>
       components_;
-  static std::unique_ptr<ComponentManager> instance_;
 
  public:
   template <typename T>
@@ -32,9 +32,11 @@ class ComponentManager {
     return instance_->components_[name];
   }
 
-  static void create() {
+  static inline void create() {
     assert(((void)"ComponentManager::create() must be called only once",
             !instance_));
     instance_ = std::make_unique<ComponentManager>();
   }
+
+  static inline void close() { instance_->components_.clear(); }
 };

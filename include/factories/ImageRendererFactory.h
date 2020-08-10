@@ -16,7 +16,7 @@ class ImageRendererFactory final : public ComponentFactory<ImageRenderer> {
   ~ImageRendererFactory() noexcept override;
 
   [[nodiscard]] std::shared_ptr<ImageRenderer> fromJson(
-      const Json::Value&) override;
+      const Json::Value& json, std::weak_ptr<GameObject> parent) override;
   [[nodiscard]] Json::Value toJson(
       std::shared_ptr<ImageRenderer> value) const override;
 };

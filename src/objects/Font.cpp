@@ -2,6 +2,7 @@
 #include "objects/Font.h"
 
 #include <cassert>
+#include <cstdio>
 
 Font::Font(const char* filepath, uint16_t size) noexcept {
   ttfFont_ = TTF_OpenFont(filepath, size);

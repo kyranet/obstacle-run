@@ -42,13 +42,14 @@ struct SDL_Texture;
 class ImageRenderer final : public Component {
   std::string path_;
   ImageFit fit_;
-  Image* image_ = nullptr;
+  std::shared_ptr<Image> image_{};
   SDL_Texture* texture_ = nullptr;
 
   void updateImageFit() noexcept;
 
  public:
-  explicit ImageRenderer(std::string path, ImageFit fit) noexcept;
+  explicit ImageRenderer(std::weak_ptr<GameObject> gameObject, std::string path,
+                         ImageFit fit) noexcept;
   ~ImageRenderer() noexcept;
 
   void onAwake() noexcept override;
@@ -62,5 +63,7 @@ class ImageRenderer final : public Component {
   [[nodiscard]] inline const ImageFit& fit() const noexcept { return fit_; }
   inline ImageFit& fit() noexcept { return fit_; }
 
-  [[nodiscard]] inline const Image* image() const noexcept { return image_; }
+  [[nodiscard]] inline const std::shared_ptr<Image> image() const noexcept {
+    return image_;
+  }
 };

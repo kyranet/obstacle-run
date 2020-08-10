@@ -13,7 +13,8 @@ class SolidRenderer final : public Component {
   Vector4<uint8_t> color_;
 
  public:
-  SolidRenderer(const Vector4<int32_t>& rectangle,
+  SolidRenderer(std::weak_ptr<GameObject> gameObject,
+                const Vector4<int32_t>& rectangle,
                 const Vector4<uint8_t>& color) noexcept;
   ~SolidRenderer() noexcept;
 

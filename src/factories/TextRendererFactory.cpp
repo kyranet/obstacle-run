@@ -14,9 +14,9 @@ TextRendererFactory::~TextRendererFactory() noexcept = default;
 // }
 
 std::shared_ptr<TextRenderer> TextRendererFactory::fromJson(
-    const Json::Value& json) {
+    const Json::Value& json, std::weak_ptr<GameObject> parent) {
   return std::make_shared<TextRenderer>(
-      json["font"].asString(), json["text"].asString(),
+      parent, json["font"].asString(), json["text"].asString(),
       static_cast<uint16_t>(json["size"].asUInt()),
       Vector4<uint8_t>(json["color"]));
 }

@@ -1,10 +1,11 @@
 // Copyright (c) 2020 Antonio Román. All rights reserved.
 #include <objects/Component.h>
 
+#include <utility>
+
 #include "objects/GameObject.h"
 
-Component::Component() noexcept = default;
-Component::Component(GameObject* gameObject) noexcept
+Component::Component(std::weak_ptr<GameObject> gameObject) noexcept
     : gameObject_(gameObject) {}
 Component::~Component() noexcept = default;
 

@@ -26,8 +26,10 @@ void Scene::onCreate() noexcept {
   size_t last = gameObjects_.size();
   gameObjects_.resize(last + newGameObjects_.size());
   for (auto& gameObject : newGameObjects_) {
-    gameObjects_[last++].swap(gameObject);
     gameObject->onAwake();
+
+    std::shared_ptr<GameObject> sharedPtr(std::move(gameObject));
+    gameObjects_[last++].swap(sharedPtr);
   }
 
   newGameObjects_.clear();
@@ -40,7 +42,10 @@ void Scene::onEvents() noexcept {
   // Handle all events
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
-    if (event.type == SDL_QUIT) return end();
+    if (event.type == SDL_QUIT) {
+      stop();
+      return;
+    }
 
     Input::update(event);
   }
@@ -94,8 +99,10 @@ void Scene::load() {
   const auto rawGameObjects = root["game_objects"];
   for (const auto& object : rawGameObjects) {
     debug_print("Loading GameObject: '%s'.\n", object["name"].asCString());
-    gameObjects_.emplace_back(
-        std::make_unique<GameObject>(object, shared_from_this()));
+
+    auto gameObject = std::make_shared<GameObject>(shared_from_this());
+    gameObject->load(object);
+    gameObjects_.emplace_back(std::move(gameObject));
   }
 
   debug_print("Successfully loaded Scene '%s' with %zi GameObject(s).\n",
@@ -132,17 +139,13 @@ void Scene::run() noexcept {
       debug_print("[Frame: %zi] Delta time: %f\n", frame++, Time::delta());
     }
   }
-}
 
-void Scene::end() noexcept {
-  stop();
-  Game::getInstance()->end();
-}
-
-void Scene::stop() noexcept {
-  stop_ = true;
   onEnd();
 }
+
+void Scene::end() noexcept { stop(); }
+
+void Scene::stop() noexcept { stop_ = true; }
 
 void Scene::addGameObject(GameObject* gameObject) noexcept {
   gameObjects_.emplace_back(gameObject);

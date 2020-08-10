@@ -5,6 +5,8 @@
 
 #include "Game.h"
 #include "managers/ComponentManager.h"
+#include "managers/FontManager.h"
+#include "managers/ImageManager.h"
 
 #undef main
 
@@ -16,6 +18,8 @@ int main(int, char*[]) {
                  _CRTDBG_LEAK_CHECK_DF);  // Check Memory Leaks
 #endif
   ComponentManager::create();
+  ImageManager::create();
+  FontManager::create();
 
   auto* game = Game::getInstance();
   game->start();

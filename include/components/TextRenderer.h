@@ -20,11 +20,12 @@ class TextRenderer final : public Component {
   uint16_t size_;
   Vector4<int32_t> rectangle_;
   Vector4<uint8_t> color_;
-  const Font* ttfFont_ = nullptr;
+  std::weak_ptr<Font> ttfFont_{};
   SDL_Texture* texture_ = nullptr;
 
  public:
-  TextRenderer(std::string font, std::string text, uint16_t size,
+  TextRenderer(std::weak_ptr<GameObject> gameObject, std::string font,
+               std::string text, uint16_t size,
                Vector4<uint8_t> color) noexcept;
   ~TextRenderer() noexcept;
 

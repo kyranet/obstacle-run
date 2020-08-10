@@ -2,27 +2,30 @@
 
 #pragma once
 
+#include <cassert>
 #include <map>
+#include <memory>
 #include <string>
 
 class Image;
 
 class ImageManager {
-  static ImageManager* instance_;
-  std::map<std::string, Image*> cache_{};
-
-  ImageManager();
+  static std::unique_ptr<ImageManager> instance_;
+  std::map<std::string, std::shared_ptr<Image>> cache_;
 
  public:
-  ~ImageManager();
-  void init();
+  static void init();
 
-  [[nodiscard]] inline Image* get(const std::string& name) noexcept {
-    return cache_[name];
+  [[nodiscard]] inline static const std::shared_ptr<Image>& get(
+      const std::string& name) noexcept {
+    return instance_->cache_[name];
   }
 
-  [[nodiscard]] inline static ImageManager* instance() noexcept {
-    if (instance_ == nullptr) instance_ = new ImageManager();
-    return instance_;
+  static inline void create() {
+    assert(
+        ((void)"FontManager::create() must be called only once", !instance_));
+    instance_ = std::make_unique<ImageManager>();
   }
+
+  static inline void close() { instance_->cache_.clear(); }
 };

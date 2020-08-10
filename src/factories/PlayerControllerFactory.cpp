@@ -6,9 +6,9 @@ PlayerControllerFactory::PlayerControllerFactory() noexcept
 PlayerControllerFactory::~PlayerControllerFactory() noexcept = default;
 
 std::shared_ptr<PlayerController> PlayerControllerFactory::fromJson(
-    const Json::Value& json) {
+    const Json::Value& json, std::weak_ptr<GameObject> parent) {
   return std::make_shared<PlayerController>(
-      static_cast<uint8_t>(json["speed"].asUInt()));
+      parent, static_cast<uint8_t>(json["speed"].asUInt()));
 }
 
 Json::Value PlayerControllerFactory::toJson(

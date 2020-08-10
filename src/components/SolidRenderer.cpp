@@ -3,13 +3,16 @@
 
 #include <SDL.h>
 
+#include <utility>
+
 #include "Game.h"
 #include "components/Transform.h"
 #include "objects/GameObject.h"
 
-SolidRenderer::SolidRenderer(const Vector4<int32_t>& rectangle,
+SolidRenderer::SolidRenderer(std::weak_ptr<GameObject> gameObject,
+                             const Vector4<int32_t>& rectangle,
                              const Vector4<uint8_t>& color) noexcept
-    : rectangle_(rectangle), color_(color) {}
+    : Component(std::move(gameObject)), rectangle_(rectangle), color_(color) {}
 
 SolidRenderer::~SolidRenderer() noexcept = default;
 
@@ -25,6 +28,6 @@ void SolidRenderer::onRender() noexcept {
 }
 
 SDL_Rect SolidRenderer::calculatedRectangle() const noexcept {
-  return (rectangle() + gameObject()->transform().lock()->position())
+  return (rectangle() + gameObject().lock()->transform().lock()->position())
       .toRectangle();
 }
