@@ -295,6 +295,15 @@ class Vector4 final {
     return {x, y, z, a};
   }
 
+  template <typename Q, typename = typename std::enable_if_t<
+                            std::is_convertible_v<T, Q>, Q>>
+  [[nodiscard]] bool contains(const Vector2<Q>& point) const noexcept {
+    const auto px = static_cast<T>(point.x());
+    const auto py = static_cast<T>(point.y());
+    return ((px >= x()) && (px < (x() + z())) && (py >= y()) &&
+            (py < (y() + a())));
+  }
+
   friend std::ostream& operator<<(std::ostream& os,
                                   const Vector4<T>& v) noexcept {
     os << "(" << v.x() << ", " << v.y() << ", " << v.z() << ", " << v.h()

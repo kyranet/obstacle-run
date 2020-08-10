@@ -13,7 +13,7 @@ class Component {
 
  public:
   explicit Component(std::weak_ptr<GameObject> gameObject) noexcept;
-  ~Component() noexcept;
+  virtual ~Component() noexcept;
 
   [[nodiscard]] inline const bool& enabled() const noexcept { return enabled_; }
   inline bool& enabled() noexcept { return enabled_; }

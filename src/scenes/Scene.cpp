@@ -4,16 +4,19 @@
 
 #include <SDL.h>
 
-#include <chrono>
 #include <fstream>
+#include <utility>
 
 #include "Game.h"
 #include "exceptions/FileSystemException.h"
 #include "managers/Input.h"
+#include "objects/PhysicsWorld.h"
 #include "utils/DebugAssert.h"
 #include "utils/Time.h"
 
-Scene::Scene(const std::string& name) noexcept { name_ = name; }
+Scene::Scene(std::string name) noexcept
+    : name_(std::move(name)), physics_(std::make_unique<PhysicsWorld>()) {}
+
 Scene::~Scene() noexcept { end(); }
 
 void Scene::onStart() const noexcept {

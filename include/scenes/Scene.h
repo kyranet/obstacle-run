@@ -7,9 +7,12 @@
 
 #include "objects/GameObject.h"
 
+class PhysicsWorld;
+
 class Scene final : public std::enable_shared_from_this<Scene> {
  private:
   std::string name_;
+  std::unique_ptr<PhysicsWorld> physics_{};
   std::vector<std::unique_ptr<GameObject>> newGameObjects_{};
   std::vector<std::shared_ptr<GameObject>> gameObjects_{};
   bool stop_ = false;
@@ -22,7 +25,7 @@ class Scene final : public std::enable_shared_from_this<Scene> {
   void onEnd() noexcept;
 
  public:
-  explicit Scene(const std::string& name) noexcept;
+  explicit Scene(std::string name) noexcept;
   ~Scene() noexcept;
 
   void addGameObject(GameObject* gameObject) noexcept;
@@ -36,6 +39,11 @@ class Scene final : public std::enable_shared_from_this<Scene> {
   [[nodiscard]] inline const std::vector<std::shared_ptr<GameObject>>&
   gameObjects() const noexcept {
     return gameObjects_;
+  }
+
+  [[nodiscard]] inline const std::unique_ptr<PhysicsWorld>& physics()
+      const noexcept {
+    return physics_;
   }
 
   [[nodiscard]] inline const std::string& name() const noexcept {

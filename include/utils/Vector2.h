@@ -72,6 +72,10 @@ class Vector2 final {
     x_ = static_cast<T>(point.x);
     y_ = static_cast<T>(point.y);
   }
+  template <typename Q, typename = typename std::enable_if_t<
+                            std::is_convertible_v<T, Q>, Q>>
+  explicit Vector2(const Vector2<Q>& other) noexcept
+      : x_(static_cast<T>(other.x())), y_(static_cast<T>(other.y())) {}
 
   // Copy constructors
   Vector2(Vector2<T>& other) noexcept : x_(other.x()), y_(other.y()) {}

@@ -9,12 +9,14 @@ include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${SDL2_TTF_INC
 set(GAME_SOURCES
   components/Button.cpp
   components/ImageRenderer.cpp
+  components/PhysicsBody.cpp
   components/PlayerController.cpp
   components/SolidRenderer.cpp
   components/TextRenderer.cpp
   components/Transform.cpp
   factories/ButtonFactory.cpp
   factories/ImageRendererFactory.cpp
+  factories/PhysicsBodyFactory.cpp
   factories/PlayerControllerFactory.cpp
   factories/SolidRendererFactory.cpp
   factories/TextRendererFactory.cpp
@@ -30,8 +32,10 @@ set(GAME_SOURCES
   objects/Font.cpp
   objects/GameObject.cpp
   objects/Image.cpp
+  objects/PhysicsWorld.cpp
   scenes/Scene.cpp
-  third-party/jsoncpp/jsoncpp.cpp utils/Time.cpp)
+  utils/Time.cpp
+  third-party/jsoncpp/jsoncpp.cpp)
 
 add_executable(Game ${GAME_SOURCES})
 target_compile_features(Game PUBLIC cxx_std_17)

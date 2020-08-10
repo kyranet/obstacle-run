@@ -18,6 +18,20 @@
       "children": []
     },
     {
+      "name": "Physics",
+      "components": [
+        {
+          "name": "PhysicsBody",
+          "data": [200, 200, 50, 50]
+        },
+        {
+          "name": "PhysicsBody",
+          "data": [150, 250, 50, 50]
+        }
+      ],
+      "children": []
+    },
+    {
       "name": "Player",
       "components": [
         {

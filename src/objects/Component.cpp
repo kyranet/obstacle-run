@@ -6,7 +6,7 @@
 #include "objects/GameObject.h"
 
 Component::Component(std::weak_ptr<GameObject> gameObject) noexcept
-    : gameObject_(gameObject) {}
+    : gameObject_(std::move(gameObject)) {}
 Component::~Component() noexcept = default;
 
 void Component::destroy() noexcept {}
