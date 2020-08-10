@@ -1,20 +1,20 @@
 // Copyright (c) 2020 Antonio Román. All rights reserved.
 
 #pragma once
+#include <box2d/box2d.h>
+
 #include <memory>
 #include <string>
 #include <vector>
 
 #include "objects/GameObject.h"
 
-class PhysicsWorld;
-
 class Scene final : public std::enable_shared_from_this<Scene> {
  private:
   std::string name_;
-  std::unique_ptr<PhysicsWorld> physics_{};
   std::vector<std::unique_ptr<GameObject>> newGameObjects_{};
   std::vector<std::shared_ptr<GameObject>> gameObjects_{};
+  b2World world_;
   bool stop_ = false;
 
   void onStart() const noexcept;
@@ -41,10 +41,7 @@ class Scene final : public std::enable_shared_from_this<Scene> {
     return gameObjects_;
   }
 
-  [[nodiscard]] inline const std::unique_ptr<PhysicsWorld>& physics()
-      const noexcept {
-    return physics_;
-  }
+  [[nodiscard]] inline b2World& world() noexcept { return world_; }
 
   [[nodiscard]] inline const std::string& name() const noexcept {
     return name_;

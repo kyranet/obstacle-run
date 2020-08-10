@@ -3,26 +3,31 @@
 
 #include "Game.h"
 #include "objects/GameObject.h"
-#include "objects/PhysicsWorld.h"
 #include "scenes/Scene.h"
 
 PhysicsBody::PhysicsBody(std::weak_ptr<GameObject> parent,
-                         Vector4<int32_t> vector) noexcept
-    : Component(std::move(parent)) {
-  id_ = gameObject().lock()->scene().lock()->physics()->add(vector);
+                         Vector4<int32_t> data) noexcept
+    : Component(std::move(parent)), data_(data) {
+  b2BodyDef bodyDef;
+  bodyDef.type = b2_staticBody;
+  bodyDef.position.Set(static_cast<float>(data.x()),
+                       static_cast<float>(data.y()));
+  bodyDef.angle = 0.f;
+
+  body_ = scene().lock()->world().CreateBody(&bodyDef);
+
+  b2PolygonShape boxShape;
+  boxShape.SetAsBox(static_cast<float>(data.z()) / 2.f,
+                    static_cast<float>(data.a()) / 2.f);
+
+  b2FixtureDef fixtureDef;
+  fixtureDef.shape = &boxShape;
+  fixtureDef.density = 1.f;
+
+  body_->CreateFixture(&fixtureDef);
 }
 
-PhysicsBody::~PhysicsBody() noexcept {
-  const auto& go = gameObject().lock();
-  if (!go) return;
-
-  const auto& scene = go->scene().lock();
-  scene->physics()->remove(id_);
-}
-
-const Vector4<int32_t>& PhysicsBody::data() const noexcept {
-  return gameObject().lock()->scene().lock()->physics()->at(id_);
-}
+PhysicsBody::~PhysicsBody() noexcept = default;
 
 #if !NDEBUG
 void PhysicsBody::onRender() noexcept {

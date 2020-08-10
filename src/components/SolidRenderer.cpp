@@ -20,7 +20,8 @@ void SolidRenderer::onAwake() noexcept { Component::onAwake(); }
 
 void SolidRenderer::onRender() noexcept {
   Component::onRender();
-
+  gameObject().lock()->transform().lock()->scale() =
+      Vector2{rectangle().a(), rectangle().z()};
   const auto destination = calculatedRectangle();
   SDL_SetRenderDrawColor(Game::renderer(), color().x(), color().y(),
                          color().z(), color().a());

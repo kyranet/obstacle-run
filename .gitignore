@@ -508,5 +508,6 @@ build_*/
 # Ignore dependency folder
 deps/
 !deps/CMakeLists.txt
+!deps/box2D
 
 # End of https://www.gitignore.io/api/c++,cmake,clion,visualstudio,visualstudiocode

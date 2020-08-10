@@ -24,18 +24,21 @@ class PhysicsWorld {
     return objects_.at(id);
   }
 
-  [[nodiscard]] uint32_t collides(
-      const Vector2<int32_t>& point) const noexcept {
+  [[nodiscard]] uint32_t collides(const Vector2<int32_t>& l1,
+                                  const Vector2<int32_t>& size) const noexcept {
+    const Vector4<int32_t> r1{l1.x(), l1.y(), l1.x() + size.x(),
+                              l1.y() + size.y()};
     for (const auto& object : objects_) {
-      if (object.second.contains(point)) return object.first;
+      if (r1.overlaps(object.second)) return object.first;
     }
 
     return max();
   }
 
-  [[nodiscard]] inline bool collides(
-      const Vector2<float>& point) const noexcept {
-    return collides(Vector2<int32_t>(point));
+  [[nodiscard]] inline uint32_t collides(
+      const Vector2<float>& point,
+      const Vector2<int32_t>& size) const noexcept {
+    return collides(Vector2<int32_t>(point), size);
   }
 
   [[nodiscard]] inline static uint32_t max() noexcept {

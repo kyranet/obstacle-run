@@ -10,12 +10,11 @@
 #include "Game.h"
 #include "exceptions/FileSystemException.h"
 #include "managers/Input.h"
-#include "objects/PhysicsWorld.h"
 #include "utils/DebugAssert.h"
 #include "utils/Time.h"
 
 Scene::Scene(std::string name) noexcept
-    : name_(std::move(name)), physics_(std::make_unique<PhysicsWorld>()) {}
+    : name_(std::move(name)), world_({0.f, 0.f}) {}
 
 Scene::~Scene() noexcept { end(); }
 

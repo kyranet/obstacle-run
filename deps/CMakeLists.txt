@@ -35,10 +35,15 @@ if (BUILD_LOCAL)
 
   foreach (dll ${DEPENDENCY_DLLS})
     get_filename_component(dll_fn ${dll} NAME)
-    configure_file(${dll} dependencies/${dll_fn} COPYONLY)
+    configure_file(${dll} dll/${dll_fn} COPYONLY)
   endforeach ()
 endif ()
 
+set(BOX2D_BUILD_UNIT_TESTS OFF)
+set(BOX2D_BUILD_TESTBED OFF)
+set(BOX2D_BUILD_DOCS OFF)
+add_subdirectory(box2d)
+
 add_executable(Dependencies IMPORTED GLOBAL)
-set_target_properties(Dependencies PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/dependencies/DO_NOT_USE)
+set_target_properties(Dependencies PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/DO_NOT_USE)
 set_target_properties(Dependencies PROPERTIES BUILD_LOCAL ${BUILD_LOCAL})

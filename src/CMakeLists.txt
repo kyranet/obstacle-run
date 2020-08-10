@@ -6,6 +6,8 @@ find_package(SDL2_mixer REQUIRED)
 find_package(SDL2_net REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR} ${SDL2_NET_INCLUDE_DIR} third-party/jsoncpp)
 
+set(DEPENDENCY_LIBRARIES $<TARGET_FILE_DIR:Dependencies>/box2d/src/box2d.lib)
+
 set(GAME_SOURCES
   components/Button.cpp
   components/ImageRenderer.cpp
@@ -32,7 +34,6 @@ set(GAME_SOURCES
   objects/Font.cpp
   objects/GameObject.cpp
   objects/Image.cpp
-  objects/PhysicsWorld.cpp
   scenes/Scene.cpp
   utils/Time.cpp
   third-party/jsoncpp/jsoncpp.cpp)
@@ -42,11 +43,12 @@ target_compile_features(Game PUBLIC cxx_std_17)
 target_include_directories(Game
   PUBLIC
   $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+  $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/deps/box2d/include>
   $<INSTALL_INTERFACE:include>
   )
 
 # Link the libraries and install them.
-target_link_libraries(Game ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SDL2_MIXER_LIBRARIES} ${SDL2_NET_LIBRARY})
+target_link_libraries(Game ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SDL2_MIXER_LIBRARIES} ${SDL2_NET_LIBRARY} ${DEPENDENCY_LIBRARIES})
 
 add_custom_command(
   TARGET Game POST_BUILD
@@ -59,7 +61,7 @@ if (BUILD_LOCAL)
     add_custom_command(
       TARGET Game POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy_directory
-      $<TARGET_FILE_DIR:Dependencies>
+      $<TARGET_FILE_DIR:Dependencies>/dll
       $<TARGET_FILE_DIR:Game>
     )
 endif ()

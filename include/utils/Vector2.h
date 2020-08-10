@@ -104,6 +104,18 @@ class Vector2 final {
     return *this;
   }
 
+  Vector2& operator+=(const Vector2<T>& other) {
+    x() += other.x();
+    y() += other.y();
+    return *this;
+  }
+
+  Vector2& operator+=(const SDL_Point& other) {
+    x() += other.x;
+    y() += other.y;
+    return *this;
+  }
+
   /**
    * \brief Get the x coordinate value for this instance.
    * \return The value for the x coordinate.
@@ -151,7 +163,7 @@ class Vector2 final {
    * \brief Gets the magnitude of this vector.
    * \return The magnitude of this vector.
    */
-  [[nodiscard]] inline T magnitude() const noexcept {
+  [[nodiscard]] inline float magnitude() const noexcept {
     return sqrt(pow(x(), 2) + pow(y(), 2));
   }
 

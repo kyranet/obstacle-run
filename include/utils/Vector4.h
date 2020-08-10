@@ -297,11 +297,25 @@ class Vector4 final {
 
   template <typename Q, typename = typename std::enable_if_t<
                             std::is_convertible_v<T, Q>, Q>>
-  [[nodiscard]] bool contains(const Vector2<Q>& point) const noexcept {
+  [[nodiscard]] inline bool contains(const Vector2<Q>& point) const noexcept {
     const auto px = static_cast<T>(point.x());
     const auto py = static_cast<T>(point.y());
     return ((px >= x()) && (px < (x() + z())) && (py >= y()) &&
             (py < (y() + a())));
+  }
+
+  template <typename Q, typename = typename std::enable_if_t<
+                            std::is_convertible_v<T, Q>, Q>>
+  [[nodiscard]] inline bool overlaps(const Vector4<Q>& other) const noexcept {
+    // Check x boundaries
+    if (((x() + z()) < other.x()) || (x() > (other.x() + other.z())))
+      return false;
+
+    // Check y boundaries
+    if (((y() + a()) < other.y()) || (y() > (other.y() + other.a())))
+      return false;
+
+    return true;
   }
 
   friend std::ostream& operator<<(std::ostream& os,

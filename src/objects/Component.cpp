@@ -14,3 +14,7 @@ void Component::destroy() noexcept {}
 void Component::onAwake() noexcept { enabled() = true; }
 void Component::onUpdate() noexcept {}
 void Component::onRender() noexcept {}
+
+const std::weak_ptr<Scene>& Component::scene() const noexcept {
+  return gameObject().lock()->scene();
+}

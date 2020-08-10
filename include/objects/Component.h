@@ -5,6 +5,7 @@
 #include <json/json.h>
 
 class GameObject;
+class Scene;
 
 class Component {
  private:
@@ -22,9 +23,8 @@ class Component {
       const noexcept {
     return gameObject_;
   }
-  inline std::weak_ptr<GameObject>& gameObject() noexcept {
-    return gameObject_;
-  }
+
+  [[nodiscard]] const std::weak_ptr<Scene>& scene() const noexcept;
 
   void destroy() noexcept;
 
