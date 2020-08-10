@@ -16,13 +16,13 @@
  * \tparam T The value type this instance will hold and use.
  */
 template <typename T,
-          typename =
-              typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
+          typename = typename std::enable_if_t<std::is_arithmetic_v<T>, T>>
 class Vector4 final {
   /**
    * \brief The x coordinate.
    */
   T x_;
+
   /**
    * \brief The y coordinate.
    */
@@ -208,60 +208,64 @@ class Vector4 final {
     a_ = v.a();
   }
 
-  template <typename Q, typename = typename std::enable_if<
-                            std::is_arithmetic<Q>::value, Q>::type>
+  template <typename Q, typename = typename std::enable_if_t<
+                            std::is_convertible_v<T, Q>, Q>>
   [[nodiscard]] inline Vector4<T> operator-(
       const Vector4<Q>& v) const noexcept {
     return Vector4(x() - static_cast<T>(v.x()), y() - static_cast<T>(v.y()),
                    z() - static_cast<T>(v.z()), a() - static_cast<T>(v.a()));
   }
 
-  template <typename Q, typename = typename std::enable_if<
-                            std::is_arithmetic<Q>::value, Q>::type>
+  template <typename Q, typename = typename std::enable_if_t<
+      std::is_convertible_v<T, Q>, Q>>
   [[nodiscard]] inline Vector4<T> operator-(
       const Vector2<Q>& v) const noexcept {
     return Vector4(x() - static_cast<T>(v.x()), y() - static_cast<T>(v.y()),
                    z(), a());
   }
 
-  template <typename Q, typename = typename std::enable_if<
-                            std::is_arithmetic<Q>::value, Q>::type>
+  template <typename Q, typename = typename std::enable_if_t<
+      std::is_convertible_v<T, Q>, Q>>
   [[nodiscard]] inline Vector4<T> operator+(
       const Vector4<Q>& v) const noexcept {
     return Vector4(x() + static_cast<T>(v.x()), y() + static_cast<T>(v.y()),
                    z() + static_cast<T>(v.z()), a() + static_cast<T>(v.a()));
   }
 
-  template <typename Q, typename = typename std::enable_if<
-                            std::is_arithmetic<Q>::value, Q>::type>
+  template <typename Q, typename = typename std::enable_if_t<
+      std::is_convertible_v<T, Q>, Q>>
   [[nodiscard]] inline Vector4<T> operator+(
       const Vector2<Q>& v) const noexcept {
     return Vector4(x() + static_cast<T>(v.x()), y() + static_cast<T>(v.y()),
                    z(), a());
   }
 
-  template <typename Q, typename = typename std::enable_if<
-                            std::is_arithmetic<Q>::value, Q>::type>
+  template <typename Q, typename = typename std::enable_if_t<
+      std::is_convertible_v<T, Q>, Q>>
   [[nodiscard]] inline Vector4<T> operator*(
       const Vector4<Q>& d) const noexcept {
     return Vector4(x() * static_cast<T>(d.x()), y() * static_cast<T>(d.y()),
                    z() * static_cast<T>(d.z()), a() * static_cast<T>(d.a()));
   }
 
-  template <typename Q, typename = typename std::enable_if<
-                            std::is_arithmetic<Q>::value, Q>::type>
+  template <typename Q, typename = typename std::enable_if_t<
+      std::is_convertible_v<T, Q>, Q>>
   [[nodiscard]] inline Vector4<T> operator*(
       const Vector2<Q>& d) const noexcept {
     return Vector4(x() * static_cast<T>(d.x()), y() * static_cast<T>(d.y()),
                    z(), a());
   }
 
-  [[nodiscard]] inline Vector4<T> operator*(T d) const noexcept {
-    return Vector4(x() * d, y() * d, z() * d, a() * d);
+  template <typename Q, typename = typename std::enable_if_t<
+      std::is_convertible_v<T, Q>, Q>>
+  [[nodiscard]] inline Vector4<T> operator*(Q d) const noexcept {
+    return Vector4(x() * static_cast<T>(d), y() * static_cast<T>(d), z() * static_cast<T>(d), a() * static_cast<T>(d));
   }
 
-  [[nodiscard]] inline Vector4<T> operator/(T d) const noexcept {
-    return Vector4(x() / d, y() / d, z() / d, a() / d);
+  template <typename Q, typename = typename std::enable_if_t<
+      std::is_convertible_v<T, Q>, Q>>
+  [[nodiscard]] inline Vector4<T> operator/(Q d) const noexcept {
+    return Vector4(x() / static_cast<T>(d), y() / static_cast<T>(d), z() / static_cast<T>(d), a() / static_cast<T>(d));
   }
 
   [[nodiscard]] Json::Value toJson() const noexcept {

@@ -14,13 +14,13 @@
  * \tparam T The value type this instance will hold and use.
  */
 template <typename T,
-          typename =
-              typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
+          typename = typename std::enable_if_t<std::is_arithmetic_v<T>, T>>
 class Vector2 final {
   /**
    * \brief The x coordinate.
    */
   T x_;
+
   /**
    * \brief The y coordinate.
    */
@@ -66,6 +66,11 @@ class Vector2 final {
       x_ = static_cast<T>(json[0U].asDouble());
       y_ = static_cast<T>(json[1U].asDouble());
     }
+  }
+
+  explicit Vector2(const SDL_Point& point) noexcept {
+    x_ = static_cast<T>(point.x);
+    y_ = static_cast<T>(point.y);
   }
 
   // Copy constructors
@@ -138,12 +143,6 @@ class Vector2 final {
     y_ = v.y();
   }
 
-  template <typename Q, typename = typename std::enable_if<
-                            std::is_arithmetic<Q>::value, Q>::type>
-  [[nodiscard]] inline Vector2<Q> toJson() const noexcept {
-    return {static_cast<Q>(x()), static_cast<Q>(y())};
-  }
-
   /**
    * \brief Gets the magnitude of this vector.
    * \return The magnitude of this vector.
@@ -152,27 +151,37 @@ class Vector2 final {
     return sqrt(pow(x(), 2) + pow(y(), 2));
   }
 
+  template <typename Q, typename = typename std::enable_if_t<
+                            std::is_convertible_v<T, Q>, Q>>
   [[nodiscard]] inline Vector2<T> operator-(
-      const Vector2<T>& v) const noexcept {
-    return Vector2(x() - v.x(), y() - v.y());
+      const Vector2<Q>& v) const noexcept {
+    return Vector2(x() - static_cast<T>(v.x()), y() - static_cast<T>(v.y()));
   }
 
+  template <typename Q, typename = typename std::enable_if_t<
+                            std::is_convertible_v<T, Q>, Q>>
   [[nodiscard]] inline Vector2<T> operator+(
-      const Vector2<T>& v) const noexcept {
-    return Vector2(x() + v.x(), y() + v.y());
+      const Vector2<Q>& v) const noexcept {
+    return Vector2(x() + static_cast<T>(v.x()), y() + static_cast<T>(v.y()));
   }
 
+  template <typename Q, typename = typename std::enable_if_t<
+                            std::is_convertible_v<T, Q>, Q>>
   [[nodiscard]] inline Vector2<T> operator*(
-      const Vector2<T>& d) const noexcept {
-    return Vector2(x() * d.x(), y() * d.y());
+      const Vector2<Q>& d) const noexcept {
+    return Vector2(x() * static_cast<T>(d.x()), y() * static_cast<T>(d.y()));
   }
 
-  [[nodiscard]] inline Vector2<T> operator*(T d) const noexcept {
-    return Vector2(x() * d, y() * d);
+  template <typename Q, typename = typename std::enable_if_t<
+                            std::is_convertible_v<T, Q>, Q>>
+  [[nodiscard]] inline Vector2<T> operator*(Q d) const noexcept {
+    return Vector2(x() * static_cast<T>(d), y() * static_cast<T>(d));
   }
 
-  [[nodiscard]] inline Vector2<T> operator/(T d) const noexcept {
-    return Vector2(x() / d, y() / d);
+  template <typename Q, typename = typename std::enable_if_t<
+                            std::is_convertible_v<T, Q>, Q>>
+  [[nodiscard]] inline Vector2<T> operator/(Q d) const noexcept {
+    return Vector2(x() / static_cast<T>(d), y() / static_cast<T>(d));
   }
 
   [[nodiscard]] Json::Value toJson() const noexcept {
@@ -182,16 +191,8 @@ class Vector2 final {
     return out;
   }
 
-  [[nodiscard]] static Vector2<T> from(const SDL_Point& point) noexcept {
-    const auto x = static_cast<T>(point.x);
-    const auto y = static_cast<T>(point.y);
-    return {x, y};
-  }
-
   [[nodiscard]] SDL_Point toPoint() const noexcept {
-    const auto x = static_cast<int>(x());
-    const auto y = static_cast<int>(y());
-    return {x, y};
+    return {static_cast<int>(x()), static_cast<int>(y())};
   }
 
   friend std::ostream& operator<<(std::ostream& os,
