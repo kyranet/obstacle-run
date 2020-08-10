@@ -1,3 +1,6 @@
+# Copyright 2020 Matt Jones and Contributors.
+# Recipe based on https://github.com/novelrt/NovelRT
+
 set(ASSET_FILES
   fonts/all.json
   fonts/PaperWorks.ttf

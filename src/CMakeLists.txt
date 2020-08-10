@@ -1,3 +1,6 @@
+# Copyright 2020 Matt Jones and Contributors.
+# Recipe based on https://github.com/novelrt/NovelRT
+
 # Find all SDL2 libraries.
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
