@@ -8,8 +8,22 @@
 #include "interfaces/ComponentFactory.h"
 
 class PhysicsBodyFactory final : public ComponentFactory<PhysicsBody> {
-  static std::string getNameFromBodyType(b2BodyType value) noexcept;
-  static b2BodyType getBodyTypeFromName(const std::string& value) noexcept;
+  enum class PhysicsBodyMask {
+    Boundary = 0b0001,
+    Player = 0b0010,
+    Enemy = 0b0100,
+    Collectible = 0b1000
+  };
+
+  [[nodiscard]] static PhysicsBodyMask getBodyMaskFromName(
+      const std::string& value) noexcept;
+  [[nodiscard]] static uint16_t getMaskFromJson(
+      const Json::Value& json) noexcept;
+  [[nodiscard]] static Json::Value getJsonFromMask(uint16_t bits) noexcept;
+  [[nodiscard]] static std::string getNameFromBodyType(
+      b2BodyType value) noexcept;
+  [[nodiscard]] static b2BodyType getBodyTypeFromName(
+      const std::string& value) noexcept;
 
  public:
   PhysicsBodyFactory() noexcept;

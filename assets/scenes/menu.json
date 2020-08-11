@@ -18,17 +18,37 @@
       "children": []
     },
     {
-      "name": "Physics",
+      "name": "Walls",
       "components": [
         {
           "name": "PhysicsBody",
           "type":"static",
-          "data": [200, 200, 50, 50]
+          "sensor": false,
+          "data": [200, 200, 50, 50],
+          "category": ["boundary"],
+          "mask": ["boundary", "player", "enemy"]
         },
         {
           "name": "PhysicsBody",
           "type": "static",
-          "data": [150, 250, 50, 50]
+          "sensor": false,
+          "data": [150, 250, 50, 50],
+          "category":  ["boundary"],
+          "mask":  ["boundary", "player", "enemy"]
+        }
+      ],
+      "children": []
+    },
+    {
+      "name": "Collectible-1",
+      "components": [
+        {
+          "name": "PhysicsBody",
+          "type":"static",
+          "sensor": true,
+          "data": [200, 250, 25, 25],
+          "category": ["boundary"],
+          "mask": ["player"]
         }
       ],
       "children": []
@@ -44,7 +64,10 @@
         {
           "name": "PhysicsBody",
           "type":"dynamic",
-          "data": [50, 50, 50, 50]
+          "sensor": false,
+          "data": [50, 50, 50, 50],
+          "category": ["player"],
+          "mask": ["boundary"]
         },
         {
           "name": "PlayerController",

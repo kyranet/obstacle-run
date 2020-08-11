@@ -7,8 +7,14 @@
 #include "scenes/Scene.h"
 
 PhysicsBody::PhysicsBody(std::weak_ptr<GameObject> parent, b2BodyType type,
-                         Vector4<int32_t> data) noexcept
-    : Component(std::move(parent)), type_(type), data_(data) {
+                         bool sensor, Vector4<int32_t> data, uint16_t category,
+                         uint16_t mask) noexcept
+    : Component(std::move(parent)),
+      type_(type),
+      sensor_(sensor),
+      data_(data),
+      category_(category),
+      mask_(mask) {
   b2BodyDef bodyDef;
   bodyDef.type = type_;
   bodyDef.position.Set(static_cast<float>(data.x()),
@@ -25,7 +31,10 @@ PhysicsBody::PhysicsBody(std::weak_ptr<GameObject> parent, b2BodyType type,
   b2FixtureDef fixtureDef;
   fixtureDef.shape = &boxShape;
   fixtureDef.density = 1.f;
-
+  fixtureDef.userData = this;
+  fixtureDef.isSensor = sensor_;
+  fixtureDef.filter.categoryBits = category_;
+  fixtureDef.filter.maskBits = mask_;
   body_->CreateFixture(&fixtureDef);
 }
 
@@ -43,7 +52,7 @@ void PhysicsBody::onRender() noexcept {
   Component::onRender();
 
   const auto destination = rectangle();
-  SDL_SetRenderDrawColor(Game::renderer(), 255, 0, 0, 100);
+  SDL_SetRenderDrawColor(Game::renderer(), 255, sensor() ? 128 : 0, 0, 100);
   SDL_RenderDrawRect(Game::renderer(), &destination);
 }
 #endif
