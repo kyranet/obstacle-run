@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 project(ObstacleRun
         VERSION 0.0.1
         DESCRIPTION "A 2D multiplayer game built with SDL2."

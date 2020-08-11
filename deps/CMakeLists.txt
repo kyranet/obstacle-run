@@ -39,9 +39,9 @@ if (BUILD_LOCAL)
   endforeach ()
 endif ()
 
-set(BOX2D_BUILD_UNIT_TESTS OFF)
-set(BOX2D_BUILD_TESTBED OFF)
-set(BOX2D_BUILD_DOCS OFF)
+option(BOX2D_BUILD_UNIT_TESTS "Build the Box2D unit tests" OFF)
+option(BOX2D_BUILD_TESTBED "Build the Box2D testbed" OFF)
+option(BOX2D_BUILD_DOCS "Build the Box2D documentation" OFF)
 add_subdirectory(box2d)
 
 add_executable(Dependencies IMPORTED GLOBAL)

@@ -9,7 +9,7 @@ find_package(SDL2_mixer REQUIRED)
 find_package(SDL2_net REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR} ${SDL2_NET_INCLUDE_DIR} third-party/jsoncpp)
 
-set(DEPENDENCY_LIBRARIES $<TARGET_FILE_DIR:Dependencies>/box2d/src/box2d.lib)
+set(DEPENDENCY_LIBRARIES box2d)
 
 set(GAME_SOURCES
   components/Button.cpp
