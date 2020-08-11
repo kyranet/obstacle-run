@@ -2,6 +2,7 @@
 
 #pragma once
 #include <SDL.h>
+#include <box2d/box2d.h>
 #include <json/json.h>
 
 #include <cassert>
@@ -72,6 +73,12 @@ class Vector2 final {
     x_ = static_cast<T>(point.x);
     y_ = static_cast<T>(point.y);
   }
+
+  explicit Vector2(const b2Vec2& vec) noexcept {
+    x_ = static_cast<T>(vec.x);
+    y_ = static_cast<T>(vec.y);
+  }
+
   template <typename Q, typename = typename std::enable_if_t<
                             std::is_convertible_v<T, Q>, Q>>
   explicit Vector2(const Vector2<Q>& other) noexcept
@@ -104,9 +111,11 @@ class Vector2 final {
     return *this;
   }
 
-  Vector2& operator+=(const Vector2<T>& other) {
-    x() += other.x();
-    y() += other.y();
+  template <typename Q, typename = typename std::enable_if_t<
+                            std::is_convertible_v<T, Q>, Q>>
+  Vector2& operator=(const Vector2<Q>& other) {
+    x() = static_cast<T>(other.x());
+    y() = static_cast<T>(other.y());
     return *this;
   }
 
@@ -209,6 +218,10 @@ class Vector2 final {
 
   [[nodiscard]] SDL_Point toPoint() const noexcept {
     return {static_cast<int>(x()), static_cast<int>(y())};
+  }
+
+  [[nodiscard]] b2Vec2 toVec() const noexcept {
+    return {static_cast<float>(x()), static_cast<float>(y())};
   }
 
   friend std::ostream& operator<<(std::ostream& os,

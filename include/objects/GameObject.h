@@ -110,6 +110,7 @@ class GameObject final : public std::enable_shared_from_this<GameObject> {
 
   void onAwake() noexcept;
   void onUpdate() const noexcept;
+  void onLateUpdate() const noexcept;
   void onRender() const noexcept;
   void onDestroy() noexcept;
 };

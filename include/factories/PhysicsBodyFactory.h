@@ -8,6 +8,9 @@
 #include "interfaces/ComponentFactory.h"
 
 class PhysicsBodyFactory final : public ComponentFactory<PhysicsBody> {
+  static std::string getNameFromBodyType(b2BodyType value) noexcept;
+  static b2BodyType getBodyTypeFromName(const std::string& value) noexcept;
+
  public:
   PhysicsBodyFactory() noexcept;
   ~PhysicsBodyFactory() noexcept override;

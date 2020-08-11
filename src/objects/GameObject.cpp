@@ -93,6 +93,16 @@ void GameObject::onUpdate() const noexcept {
   }
 }
 
+void GameObject::onLateUpdate() const noexcept {
+  for (const auto& child : children()) {
+    if (child->active()) child->onLateUpdate();
+  }
+
+  for (const auto& component : components()) {
+    if (component->enabled()) component->onLateUpdate();
+  }
+}
+
 void GameObject::onRender() const noexcept {
   for (const auto& child : children()) {
     if (child->active()) child->onRender();

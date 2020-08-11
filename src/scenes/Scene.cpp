@@ -68,9 +68,19 @@ void Scene::onUpdate() noexcept {
   }
 }
 
+void Scene::onLateUpdate() noexcept {
+  world().Step(static_cast<float>(Time::delta()), 8, 3);
+
+  for (auto& entry : gameObjects_) entry->onLateUpdate();
+}
+
 void Scene::onRender() noexcept {
   // Clear the screen
   SDL_RenderClear(Game::renderer());
+
+#if !NDEBUG
+  world().DebugDraw();
+#endif
 
   for (auto& entry : gameObjects_) entry->onRender();
 
@@ -126,6 +136,7 @@ void Scene::run() noexcept {
     onCreate();
     onEvents();
     onUpdate();
+    onLateUpdate();
     onRender();
 
     Time::measure(start, frameTime);

@@ -9,10 +9,11 @@
 
 class PhysicsBody final : public Component {
   b2Body* body_{};
+  b2BodyType type_;
   Vector4<int32_t> data_;
 
  public:
-  PhysicsBody(std::weak_ptr<GameObject> gameObject,
+  PhysicsBody(std::weak_ptr<GameObject> gameObject, b2BodyType type,
               Vector4<int32_t> vector) noexcept;
   ~PhysicsBody() noexcept override;
 
@@ -20,7 +21,16 @@ class PhysicsBody final : public Component {
     return data_;
   }
 
+  [[nodiscard]] inline b2Body* body() const noexcept { return body_; }
+
+  [[nodiscard]] inline const b2BodyType& type() const noexcept { return type_; }
+
+  [[nodiscard]] inline SDL_Rect rectangle() const noexcept {
+    return data().toRectangle();
+  }
+
 #if !NDEBUG
   void onRender() noexcept override;
 #endif
+  void onLateUpdate() noexcept override;
 };

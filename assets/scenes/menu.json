@@ -22,10 +22,12 @@
       "components": [
         {
           "name": "PhysicsBody",
+          "type":"static",
           "data": [200, 200, 50, 50]
         },
         {
           "name": "PhysicsBody",
+          "type": "static",
           "data": [150, 250, 50, 50]
         }
       ],
@@ -38,6 +40,11 @@
           "name": "Transform",
           "position": [50, 50],
           "scale": [1, 1]
+        },
+        {
+          "name": "PhysicsBody",
+          "type":"dynamic",
+          "data": [50, 50, 50, 50]
         },
         {
           "name": "PlayerController",

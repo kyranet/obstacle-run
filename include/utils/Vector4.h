@@ -129,6 +129,24 @@ class Vector4 final {
     return *this;
   }
 
+  template <typename Q, typename = typename std::enable_if_t<
+                            std::is_convertible_v<T, Q>, Q>>
+  Vector4& operator=(const Vector4<Q>& other) {
+    x() = static_cast<T>(other.x());
+    y() = static_cast<T>(other.y());
+    z() = static_cast<T>(other.z());
+    a() = static_cast<T>(other.a());
+    return *this;
+  }
+
+  template <typename Q, typename = typename std::enable_if_t<
+                            std::is_convertible_v<T, Q>, Q>>
+  Vector4& operator=(const Vector2<Q>& other) {
+    x() = static_cast<T>(other.x());
+    y() = static_cast<T>(other.y());
+    return *this;
+  }
+
   Vector4& operator=(const SDL_Rect& other) {
     x() = other.x;
     y() = other.y;
@@ -293,6 +311,14 @@ class Vector4 final {
     const auto z = static_cast<uint8_t>(z_);
     const auto a = static_cast<uint8_t>(a_);
     return {x, y, z, a};
+  }
+
+  template <typename Q, typename = typename std::enable_if_t<
+                            std::is_convertible_v<T, Q>, Q>>
+  [[nodiscard]] Vector2<Q> toVector2() const noexcept {
+    const auto x = static_cast<Q>(x_);
+    const auto y = static_cast<Q>(y_);
+    return {x, y};
   }
 
   template <typename Q, typename = typename std::enable_if_t<

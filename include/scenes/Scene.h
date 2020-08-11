@@ -21,6 +21,7 @@ class Scene final : public std::enable_shared_from_this<Scene> {
   void onCreate() noexcept;
   void onEvents() noexcept;
   void onUpdate() noexcept;
+  void onLateUpdate() noexcept;
   void onRender() noexcept;
   void onEnd() noexcept;
 

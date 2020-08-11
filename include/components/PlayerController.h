@@ -3,9 +3,13 @@
 #pragma once
 
 #include "objects/Component.h"
+
 class Transform;
+class PhysicsBody;
+
 class PlayerController final : public Component {
   uint8_t speed_;
+  std::shared_ptr<PhysicsBody> physicsBody_;
 
  public:
   PlayerController(std::weak_ptr<GameObject> gameObject,
@@ -13,6 +17,7 @@ class PlayerController final : public Component {
   ~PlayerController() noexcept;
   void onAwake() noexcept override;
   void onUpdate() noexcept override;
+  void onLateUpdate() noexcept override;
 
   [[nodiscard]] inline const uint8_t& speed() const noexcept { return speed_; }
   inline uint8_t& speed() noexcept { return speed_; }

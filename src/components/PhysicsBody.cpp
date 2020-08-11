@@ -2,17 +2,19 @@
 #include "components/PhysicsBody.h"
 
 #include "Game.h"
+#include "components/Transform.h"
 #include "objects/GameObject.h"
 #include "scenes/Scene.h"
 
-PhysicsBody::PhysicsBody(std::weak_ptr<GameObject> parent,
+PhysicsBody::PhysicsBody(std::weak_ptr<GameObject> parent, b2BodyType type,
                          Vector4<int32_t> data) noexcept
-    : Component(std::move(parent)), data_(data) {
+    : Component(std::move(parent)), type_(type), data_(data) {
   b2BodyDef bodyDef;
-  bodyDef.type = b2_staticBody;
+  bodyDef.type = type_;
   bodyDef.position.Set(static_cast<float>(data.x()),
                        static_cast<float>(data.y()));
   bodyDef.angle = 0.f;
+  bodyDef.fixedRotation = true;
 
   body_ = scene().lock()->world().CreateBody(&bodyDef);
 
@@ -29,11 +31,18 @@ PhysicsBody::PhysicsBody(std::weak_ptr<GameObject> parent,
 
 PhysicsBody::~PhysicsBody() noexcept = default;
 
+void PhysicsBody::onLateUpdate() noexcept {
+  Component::onLateUpdate();
+
+  data_.x() = static_cast<int32_t>(body()->GetPosition().x - data().z() / 2.f);
+  data_.y() = static_cast<int32_t>(body()->GetPosition().y - data().a() / 2.f);
+}
+
 #if !NDEBUG
 void PhysicsBody::onRender() noexcept {
   Component::onRender();
 
-  const auto destination = data().toRectangle();
+  const auto destination = rectangle();
   SDL_SetRenderDrawColor(Game::renderer(), 255, 0, 0, 100);
   SDL_RenderDrawRect(Game::renderer(), &destination);
 }

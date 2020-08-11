@@ -3,6 +3,7 @@
 
 #include <utility>
 
+#include "components/PhysicsBody.h"
 #include "components/Transform.h"
 #include "managers/Input.h"
 #include "objects/GameObject.h"
@@ -14,7 +15,10 @@ PlayerController::PlayerController(std::weak_ptr<GameObject> gameObject,
     : Component(std::move(gameObject)), speed_(speed) {}
 PlayerController::~PlayerController() noexcept = default;
 
-void PlayerController::onAwake() noexcept { Component::onAwake(); }
+void PlayerController::onAwake() noexcept {
+  Component::onAwake();
+  physicsBody_ = gameObject().lock()->getComponent<PhysicsBody>();
+}
 void PlayerController::onUpdate() noexcept {
   Component::onUpdate();
 
@@ -34,10 +38,19 @@ void PlayerController::onUpdate() noexcept {
     translation.x() += 1.f;
   }
 
-  if (translation.x() == 0.f && translation.y() == 0.f) return;
+  if (translation.x() == 0.f && translation.y() == 0.f) {
+    physicsBody_->body()->SetLinearVelocity({0.f, 0.f});
+    return;
+  }
 
-  translation =
-      (translation * speed() / translation.magnitude()) * Time::delta();
+  const auto s = speed();
+  const auto m = translation.magnitude();
+  translation = translation * s / m;
+  physicsBody_->body()->SetLinearVelocity(translation.toVec());
+}
 
-  gameObject().lock()->transform().lock()->position() += translation;
+void PlayerController::onLateUpdate() noexcept {
+  Component::onLateUpdate();
+  gameObject().lock()->transform().lock()->position() =
+      physicsBody_->data().toVector2<float>();
 }
