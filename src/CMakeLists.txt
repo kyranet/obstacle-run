@@ -12,6 +12,7 @@ include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${SDL2_TTF_INC
 set(DEPENDENCY_LIBRARIES box2d)
 
 set(GAME_SOURCES
+  components/BulletBox.cpp
   components/Button.cpp
   components/ImageRenderer.cpp
   components/PhysicsBody.cpp
@@ -19,6 +20,7 @@ set(GAME_SOURCES
   components/SolidRenderer.cpp
   components/TextRenderer.cpp
   components/Transform.cpp
+  factories/BulletBoxFactory.cpp
   factories/ButtonFactory.cpp
   factories/ImageRendererFactory.cpp
   factories/PhysicsBodyFactory.cpp

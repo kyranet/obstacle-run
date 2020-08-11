@@ -80,6 +80,15 @@ class GameObject final : public std::enable_shared_from_this<GameObject> {
     return components_;
   }
 
+  inline void addChild(const std::shared_ptr<GameObject>& gameObject) noexcept {
+    children_.emplace_back(gameObject);
+  }
+
+  inline void addComponent(
+      const std::shared_ptr<Component>& component) noexcept {
+    components_.emplace_back(component);
+  }
+
   template <typename T>
   [[nodiscard]] inline std::shared_ptr<T> getComponent() const noexcept {
     for (const auto& component : components()) {
