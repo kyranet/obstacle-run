@@ -93,13 +93,19 @@ void GameObject::onUpdate() const noexcept {
   }
 }
 
-void GameObject::onLateUpdate() const noexcept {
+void GameObject::onLateUpdate() noexcept {
   for (const auto& child : children()) {
     if (child->active()) child->onLateUpdate();
   }
 
   for (const auto& component : components()) {
     if (component->enabled()) component->onLateUpdate();
+  }
+
+  size_t i = components().size();
+  while (i != 0) {
+    const auto& component = components().at(--i);
+    if (component->destroyed()) components_.erase(components().begin() + i);
   }
 }
 

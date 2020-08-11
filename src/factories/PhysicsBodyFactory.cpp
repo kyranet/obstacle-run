@@ -61,11 +61,12 @@ PhysicsBodyFactory::PhysicsBodyMask PhysicsBodyFactory::getBodyMaskFromName(
   if (value == "boundary") return PhysicsBodyMask::Boundary;
   if (value == "player") return PhysicsBodyMask::Player;
   if (value == "enemy") return PhysicsBodyMask::Enemy;
+  if (value == "collectible") return PhysicsBodyMask::Collectible;
 
-  assert(((void)"'value' must be one of 'boundary', 'player', 'enemy', or "
-                "'collectible'.",
-          value == "collectible"));
-  return PhysicsBodyMask::Collectible;
+  assert(((void)"'value' must be one of 'boundary', 'player', 'enemy', "
+                "'collectible', or 'goal'.",
+          value == "goal"));
+  return PhysicsBodyMask::Goal;
 }
 
 uint16_t PhysicsBodyFactory::getMaskFromJson(const Json::Value& json) noexcept {
@@ -90,5 +91,6 @@ Json::Value PhysicsBodyFactory::getJsonFromMask(const uint16_t bits) noexcept {
     json.append("enemy");
   if (bits & static_cast<uint16_t>(PhysicsBodyMask::Collectible))
     json.append("collectible");
+  if (bits & static_cast<uint16_t>(PhysicsBodyMask::Goal)) json.append("goal");
   return json;
 }

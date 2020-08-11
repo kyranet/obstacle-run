@@ -9,10 +9,11 @@
 
 class PhysicsBodyFactory final : public ComponentFactory<PhysicsBody> {
   enum class PhysicsBodyMask {
-    Boundary = 0b0001,
-    Player = 0b0010,
-    Enemy = 0b0100,
-    Collectible = 0b1000
+    Boundary = 0x0001,
+    Player = 0x0002,
+    Enemy = 0x0004,
+    Collectible = 0x0008,
+    Goal = 0x0010
   };
 
   [[nodiscard]] static PhysicsBodyMask getBodyMaskFromName(

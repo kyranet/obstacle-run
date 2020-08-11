@@ -9,7 +9,10 @@ Component::Component(std::weak_ptr<GameObject> gameObject) noexcept
     : gameObject_(std::move(gameObject)) {}
 Component::~Component() noexcept = default;
 
-void Component::destroy() noexcept {}
+void Component::destroy() noexcept {
+  enabled() = false;
+  destroyed() = true;
+}
 
 void Component::onAwake() noexcept { enabled() = true; }
 void Component::onUpdate() noexcept {}

@@ -26,6 +26,7 @@ set(GAME_SOURCES
   factories/SolidRendererFactory.cpp
   factories/TextRendererFactory.cpp
   factories/TransformFactory.cpp
+  listeners/ContactListener.cpp
   Game.cpp
   main.cpp
   managers/ComponentManager.cpp

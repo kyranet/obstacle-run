@@ -26,8 +26,8 @@ class GameObject final : public std::enable_shared_from_this<GameObject> {
   std::vector<std::shared_ptr<Component>> components_{};
 
  public:
-  GameObject(std::weak_ptr<Scene> scene,
-             std::weak_ptr<GameObject> parent = {}) noexcept;
+  explicit GameObject(std::weak_ptr<Scene> scene,
+                      std::weak_ptr<GameObject> parent = {}) noexcept;
   ~GameObject() noexcept;
   void load(const Json::Value& value);
 
@@ -110,7 +110,7 @@ class GameObject final : public std::enable_shared_from_this<GameObject> {
 
   void onAwake() noexcept;
   void onUpdate() const noexcept;
-  void onLateUpdate() const noexcept;
+  void onLateUpdate() noexcept;
   void onRender() const noexcept;
   void onDestroy() noexcept;
 };

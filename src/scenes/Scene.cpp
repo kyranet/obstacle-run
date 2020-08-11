@@ -3,6 +3,7 @@
 #include "scenes/Scene.h"
 
 #include <SDL.h>
+#include <listeners/ContactListener.h>
 
 #include <fstream>
 #include <utility>
@@ -14,7 +15,7 @@
 #include "utils/Time.h"
 
 Scene::Scene(std::string name) noexcept
-    : name_(std::move(name)), world_({0.f, 0.f}) {}
+    : name_(std::move(name)), world_({0.f, 0.f}), contactListener_() {}
 
 Scene::~Scene() noexcept { end(); }
 
@@ -78,10 +79,6 @@ void Scene::onRender() noexcept {
   // Clear the screen
   SDL_RenderClear(Game::renderer());
 
-#if !NDEBUG
-  world().DebugDraw();
-#endif
-
   for (auto& entry : gameObjects_) entry->onRender();
 
   // Render the new frame
@@ -129,6 +126,8 @@ void Scene::run() noexcept {
   const constexpr static int32_t gameFrameRate = 60;
   const constexpr static double frameTime =
       1000.0 / static_cast<double>(gameFrameRate);
+
+  world().SetContactListener(&contactListener_);
 
   size_t frame{0};
   while (!stop_) {

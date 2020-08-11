@@ -38,7 +38,15 @@ PhysicsBody::PhysicsBody(std::weak_ptr<GameObject> parent, b2BodyType type,
   body_->CreateFixture(&fixtureDef);
 }
 
-PhysicsBody::~PhysicsBody() noexcept = default;
+PhysicsBody::~PhysicsBody() noexcept {
+  if (gameObject().expired()) return;
+
+  auto go = gameObject().lock();
+  if (go->scene().expired()) return;
+
+  auto& world = go->scene().lock()->world();
+  if (!world.IsLocked()) world.DestroyBody(body());
+}
 
 void PhysicsBody::onLateUpdate() noexcept {
   Component::onLateUpdate();

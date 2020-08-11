@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+#include "listeners/ContactListener.h"
 #include "objects/GameObject.h"
 
 class Scene final : public std::enable_shared_from_this<Scene> {
@@ -15,6 +16,7 @@ class Scene final : public std::enable_shared_from_this<Scene> {
   std::vector<std::unique_ptr<GameObject>> newGameObjects_{};
   std::vector<std::shared_ptr<GameObject>> gameObjects_{};
   b2World world_;
+  ContactListener contactListener_;
   bool stop_ = false;
 
   void onStart() const noexcept;
