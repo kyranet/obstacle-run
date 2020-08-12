@@ -84,6 +84,7 @@
         },
         {
           "name": "PlayerController",
+          "bullet_clip": 2,
           "speed": 100
         },
         {

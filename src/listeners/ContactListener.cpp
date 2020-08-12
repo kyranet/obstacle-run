@@ -2,6 +2,7 @@
 #include "listeners/ContactListener.h"
 
 #include "components/PhysicsBody.h"
+#include "components/PlayerController.h"
 #include "objects/GameObject.h"
 #include "utils/DebugAssert.h"
 
@@ -19,8 +20,21 @@ void ContactListener::BeginContact(b2Contact* contact) {
               a->gameObject().lock()->name().c_str(), ac,
               b->gameObject().lock()->name().c_str(), bc, collectible);
 
-  if (ac) a->destroy();
-  if (bc) b->destroy();
+  if (ac) {
+    a->destroy();
+    auto gb = b->gameObject().lock();
+    if (gb->name() == "Player") {
+      gb->getComponent<PlayerController>()->bulletClip()++;
+    }
+  }
+
+  if (bc) {
+    b->destroy();
+    auto ga = a->gameObject().lock();
+    if (ga->name() == "Player") {
+      ga->getComponent<PlayerController>()->bulletClip()++;
+    }
+  }
 }
 
 void ContactListener::EndContact(b2Contact* contact) {

@@ -14,8 +14,10 @@
 #include "scenes/Scene.h"
 
 PlayerController::PlayerController(std::weak_ptr<GameObject> gameObject,
-                                   uint8_t speed) noexcept
-    : Component(std::move(gameObject)), speed_(speed) {}
+                                   uint8_t bulletClip, uint8_t speed) noexcept
+    : Component(std::move(gameObject)),
+      bulletClip_(bulletClip),
+      speed_(speed) {}
 
 PlayerController::~PlayerController() noexcept = default;
 
@@ -56,7 +58,9 @@ void PlayerController::onUpdate() noexcept {
     physicsBody_->body()->SetLinearVelocity(translation.toVec());
   }
 
-  if (Input::keyDown(KeyboardKey::SPACE)) {
+  if (bulletClip_ && Input::keyDown(KeyboardKey::SPACE)) {
+    --bulletClip_;
+
     const auto transform = gameObject().lock()->transform().lock();
 
     const auto& sp = transform->scale().cast<float>() / 2.f;

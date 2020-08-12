@@ -10,6 +10,7 @@ PhysicsBodyFactory::~PhysicsBodyFactory() noexcept = default;
 //   "name": "PhysicsBody",
 //   "type": "static",
 //   "sensor": false,
+//   "density": 18.5,
 //   "restitution": 0.6,
 //   "data": [400, 400, 100, 100],
 //   "category": ["player"],
