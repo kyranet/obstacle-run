@@ -33,6 +33,8 @@ class Scene final : public std::enable_shared_from_this<Scene> {
 
   void addGameObject(GameObject* gameObject) noexcept;
   void removeGameObject(GameObject* gameObject) noexcept;
+  [[nodiscard]] std::weak_ptr<GameObject> getGameObjectByName(
+      const std::string& name) const noexcept;
 
   void load();
   void run() noexcept;

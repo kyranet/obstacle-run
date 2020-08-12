@@ -209,6 +209,12 @@ class Vector2 final {
     return Vector2(x() / static_cast<T>(d), y() / static_cast<T>(d));
   }
 
+  template <typename Q, typename = typename std::enable_if_t<
+                            std::is_convertible_v<T, Q>, Q>>
+  [[nodiscard]] inline Vector2<Q> cast() const noexcept {
+    return Vector2<Q>(static_cast<Q>(x()), static_cast<Q>(y()));
+  }
+
   [[nodiscard]] Json::Value toJson() const noexcept {
     Json::Value out(Json::arrayValue);
     out.append(Json::Value(x()));

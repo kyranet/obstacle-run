@@ -10,6 +10,7 @@ class PhysicsBody;
 class PlayerController final : public Component {
   uint8_t speed_;
   std::shared_ptr<PhysicsBody> physicsBody_;
+  std::weak_ptr<GameObject> bullets_;
 
  public:
   PlayerController(std::weak_ptr<GameObject> gameObject,

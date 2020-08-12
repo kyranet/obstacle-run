@@ -102,6 +102,15 @@ class Vector4 final {
         z_(static_cast<T>(point.w)),
         a_(static_cast<T>(point.h)) {}
 
+  template <typename Q, typename S,
+            typename = typename std::enable_if_t<
+                std::is_convertible_v<T, Q> && std::is_convertible_v<T, S>, Q>>
+  explicit Vector4(const Vector2<Q>& position, const Vector2<S>& scale) noexcept
+      : x_(static_cast<T>(position.x())),
+        y_(static_cast<T>(position.y())),
+        z_(static_cast<T>(scale.x())),
+        a_(static_cast<T>(scale.y())) {}
+
   // Copy constructors
   Vector4(Vector4<T>& other) noexcept
       : x_(other.x()), y_(other.y()), z_(other.z()), a_(other.a()) {}

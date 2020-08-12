@@ -24,7 +24,8 @@ void BulletBox::onAwake() noexcept {
 
   auto* pBody = body_.lock()->body();
   pBody->SetTransform(data_.toVector2<float>().toVec(), 0.f);
-  pBody->ApplyForceToCenter(velocity_.toVec(), false);
+  pBody->ApplyLinearImpulseToCenter(velocity_.toVec(), true);
+  // pBody->ApplyForceToCenter(velocity_.toVec(), true);
 }
 
 void BulletBox::onUpdate() noexcept {

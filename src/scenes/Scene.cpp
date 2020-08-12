@@ -166,3 +166,12 @@ void Scene::addGameObject(GameObject* gameObject) noexcept {
 void Scene::removeGameObject(GameObject* gameObject) noexcept {
   gameObject->destroy() = true;
 }
+
+std::weak_ptr<GameObject> Scene::getGameObjectByName(
+    const std::string& name) const noexcept {
+  for (const auto& object : gameObjects()) {
+    if (object->name() == name) return object;
+  }
+
+  return std::weak_ptr<GameObject>();
+}
