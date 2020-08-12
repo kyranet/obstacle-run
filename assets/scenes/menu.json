@@ -26,9 +26,10 @@
           "sensor": false,
           "density": 0,
           "restitution": 0,
+          "linear_damping": 0,
           "data": [200, 200, 50, 50],
           "category": ["boundary"],
-          "mask": ["player", "bullet"]
+          "mask": ["player", "bullet", "boundary"]
         },
         {
           "name": "PhysicsBody",
@@ -36,11 +37,17 @@
           "sensor": false,
           "density": 0,
           "restitution": 0,
+          "linear_damping": 0,
           "data": [150, 250, 50, 50],
           "category":  ["boundary"],
-          "mask":  ["player", "bullet"]
+          "mask":  ["player", "bullet", "boundary"]
         }
       ],
+      "children": []
+    },
+    {
+      "name": "Destructible-Walls",
+      "components": [],
       "children": []
     },
     {
@@ -52,6 +59,7 @@
           "sensor": true,
           "density": 0,
           "restitution": 0,
+          "linear_damping": 0,
           "data": [200, 250, 25, 25],
           "category": ["collectible"],
           "mask": ["player"]
@@ -78,6 +86,7 @@
           "sensor": false,
           "density": 10000,
           "restitution": 0,
+          "linear_damping": 1,
           "data": [50, 50, 50, 50],
           "category": ["player"],
           "mask": ["boundary", "collectible", "bullet"]

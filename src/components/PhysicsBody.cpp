@@ -8,13 +8,14 @@
 
 PhysicsBody::PhysicsBody(std::weak_ptr<GameObject> parent, b2BodyType type,
                          bool sensor, float density, float restitution,
-                         Vector4<int32_t> data, uint16_t category,
-                         uint16_t mask) noexcept
+                         float linearDamping, Vector4<int32_t> data,
+                         uint16_t category, uint16_t mask) noexcept
     : Component(std::move(parent)),
       type_(type),
       sensor_(sensor),
       density_(density),
       restitution_(restitution),
+      linearDamping_(linearDamping),
       data_(data),
       category_(category),
       mask_(mask) {
@@ -24,6 +25,7 @@ PhysicsBody::PhysicsBody(std::weak_ptr<GameObject> parent, b2BodyType type,
                        static_cast<float>(data.y()));
   bodyDef.angle = 0.f;
   bodyDef.fixedRotation = true;
+  bodyDef.linearDamping = linearDamping;
   bodyDef.awake = true;
 
   body_ = scene().lock()->world().CreateBody(&bodyDef);
@@ -65,7 +67,8 @@ void PhysicsBody::onRender() noexcept {
   Component::onRender();
 
   const auto destination = rectangle();
-  SDL_SetRenderDrawColor(Game::renderer(), 255, sensor() ? 128 : 0, 0, 100);
+  SDL_SetRenderDrawColor(Game::renderer(), 255, sensor() ? 128 : 0,
+                         type() == b2BodyType::b2_dynamicBody ? 255 : 0, 100);
   SDL_RenderDrawRect(Game::renderer(), &destination);
 }
 #endif

@@ -12,6 +12,7 @@ PhysicsBodyFactory::~PhysicsBodyFactory() noexcept = default;
 //   "sensor": false,
 //   "density": 18.5,
 //   "restitution": 0.6,
+//   "linear_damping": 0,
 //   "data": [400, 400, 100, 100],
 //   "category": ["player"],
 //   "mask": ["boundary"]
@@ -22,8 +23,9 @@ std::shared_ptr<PhysicsBody> PhysicsBodyFactory::fromJson(
   return std::make_shared<PhysicsBody>(
       parent, getBodyTypeFromName(json["type"].asString()),
       json["sensor"].asBool(), json["density"].asFloat(),
-      json["restitution"].asFloat(), Vector4<int32_t>(json["data"]),
-      getMaskFromJson(json["category"]), getMaskFromJson(json["mask"]));
+      json["restitution"].asFloat(), json["linear_damping"].asFloat(),
+      Vector4<int32_t>(json["data"]), getMaskFromJson(json["category"]),
+      getMaskFromJson(json["mask"]));
 }
 
 Json::Value PhysicsBodyFactory::toJson(
@@ -34,6 +36,7 @@ Json::Value PhysicsBodyFactory::toJson(
   json["sensor"] = value->sensor();
   json["density"] = value->density();
   json["restitution"] = value->restitution();
+  json["linear_damping"] = value->linearDamping();
   json["data"] = value->data().toJson();
   json["category"] = getJsonFromMask(value->category());
   json["mask"] = getJsonFromMask(value->mask());

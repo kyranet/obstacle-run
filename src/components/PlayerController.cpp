@@ -77,8 +77,9 @@ void PlayerController::onUpdate() noexcept {
     const auto newTransform = std::make_shared<Transform>(
         go->shared_from_this(), bp.toVector2<float>(), bs);
     const auto newPhysics = std::make_shared<PhysicsBody>(
-        go->shared_from_this(), b2BodyType::b2_dynamicBody, false, 1.f, 1.f, bp,
-        static_cast<uint16_t>(1 << 4), static_cast<uint16_t>(0b11111));
+        go->shared_from_this(), b2BodyType::b2_dynamicBody, false, 1.f, 1.f,
+        0.4f, bp, static_cast<uint16_t>(1 << 4),
+        static_cast<uint16_t>(0b11111));
     const auto newBullet = std::make_shared<BulletBox>(
         go->shared_from_this(), bp,
         Vector2<double>{-cos(angle) * 5000000000.0, -sin(angle) * 5000000000.0},

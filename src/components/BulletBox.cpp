@@ -6,6 +6,7 @@
 #include "components/PhysicsBody.h"
 #include "components/Transform.h"
 #include "objects/GameObject.h"
+#include "scenes/Scene.h"
 #include "utils/Time.h"
 
 BulletBox::BulletBox(std::weak_ptr<GameObject> gameObject,
@@ -35,5 +36,16 @@ void BulletBox::onUpdate() noexcept {
     // Delete temporary physics body and this component
     body_.lock()->destroy();
     destroy();
+
+    auto walls =
+        scene().lock()->getGameObjectByName("Destructible-Walls").lock();
+    const auto newPhysicsBody = std::make_shared<PhysicsBody>(
+        walls->shared_from_this(), b2BodyType::b2_dynamicBody, false, 1000000.f,
+        0.f, 1.f,
+        Vector4<int32_t>{body_.lock()->data().toVector2<int32_t>(),
+                         Vector2<int32_t>{50, 50}},
+        static_cast<uint16_t>(0b00001), static_cast<uint16_t>(0b10011));
+    newPhysicsBody->onAwake();
+    walls->addComponent(newPhysicsBody);
   }
 }

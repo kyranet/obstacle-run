@@ -13,6 +13,7 @@ class PhysicsBody final : public Component {
   bool sensor_;
   float density_;
   float restitution_;
+  float linearDamping_;
   Vector4<int32_t> data_;
   uint16_t category_;
   uint16_t mask_;
@@ -20,7 +21,7 @@ class PhysicsBody final : public Component {
  public:
   PhysicsBody(std::weak_ptr<GameObject> gameObject, b2BodyType type,
               bool sensor, float density, float restitution,
-              Vector4<int32_t> vector, uint16_t category,
+              float linearDamping, Vector4<int32_t> vector, uint16_t category,
               uint16_t mask) noexcept;
   ~PhysicsBody() noexcept override;
 
@@ -40,6 +41,10 @@ class PhysicsBody final : public Component {
 
   [[nodiscard]] inline const float& restitution() const noexcept {
     return restitution_;
+  }
+
+  [[nodiscard]] inline const float& linearDamping() const noexcept {
+    return linearDamping_;
   }
 
   [[nodiscard]] inline const uint16_t& category() const noexcept {
