@@ -41,6 +41,7 @@ set(GAME_SOURCES
   objects/GameObject.cpp
   objects/Image.cpp
   scenes/Scene.cpp
+  server/Server.cpp
   utils/Time.cpp
   third-party/jsoncpp/jsoncpp.cpp)
 
