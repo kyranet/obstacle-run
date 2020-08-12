@@ -12,10 +12,13 @@
 #include "managers/Input.h"
 #include "objects/GameObject.h"
 #include "scenes/Scene.h"
+#include "utils/Time.h"
 
 PlayerController::PlayerController(std::weak_ptr<GameObject> gameObject,
-                                   uint8_t bulletClip, uint8_t speed) noexcept
+                                   double bulletNext, uint8_t bulletClip,
+                                   uint8_t speed) noexcept
     : Component(std::move(gameObject)),
+      bulletNext_(bulletNext),
       bulletClip_(bulletClip),
       speed_(speed) {}
 
@@ -32,6 +35,11 @@ void PlayerController::onAwake() noexcept {
 
 void PlayerController::onUpdate() noexcept {
   Component::onUpdate();
+
+  if (bulletNext_ != 0.0) {
+    bulletNext_ -= Time::delta();
+    if (bulletNext_ < 0.0) bulletNext_ = 0.0;
+  }
 
   Vector2<float> translation;
 
@@ -58,8 +66,9 @@ void PlayerController::onUpdate() noexcept {
     physicsBody_->body()->SetLinearVelocity(translation.toVec());
   }
 
-  if (bulletClip_ && Input::keyDown(KeyboardKey::SPACE)) {
+  if (bulletNext_ == 0.0 && bulletClip_ && Input::keyDown(KeyboardKey::SPACE)) {
     --bulletClip_;
+    bulletNext_ += 1.0;
 
     const auto transform = gameObject().lock()->transform().lock();
 
