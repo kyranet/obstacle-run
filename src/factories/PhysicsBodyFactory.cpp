@@ -10,6 +10,7 @@ PhysicsBodyFactory::~PhysicsBodyFactory() noexcept = default;
 //   "name": "PhysicsBody",
 //   "type": "static",
 //   "sensor": false,
+//   "restitution": 0.6,
 //   "data": [400, 400, 100, 100],
 //   "category": ["player"],
 //   "mask": ["boundary"]
@@ -19,7 +20,8 @@ std::shared_ptr<PhysicsBody> PhysicsBodyFactory::fromJson(
     const Json::Value& json, std::weak_ptr<GameObject> parent) {
   return std::make_shared<PhysicsBody>(
       parent, getBodyTypeFromName(json["type"].asString()),
-      json["sensor"].asBool(), Vector4<int32_t>(json["data"]),
+      json["sensor"].asBool(), json["density"].asFloat(),
+      json["restitution"].asFloat(), Vector4<int32_t>(json["data"]),
       getMaskFromJson(json["category"]), getMaskFromJson(json["mask"]));
 }
 
@@ -29,6 +31,8 @@ Json::Value PhysicsBodyFactory::toJson(
   json["name"] = name();
   json["type"] = getNameFromBodyType(value->type());
   json["sensor"] = value->sensor();
+  json["density"] = value->density();
+  json["restitution"] = value->restitution();
   json["data"] = value->data().toJson();
   json["category"] = getJsonFromMask(value->category());
   json["mask"] = getJsonFromMask(value->mask());

@@ -24,6 +24,8 @@
           "name": "PhysicsBody",
           "type":"static",
           "sensor": false,
+          "density": 0,
+          "restitution": 0,
           "data": [200, 200, 50, 50],
           "category": ["boundary"],
           "mask": ["player", "bullet"]
@@ -32,6 +34,8 @@
           "name": "PhysicsBody",
           "type": "static",
           "sensor": false,
+          "density": 0,
+          "restitution": 0,
           "data": [150, 250, 50, 50],
           "category":  ["boundary"],
           "mask":  ["player", "bullet"]
@@ -46,6 +50,8 @@
           "name": "PhysicsBody",
           "type":"static",
           "sensor": true,
+          "density": 0,
+          "restitution": 0,
           "data": [200, 250, 25, 25],
           "category": ["collectible"],
           "mask": ["player"]
@@ -70,6 +76,8 @@
           "name": "PhysicsBody",
           "type":"dynamic",
           "sensor": false,
+          "density": 10000,
+          "restitution": 0,
           "data": [50, 50, 50, 50],
           "category": ["player"],
           "mask": ["boundary", "collectible", "bullet"]

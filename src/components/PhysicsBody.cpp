@@ -7,11 +7,14 @@
 #include "scenes/Scene.h"
 
 PhysicsBody::PhysicsBody(std::weak_ptr<GameObject> parent, b2BodyType type,
-                         bool sensor, Vector4<int32_t> data, uint16_t category,
+                         bool sensor, float density, float restitution,
+                         Vector4<int32_t> data, uint16_t category,
                          uint16_t mask) noexcept
     : Component(std::move(parent)),
       type_(type),
       sensor_(sensor),
+      density_(density),
+      restitution_(restitution),
       data_(data),
       category_(category),
       mask_(mask) {
@@ -21,6 +24,7 @@ PhysicsBody::PhysicsBody(std::weak_ptr<GameObject> parent, b2BodyType type,
                        static_cast<float>(data.y()));
   bodyDef.angle = 0.f;
   bodyDef.fixedRotation = true;
+  bodyDef.awake = true;
 
   body_ = scene().lock()->world().CreateBody(&bodyDef);
 
@@ -30,11 +34,12 @@ PhysicsBody::PhysicsBody(std::weak_ptr<GameObject> parent, b2BodyType type,
 
   b2FixtureDef fixtureDef;
   fixtureDef.shape = &boxShape;
-  fixtureDef.density = 1.f;
-  fixtureDef.userData = this;
+  fixtureDef.density = density;
   fixtureDef.isSensor = sensor_;
   fixtureDef.filter.categoryBits = category_;
   fixtureDef.filter.maskBits = mask_;
+  fixtureDef.restitution = restitution;
+  fixtureDef.userData = this;
   body_->CreateFixture(&fixtureDef);
 }
 
