@@ -59,7 +59,7 @@ void Server::ServerClient::parseMessage(uint8_t* message) noexcept {
   const auto type = static_cast<MessageType>(buffer_->readUint8(message, 4));
   switch (type) {
     case MessageType::kPlayerDisconnect: {
-      debug_print("Disconnecting client.\n");
+      debug_print("%s", "Disconnecting client.\n");
       pushEvent(
           {ClientEvent::kDisconnect, this, new client_event_disconnect_t{}});
       status_ = ClientStatus::kClosed;
