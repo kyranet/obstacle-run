@@ -29,11 +29,9 @@ class Time {
   }
 
   static inline void measure(
-      const std::chrono::time_point<std::chrono::steady_clock>& a,
+      const std::chrono::time_point<std::chrono::steady_clock>& timePoint,
       const double& frameTime) noexcept {
-    const auto difference = now() - a;
-    const auto nanoseconds = difference.count();
-    elapsed_ = nanoseconds;
+    elapsed_ = (now() - timePoint).count();
 
     const auto delta = static_cast<double>(elapsed_) / 1000000.0;
     delta_ = std::max(delta, frameTime) / 1000.0;
