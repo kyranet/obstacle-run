@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
 #endif
   try {
     if (argc == 2 && strcmp(argv[1], "server") == 0) {
-      auto server = std::make_unique<Server>();
+      auto server = std::make_shared<Server>();
       server->run();
     } else {
       ComponentManager::create();

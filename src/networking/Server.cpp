@@ -129,7 +129,7 @@ void Server::run() noexcept {
       continue;
     }
 
-    std::thread([&]() {
+    std::thread([&, client]() {
       clients_.emplace_back(
           std::make_unique<ServerClient>(shared_from_this(), client));
     }).detach();

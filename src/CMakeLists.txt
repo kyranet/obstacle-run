@@ -24,6 +24,7 @@ set(GAME_SOURCES
   factories/BulletBoxFactory.cpp
   factories/ButtonFactory.cpp
   factories/ImageRendererFactory.cpp
+  factories/NetworkControllerFactory.cpp
   factories/PhysicsBodyFactory.cpp
   factories/PlayerControllerFactory.cpp
   factories/SolidRendererFactory.cpp
@@ -45,7 +46,7 @@ set(GAME_SOURCES
   objects/Image.cpp
   scenes/Scene.cpp
   utils/Time.cpp
-  third-party/jsoncpp/jsoncpp.cpp factories/NetworkControllerFactory.cpp ../include/factories/NetworkControllerFactory.h)
+  third-party/jsoncpp/jsoncpp.cpp)
 
 add_executable(Game ${GAME_SOURCES})
 target_compile_features(Game PUBLIC cxx_std_17)

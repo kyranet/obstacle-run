@@ -12,7 +12,7 @@
 #include "utils/Buffer.h"
 #include "utils/Vector2.h"
 
-class Server : std::enable_shared_from_this<Server> {
+class Server : public std::enable_shared_from_this<Server> {
   enum class ClientStatus : uint8_t { kPending, kRunning, kClosed };
   enum class ClientEvent : uint8_t { kConnect, kDisconnect, kUpdatePosition };
   enum class MessageType : uint8_t { kPlayerDisconnect, kPlayerUpdatePosition };
