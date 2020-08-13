@@ -36,14 +36,15 @@ set(GAME_SOURCES
   managers/ImageManager.cpp
   managers/Input.cpp
   managers/SceneManager.cpp
+  networking/Client.cpp
+  networking/Server.cpp
   objects/Component.cpp
   objects/Font.cpp
   objects/GameObject.cpp
   objects/Image.cpp
   scenes/Scene.cpp
-  server/Server.cpp
   utils/Time.cpp
-  third-party/jsoncpp/jsoncpp.cpp ../include/utils/Buffer.h ../include/utils/Endian.h)
+  third-party/jsoncpp/jsoncpp.cpp)
 
 add_executable(Game ${GAME_SOURCES})
 target_compile_features(Game PUBLIC cxx_std_17)

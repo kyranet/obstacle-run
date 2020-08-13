@@ -14,8 +14,8 @@ class Buffer {
   double doubleArray_[1];
 
  public:
-  inline void write(uint8_t* buffer, int8_t input,
-                    size_t offset) const noexcept {
+  inline void writeInt8(uint8_t* buffer, int8_t input,
+                        size_t offset) const noexcept {
     reinterpret_cast<int8_t*>(buffer + offset)[0] = input;
   }
 
@@ -24,8 +24,8 @@ class Buffer {
     return reinterpret_cast<const int8_t*>(buffer)[offset];
   }
 
-  inline void write(uint8_t* buffer, uint8_t input,
-                    size_t offset) const noexcept {
+  inline void writeUint8(uint8_t* buffer, uint8_t input,
+                         size_t offset) const noexcept {
     buffer[offset] = input;
   }
 
@@ -34,8 +34,8 @@ class Buffer {
     return buffer[offset];
   }
 
-  inline void write(uint8_t* buffer, int16_t input,
-                    size_t offset) const noexcept {
+  inline void writeInt16(uint8_t* buffer, int16_t input,
+                         size_t offset) const noexcept {
     if constexpr (endian() == Endian::kLittleEndian) {
       reinterpret_cast<int16_t*>(buffer + offset)[0] = input;
     } else {
@@ -58,8 +58,8 @@ class Buffer {
     }
   }
 
-  inline void write(uint8_t* buffer, uint16_t input,
-                    size_t offset) const noexcept {
+  inline void writeUint16(uint8_t* buffer, uint16_t input,
+                          size_t offset) const noexcept {
     if constexpr (endian() == Endian::kLittleEndian) {
       reinterpret_cast<uint16_t*>(buffer + offset)[0] = input;
     } else {
@@ -80,8 +80,8 @@ class Buffer {
     }
   }
 
-  inline void write(uint8_t* buffer, int32_t input,
-                    size_t offset) const noexcept {
+  inline void writeInt32(uint8_t* buffer, int32_t input,
+                         size_t offset) const noexcept {
     if constexpr (endian() == Endian::kLittleEndian) {
       reinterpret_cast<int32_t*>(buffer + offset)[0] = input;
     } else {
@@ -105,8 +105,8 @@ class Buffer {
     }
   }
 
-  inline void write(uint8_t* buffer, uint32_t input,
-                    size_t offset) const noexcept {
+  inline void writeUint32(uint8_t* buffer, uint32_t input,
+                          size_t offset) const noexcept {
     if constexpr (endian() == Endian::kLittleEndian) {
       reinterpret_cast<uint32_t*>(buffer + offset)[0] = input;
     } else {
@@ -129,7 +129,7 @@ class Buffer {
     }
   }
 
-  inline void write(uint8_t* buffer, float input, size_t offset) noexcept {
+  inline void writeFloat(uint8_t* buffer, float input, size_t offset) noexcept {
     if constexpr (endian() == Endian::kLittleEndian) {
       reinterpret_cast<float*>(buffer + offset)[0] = input;
     } else {
@@ -156,8 +156,8 @@ class Buffer {
     }
   }
 
-  inline void write(uint8_t* buffer, int64_t input,
-                    size_t offset) const noexcept {
+  inline void writeInt64(uint8_t* buffer, int64_t input,
+                         size_t offset) const noexcept {
     if constexpr (endian() == Endian::kLittleEndian) {
       reinterpret_cast<int64_t*>(buffer + offset)[0] = input;
     } else {
@@ -182,8 +182,8 @@ class Buffer {
     }
   }
 
-  inline void write(uint8_t* buffer, uint64_t input,
-                    size_t offset) const noexcept {
+  inline void writeUint64(uint8_t* buffer, uint64_t input,
+                          size_t offset) const noexcept {
     if constexpr (endian() == Endian::kLittleEndian) {
       reinterpret_cast<uint64_t*>(buffer + offset)[0] = input;
     } else {
@@ -208,7 +208,8 @@ class Buffer {
     }
   }
 
-  inline void write(uint8_t* buffer, double input, size_t offset) noexcept {
+  inline void writeDouble(uint8_t* buffer, double input,
+                          size_t offset) noexcept {
     if constexpr (endian() == Endian::kLittleEndian) {
       reinterpret_cast<double*>(buffer + offset)[0] = input;
     } else {

@@ -51,6 +51,11 @@ class Server : std::enable_shared_from_this<Server> {
 
     void parseMessage(uint8_t* message) noexcept;
 
+    inline void pushEvent(const client_event_t& event) noexcept {
+      std::lock_guard<std::mutex> guard(event_mutex_);
+      events_.push(event);
+    }
+
    public:
     ServerClient(std::weak_ptr<Server> server, TCPsocket socket) noexcept;
     ~ServerClient() noexcept;
@@ -73,11 +78,6 @@ class Server : std::enable_shared_from_this<Server> {
         // socket error.
         disconnect();
       }
-    }
-
-    inline void pushEvent(const client_event_t& event) noexcept {
-      std::lock_guard<std::mutex> guard(event_mutex_);
-      events_.push(event);
     }
 
     inline bool readEvent(client_event_t* event) noexcept {

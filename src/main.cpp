@@ -7,7 +7,7 @@
 #include "managers/ComponentManager.h"
 #include "managers/FontManager.h"
 #include "managers/ImageManager.h"
-#include "server/Server.h"
+#include "networking/Server.h"
 
 #undef main
 

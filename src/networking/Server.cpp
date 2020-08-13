@@ -1,5 +1,6 @@
 // Copyright (c) 2020 Antonio Román. All rights reserved.
-#include "server/Server.h"
+
+#include "networking/Server.h"
 
 #include <iostream>
 #include <thread>
