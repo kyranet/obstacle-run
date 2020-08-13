@@ -43,7 +43,7 @@ set(GAME_SOURCES
   scenes/Scene.cpp
   server/Server.cpp
   utils/Time.cpp
-  third-party/jsoncpp/jsoncpp.cpp)
+  third-party/jsoncpp/jsoncpp.cpp ../include/utils/Buffer.h ../include/utils/Endian.h)
 
 add_executable(Game ${GAME_SOURCES})
 target_compile_features(Game PUBLIC cxx_std_17)

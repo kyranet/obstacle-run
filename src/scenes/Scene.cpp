@@ -3,7 +3,6 @@
 #include "scenes/Scene.h"
 
 #include <SDL.h>
-#include <listeners/ContactListener.h>
 
 #include <fstream>
 #include <utility>
