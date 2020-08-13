@@ -15,6 +15,7 @@ set(GAME_SOURCES
   components/BulletBox.cpp
   components/Button.cpp
   components/ImageRenderer.cpp
+  components/NetworkController.cpp
   components/PhysicsBody.cpp
   components/PlayerController.cpp
   components/SolidRenderer.cpp
@@ -44,7 +45,7 @@ set(GAME_SOURCES
   objects/Image.cpp
   scenes/Scene.cpp
   utils/Time.cpp
-  third-party/jsoncpp/jsoncpp.cpp)
+  third-party/jsoncpp/jsoncpp.cpp factories/NetworkControllerFactory.cpp ../include/factories/NetworkControllerFactory.h)
 
 add_executable(Game ${GAME_SOURCES})
 target_compile_features(Game PUBLIC cxx_std_17)

@@ -10,9 +10,7 @@
 
 GameObject::GameObject(std::weak_ptr<Scene> scene,
                        std::weak_ptr<GameObject> parent) noexcept
-    : std::enable_shared_from_this<GameObject>(),
-      scene_(std::move(scene)),
-      parent_(std::move(parent)) {}
+    : scene_(std::move(scene)), parent_(std::move(parent)) {}
 
 GameObject::~GameObject() noexcept {
   for (auto& child : children_) {
@@ -47,7 +45,7 @@ void GameObject::load(const Json::Value& value) {
   const auto jsonChildren = value["children"];
   for (const auto& child : jsonChildren) {
     debug_print("Loading GameObject: '%s'.\n", child["name"].asCString());
-    auto gameObject = std::make_unique<GameObject>(scene(), shared_from_this());
+    auto gameObject = std::make_shared<GameObject>(scene(), shared_from_this());
     gameObject->load(child);
     children_.emplace_back(std::move(gameObject));
   }

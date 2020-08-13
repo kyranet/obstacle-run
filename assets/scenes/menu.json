@@ -18,6 +18,15 @@
       "children": []
     },
     {
+      "name": "Network",
+      "components": [
+        {
+          "name": "NetworkController"
+        }
+      ],
+      "children": []
+    },
+    {
       "name": "Walls",
       "components": [
         {
@@ -73,37 +82,43 @@
       "children": []
     },
     {
-      "name": "Player",
-      "components": [
+      "name": "Players",
+      "components": [],
+      "children": [
         {
-          "name": "Transform",
-          "position": [50, 50],
-          "scale": [1, 1]
-        },
-        {
-          "name": "PhysicsBody",
-          "type":"dynamic",
-          "sensor": false,
-          "density": 10000,
-          "restitution": 0,
-          "linear_damping": 1,
-          "data": [50, 50, 50, 50],
-          "category": ["player"],
-          "mask": ["boundary", "collectible", "bullet"]
-        },
-        {
-          "name": "PlayerController",
-          "bullet_clip": 2,
-          "bullet_next": 1,
-          "speed": 100
-        },
-        {
-          "name": "SolidRenderer",
-          "rectangle": [0, 0, 50, 50],
-          "color": [255, 255, 0, 255]
+          "name": "Player",
+          "components": [
+            {
+              "name": "Transform",
+              "position": [50, 50],
+              "scale": [1, 1]
+            },
+            {
+              "name": "PhysicsBody",
+              "type":"dynamic",
+              "sensor": false,
+              "density": 10000,
+              "restitution": 0,
+              "linear_damping": 1,
+              "data": [50, 50, 50, 50],
+              "category": ["player"],
+              "mask": ["boundary", "collectible", "bullet"]
+            },
+            {
+              "name": "PlayerController",
+              "bullet_clip": 2,
+              "bullet_next": 1,
+              "speed": 100
+            },
+            {
+              "name": "SolidRenderer",
+              "rectangle": [0, 0, 50, 50],
+              "color": [255, 255, 0, 255]
+            }
+          ],
+          "children": []
         }
-      ],
-      "children": []
+      ]
     },
     {
       "name": "GUI",

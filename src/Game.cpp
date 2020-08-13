@@ -10,6 +10,7 @@
 
 #include "factories/ButtonFactory.h"
 #include "factories/ImageRendererFactory.h"
+#include "factories/NetworkControllerFactory.h"
 #include "factories/PhysicsBodyFactory.h"
 #include "factories/PlayerControllerFactory.h"
 #include "factories/SolidRendererFactory.h"
@@ -98,6 +99,8 @@ bool Game::init() noexcept {
   ComponentManager::add<Button>(std::make_shared<ButtonFactory>());
   ComponentManager::add<TextRenderer>(std::make_shared<TextRendererFactory>());
   ComponentManager::add<PhysicsBody>(std::make_shared<PhysicsBodyFactory>());
+  ComponentManager::add<NetworkController>(
+      std::make_shared<NetworkControllerFactory>());
 
   return true;
 }

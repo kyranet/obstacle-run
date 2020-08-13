@@ -12,34 +12,34 @@
 #include "utils/Buffer.h"
 #include "utils/Vector2.h"
 
+enum class ClientStatus : uint8_t { kPending, kRunning, kClosed };
+enum class ClientEvent : uint8_t { kConnect, kDisconnect, kUpdatePosition };
+
+struct client_event_base_t {};
+
+struct client_event_connect_t : public client_event_base_t {
+  explicit client_event_connect_t(uint8_t player) : player_(player) {}
+  uint8_t player_;
+};
+
+struct client_event_disconnect_t : public client_event_base_t {
+  explicit client_event_disconnect_t(uint8_t player) : player_(player) {}
+  uint8_t player_;
+};
+
+struct client_event_player_update_t : public client_event_base_t {
+  client_event_player_update_t(uint8_t player, Vector2<float> position)
+      : player_(player), position_(std::move(position)) {}
+  uint8_t player_;
+  Vector2<float> position_;
+};
+
+struct client_event_t {
+  ClientEvent event;
+  client_event_base_t* data;
+};
+
 class Client {
-  enum class ClientStatus : uint8_t { kPending, kRunning, kClosed };
-  enum class ClientEvent : uint8_t { kConnect, kDisconnect, kUpdatePosition };
-
-  struct client_event_base_t {};
-
-  struct client_event_connect_t : public client_event_base_t {
-    explicit client_event_connect_t(uint8_t player) : player_(player) {}
-    uint8_t player_;
-  };
-
-  struct client_event_disconnect_t : public client_event_base_t {
-    explicit client_event_disconnect_t(uint8_t player) : player_(player) {}
-    uint8_t player_;
-  };
-
-  struct client_event_player_update_t : public client_event_base_t {
-    client_event_player_update_t(uint8_t player, Vector2<float> position)
-        : player_(player), position_(std::move(position)) {}
-    uint8_t player_;
-    Vector2<float> position_;
-  };
-
-  struct client_event_t {
-    ClientEvent event;
-    client_event_base_t* data;
-  };
-
   ClientStatus status_ = ClientStatus::kPending;
   std::unique_ptr<Buffer> buffer_{};
   std::queue<client_event_t> events_{};
