@@ -12,7 +12,7 @@
 #include "utils/Buffer.h"
 #include "utils/Vector2.h"
 
-class Server {
+class Server : std::enable_shared_from_this<Server> {
   enum class ClientStatus : uint8_t { kPending, kRunning, kClosed };
   enum class ClientEvent : uint8_t { kConnect, kDisconnect, kUpdatePosition };
   enum class MessageType : uint8_t { kPlayerDisconnect, kPlayerUpdatePosition };
@@ -57,16 +57,22 @@ class Server {
 
     void run() noexcept;
 
-    [[nodiscard]] inline bool pending() const noexcept {
-      return status_ == ClientStatus::kPending;
-    }
-
     [[nodiscard]] inline bool running() const noexcept {
       return status_ == ClientStatus::kRunning;
     }
 
-    [[nodiscard]] inline bool closed() const noexcept {
-      return status_ == ClientStatus::kClosed;
+    inline void disconnect() noexcept {
+      pushEvent(
+          {ClientEvent::kDisconnect, this, new client_event_disconnect_t{}});
+      status_ = ClientStatus::kClosed;
+    }
+
+    inline void send(uint8_t* data, int32_t size) noexcept {
+      if (SDLNet_TCP_Send(socket_, data, size) != size) {
+        // Not all bits were sent, meaning an abrupt disconnection or unknown
+        // socket error.
+        disconnect();
+      }
     }
 
     inline void pushEvent(const client_event_t& event) noexcept {
@@ -83,4 +89,25 @@ class Server {
       return true;
     }
   };
+
+  enum class ServerStatus : uint8_t { kPending, kRunning, kClosed };
+
+  std::vector<std::unique_ptr<ServerClient>> clients_{};
+  ServerStatus status_;
+  TCPsocket server_;
+
+  inline void broadcast(uint8_t* data, int32_t size) noexcept {
+    for (auto& client : clients_) {
+      client->send(data, size);
+    }
+  }
+
+ public:
+  Server() noexcept;
+  ~Server() noexcept;
+  void run() noexcept;
+
+  [[nodiscard]] inline bool running() const noexcept {
+    return status_ == ServerStatus::kRunning;
+  }
 };
