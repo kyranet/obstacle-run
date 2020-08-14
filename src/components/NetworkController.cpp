@@ -34,7 +34,7 @@ void NetworkController::onUpdate() noexcept {
 
   client_event_t event{};
   while (client_->readEvent(&event)) {
-    debug_print("Received event %i", event.event);
+    debug_print("[NETWORK] Received event %i\n", event.event);
   }
 }
 

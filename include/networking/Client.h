@@ -13,9 +13,20 @@
 #include "utils/Vector2.h"
 
 enum class ClientStatus : uint8_t { kPending, kRunning, kClosed };
-enum class ClientEvent : uint8_t { kConnect, kDisconnect, kUpdatePosition };
+enum class IncomingClientEvent : uint8_t {
+  kPlayerIdentify,
+  kPlayerConnect,
+  kPlayerDisconnect,
+  kPlayerUpdatePosition
+};
+enum class OutgoingClientEvent : uint8_t { kUpdatePosition };
 
 struct client_event_base_t {};
+
+struct client_event_identify_t : public client_event_base_t {
+  explicit client_event_identify_t(uint8_t id) : id_(id) {}
+  uint8_t id_;
+};
 
 struct client_event_connect_t : public client_event_base_t {
   explicit client_event_connect_t(uint8_t player) : player_(player) {}
@@ -35,7 +46,7 @@ struct client_event_player_update_t : public client_event_base_t {
 };
 
 struct client_event_t {
-  ClientEvent event;
+  IncomingClientEvent event;
   client_event_base_t* data;
 };
 
@@ -45,11 +56,12 @@ class Client {
   std::queue<client_event_t> events_{};
   std::mutex event_mutex_{};
   TCPsocket socket_;
-  uint32_t event_ = 0;
-  uint8_t id_ = 0;
+  uint32_t remoteEvent_{0};
+  uint32_t event_{0};
+  uint8_t id_{0};
 
   [[nodiscard]] std::tuple<uint8_t*, int32_t> serializeMessage(
-      ClientEvent event, void* data) const noexcept;
+      OutgoingClientEvent event, void* data) const noexcept;
   void deserializeMessage(uint8_t* message) noexcept;
 
   inline void pushEvent(const client_event_t& event) noexcept {
@@ -69,21 +81,25 @@ class Client {
   }
 
   inline void disconnect() noexcept {
-    pushEvent({ClientEvent::kDisconnect, new client_event_disconnect_t{id_}});
+    pushEvent({IncomingClientEvent::kPlayerDisconnect,
+               new client_event_disconnect_t{id_}});
     status_ = ClientStatus::kClosed;
   }
 
   inline void send(uint8_t* data, int32_t size) noexcept {
+    buffer_->writeUint32(data, event_, 0);
+
     if (SDLNet_TCP_Send(socket_, data, size) != size) {
       // Not all bits were sent, meaning an abrupt disconnection or unknown
       // socket error.
       disconnect();
+      return;
     }
 
     ++event_;
   }
 
-  inline void send(ClientEvent event, void* data = nullptr) noexcept {
+  inline void send(OutgoingClientEvent event, void* data = nullptr) noexcept {
     const auto& [message, size] = serializeMessage(event, data);
     send(message, size);
   }

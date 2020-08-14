@@ -30,7 +30,7 @@
       "components": [
         {
           "id": 0,
-          "enabled": false,
+          "enabled": true,
           "name": "NetworkController"
         }
       ],

@@ -25,9 +25,11 @@ Server::ServerClient::ServerClient(std::weak_ptr<Server> server,
          (ipAddress >> 16u) & 0xFFu, (ipAddress >> 8u) & 0xFFu,
          ipAddress & 0xFFu, remoteIP->port);
 
-  status_ = ClientStatus::kRunning;
-  pushEvent(
-      {ClientEvent::kConnect, this, new client_event_connect_t{ipAddress}});
+  if (sendIdentify()) {
+    status_ = ClientStatus::kRunning;
+    pushEvent(
+        {ClientEvent::kConnect, this, new client_event_connect_t{ipAddress}});
+  }
 }
 
 Server::ServerClient::~ServerClient() noexcept {
@@ -47,7 +49,7 @@ void Server::ServerClient::run() noexcept {
     }
 
     // Print the received message
-    debug_print("Received: %.*s\n", len, message);
+    debug_print("[SERVER] Received: %.*s\n", len, message);
     parseMessage(message);
   }
 }
@@ -55,17 +57,16 @@ void Server::ServerClient::run() noexcept {
 void Server::ServerClient::parseMessage(uint8_t* message) noexcept {
   // Validate event number, if it does not match, skip:
   const auto counter = buffer_->readUInt32(message, 0);
-  if (counter != event_) return;
+  if (counter != remoteEvent_) return;
+
+  // Increase the remote event's number:
+  ++remoteEvent_;
 
   // Read the message type:
-  const auto type = static_cast<MessageType>(buffer_->readUint8(message, 4));
+  const auto type =
+      static_cast<IncomingMessageType>(buffer_->readUint8(message, 4));
   switch (type) {
-    case MessageType::kPlayerDisconnect: {
-      debug_print("%s", "Disconnecting client.\n");
-      disconnect();
-      break;
-    }
-    case MessageType::kPlayerUpdatePosition: {
+    case IncomingMessageType::kUpdatePosition: {
       Vector2<float> position{buffer_->readFloat(message, 5),
                               buffer_->readFloat(message, 5 + sizeof(float))};
       pushEvent({ClientEvent::kUpdatePosition, this,
@@ -73,6 +74,15 @@ void Server::ServerClient::parseMessage(uint8_t* message) noexcept {
       break;
     }
   }
+}
+
+bool Server::ServerClient::sendIdentify() noexcept {
+  id_ = server_.lock()->nextPlayerID();
+  uint8_t message[6];
+  buffer_->writeUint8(
+      message, static_cast<uint8_t>(OutgoingMessageType::kPlayerIdentify), 4);
+  buffer_->writeUint8(message, id_, 5);
+  return send(message, 6);
 }
 
 Server::Server() noexcept {
@@ -114,12 +124,35 @@ Server::~Server() noexcept {
   SDLNet_Quit();
 }
 
+void Server::handleEvents() noexcept {
+  if (clients_.empty()) return;
+
+  client_event_t event{};
+  size_t i = clients_.size();
+  while (i != 0) {
+    auto& client = clients_[--i];
+    while (client->readEvent(&event)) {
+      if (event.event == ClientEvent::kDisconnect) {
+        clients_.erase(clients_.begin() + i);
+        break;
+      } else if (event.event == ClientEvent::kConnect) {
+        uint8_t message[6];
+        message[4] = static_cast<uint8_t>(OutgoingMessageType::kPlayerConnect);
+        message[5] = client->id();
+        broadcastExcept(message, 6, client->id());
+      }
+    }
+  }
+}
+
 void Server::run() noexcept {
   const constexpr static uint32_t gameFrameRate = 60U;
   const constexpr static auto frameTime =
       static_cast<uint32_t>(1000 / gameFrameRate);
 
   while (running()) {
+    handleEvents();
+
     // Try to accept a connection
     auto* client = SDLNet_TCP_Accept(server_);
 

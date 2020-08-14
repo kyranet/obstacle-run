@@ -15,7 +15,13 @@
 class Server : public std::enable_shared_from_this<Server> {
   enum class ClientStatus : uint8_t { kPending, kRunning, kClosed };
   enum class ClientEvent : uint8_t { kConnect, kDisconnect, kUpdatePosition };
-  enum class MessageType : uint8_t { kPlayerDisconnect, kPlayerUpdatePosition };
+  enum class OutgoingMessageType : uint8_t {
+    kPlayerIdentify,
+    kPlayerConnect,
+    kPlayerDisconnect,
+    kPlayerUpdatePosition
+  };
+  enum class IncomingMessageType : uint8_t { kUpdatePosition };
   class ServerClient;
 
   struct client_event_base_t {};
@@ -47,9 +53,12 @@ class Server : public std::enable_shared_from_this<Server> {
     std::mutex event_mutex_{};
     std::weak_ptr<Server> server_;
     TCPsocket socket_;
-    uint32_t event_ = 0;
+    uint8_t id_{0};
+    uint32_t event_{0};
+    uint32_t remoteEvent_{0};
 
     void parseMessage(uint8_t* message) noexcept;
+    bool sendIdentify() noexcept;
 
     inline void pushEvent(const client_event_t& event) noexcept {
       std::lock_guard<std::mutex> guard(event_mutex_);
@@ -66,18 +75,27 @@ class Server : public std::enable_shared_from_this<Server> {
       return status_ == ClientStatus::kRunning;
     }
 
+    [[nodiscard]] inline const uint8_t& id() const noexcept { return id_; }
+
     inline void disconnect() noexcept {
       pushEvent(
           {ClientEvent::kDisconnect, this, new client_event_disconnect_t{}});
       status_ = ClientStatus::kClosed;
     }
 
-    inline void send(uint8_t* data, int32_t size) noexcept {
+    inline bool send(uint8_t* data, int32_t size) noexcept {
+      // Set the event count before sending:
+      buffer_->writeUint32(data, event_, 0);
+
       if (SDLNet_TCP_Send(socket_, data, size) != size) {
         // Not all bits were sent, meaning an abrupt disconnection or unknown
         // socket error.
         disconnect();
+        return false;
       }
+
+      ++event_;
+      return true;
     }
 
     inline bool readEvent(client_event_t* event) noexcept {
@@ -93,14 +111,25 @@ class Server : public std::enable_shared_from_this<Server> {
   enum class ServerStatus : uint8_t { kPending, kRunning, kClosed };
 
   std::vector<std::unique_ptr<ServerClient>> clients_{};
+  std::mutex player_counter_mutex_{};
+  uint8_t playerCounter_{0};
   ServerStatus status_;
   TCPsocket server_;
+
+  inline void broadcastExcept(uint8_t* data, int32_t size,
+                              uint8_t id) noexcept {
+    for (auto& client : clients_) {
+      if (client->id() != id) client->send(data, size);
+    }
+  }
 
   inline void broadcast(uint8_t* data, int32_t size) noexcept {
     for (auto& client : clients_) {
       client->send(data, size);
     }
   }
+
+  void handleEvents() noexcept;
 
  public:
   Server() noexcept;
@@ -109,5 +138,10 @@ class Server : public std::enable_shared_from_this<Server> {
 
   [[nodiscard]] inline bool running() const noexcept {
     return status_ == ServerStatus::kRunning;
+  }
+
+  [[nodiscard]] inline uint8_t nextPlayerID() noexcept {
+    std::lock_guard<std::mutex> guard(player_counter_mutex_);
+    return playerCounter_++;
   }
 };
