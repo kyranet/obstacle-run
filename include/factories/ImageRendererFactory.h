@@ -8,13 +8,7 @@
 #include "interfaces/ComponentFactory.h"
 
 class ImageRendererFactory final : public ComponentFactory<ImageRenderer> {
-  static ImageFit getImageFitFromName(const std::string& value) noexcept;
-
  public:
   ImageRendererFactory() noexcept;
   ~ImageRendererFactory() noexcept override;
-
-  [[nodiscard]] std::shared_ptr<ImageRenderer> fromJson(
-      const Json::Value& json,
-      std::weak_ptr<GameObject> parent) const noexcept override;
 };

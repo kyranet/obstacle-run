@@ -11,14 +11,8 @@
 #include "objects/Font.h"
 #include "objects/GameObject.h"
 
-TextRenderer::TextRenderer(std::weak_ptr<GameObject> gameObject,
-                           std::string font, std::string text, uint16_t size,
-                           Vector4<uint8_t> color) noexcept
-    : Component(std::move(gameObject)),
-      font_(std::move(font)),
-      text_(std::move(text)),
-      size_(size),
-      color_(std::move(color)) {}
+TextRenderer::TextRenderer(std::weak_ptr<GameObject> gameObject) noexcept
+    : Component(std::move(gameObject)) {}
 TextRenderer::~TextRenderer() noexcept { SDL_DestroyTexture(texture_); }
 
 void TextRenderer::refresh() noexcept {
@@ -33,7 +27,6 @@ void TextRenderer::refresh() noexcept {
 
 void TextRenderer::onAwake() noexcept {
   Component::onAwake();
-  ttfFont_ = FontManager::get(font(), size());
   refresh();
 }
 
@@ -54,4 +47,15 @@ Json::Value TextRenderer::toJson() const noexcept {
   json["size"] = size();
   json["color"] = color().toJson();
   return json;
+}
+
+void TextRenderer::patch(const Json::Value& json) noexcept {
+  Component::patch(json);
+
+  font_ = json["font"].asString();
+  text_ = json["text"].asString();
+  size_ = static_cast<uint16_t>(json["size"].asUInt());
+  color_ = Vector4<uint8_t>(json["color"]);
+
+  ttfFont_ = FontManager::get(font(), size());
 }

@@ -11,9 +11,8 @@
 #include "objects/GameObject.h"
 #include "objects/Image.h"
 
-ImageRenderer::ImageRenderer(std::weak_ptr<GameObject> gameObject,
-                             std::string path, ImageFit fit) noexcept
-    : Component(std::move(gameObject)), path_(std::move(path)), fit_(fit) {}
+ImageRenderer::ImageRenderer(std::weak_ptr<GameObject> gameObject) noexcept
+    : Component(std::move(gameObject)) {}
 ImageRenderer::~ImageRenderer() noexcept = default;
 
 void ImageRenderer::onAwake() noexcept {
@@ -116,4 +115,21 @@ std::string ImageRenderer::getNameFromImageFit(ImageFit value) noexcept {
     default:
       return "cover";
   }
+}
+
+void ImageRenderer::patch(const Json::Value& json) noexcept {
+  Component::patch(json);
+
+  path_ = json["image"].asString();
+  fit_ = getImageFitFromName(json["fit"].asString());
+}
+
+ImageFit ImageRenderer::getImageFitFromName(const std::string& value) noexcept {
+  if (value == "none") return ImageFit::None;
+  if (value == "fill") return ImageFit::Fill;
+  if (value == "contain") return ImageFit::Contain;
+
+  assert(((void)"'value' must be one of 'none', 'fill', 'contain', or 'cover'.",
+          value == "cover"));
+  return ImageFit::Cover;
 }

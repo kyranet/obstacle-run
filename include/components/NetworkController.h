@@ -21,5 +21,5 @@ class NetworkController final : public Component {
     return client_;
   }
 
-  [[nodiscard]] virtual Json::Value toJson() const noexcept override;
+  [[nodiscard]] Json::Value toJson() const noexcept override;
 };

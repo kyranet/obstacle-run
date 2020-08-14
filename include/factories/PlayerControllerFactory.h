@@ -10,8 +10,4 @@ class PlayerControllerFactory final
  public:
   PlayerControllerFactory() noexcept;
   ~PlayerControllerFactory() noexcept override;
-
-  [[nodiscard]] std::shared_ptr<PlayerController> fromJson(
-      const Json::Value& json,
-      std::weak_ptr<GameObject> parent) const noexcept override;
 };

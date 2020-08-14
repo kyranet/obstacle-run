@@ -40,7 +40,9 @@ SDL_Rect GameObject::rectangle() const noexcept {
 }
 
 void GameObject::load(const Json::Value& value) {
+  id() = value["id"].asUInt();
   name() = value["name"].asString();
+  active() = value["active"].asBool();
 
   const auto jsonChildren = value["children"];
   for (const auto& child : jsonChildren) {
@@ -69,15 +71,14 @@ void GameObject::load(const Json::Value& value) {
 }
 
 void GameObject::onAwake() noexcept {
-  active() = true;
   transform_ = getComponent<Transform>();
 
   for (const auto& child : children()) {
-    child->onAwake();
+    if (child->active()) child->onAwake();
   }
 
   for (const auto& component : components()) {
-    component->onAwake();
+    if (component->enabled()) component->onAwake();
   }
 }
 
@@ -118,3 +119,19 @@ void GameObject::onRender() const noexcept {
 }
 
 void GameObject::onDestroy() noexcept { active() = false; }
+
+Json::Value GameObject::toJson() const noexcept {
+  Json::Value json(Json::objectValue);
+  json["id"] = id();
+  json["active"] = active();
+
+  Json::Value children(Json::arrayValue);
+  for (const auto& child : children_) children.append(child->toJson());
+  json["children"] = children;
+
+  Json::Value components(Json::arrayValue);
+  for (const auto& child : components_) components.append(child->toJson());
+  json["components"] = components;
+
+  return json;
+}

@@ -5,16 +5,21 @@
 #include "objects/Component.h"
 #include "utils/Vector4.h"
 
+struct bullet_box_patch_t : component_patch_t {
+  double remaining;
+  Vector4<int32_t> data;
+  Vector2<double> velocity;
+};
+
 class PhysicsBody;
 class BulletBox final : public Component {
-  double remaining_;
-  Vector4<int32_t> data_;
-  Vector2<double> velocity_;
+  double remaining_{};
+  Vector4<int32_t> data_{};
+  Vector2<double> velocity_{};
   std::weak_ptr<PhysicsBody> body_{};
 
  public:
-  BulletBox(std::weak_ptr<GameObject> gameObject, Vector4<int32_t> data,
-            Vector2<double> velocity, double remaining) noexcept;
+  explicit BulletBox(std::weak_ptr<GameObject> gameObject) noexcept;
 
   void onAwake() noexcept override;
   void onUpdate() noexcept override;
@@ -31,5 +36,7 @@ class BulletBox final : public Component {
     return velocity_;
   }
 
-  [[nodiscard]] virtual Json::Value toJson() const noexcept override;
+  [[nodiscard]] Json::Value toJson() const noexcept override;
+  void patch(const Json::Value& json) noexcept override;
+  void patch(const bullet_box_patch_t& json) noexcept;
 };

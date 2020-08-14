@@ -9,10 +9,8 @@
 #include "components/Transform.h"
 #include "objects/GameObject.h"
 
-SolidRenderer::SolidRenderer(std::weak_ptr<GameObject> gameObject,
-                             const Vector4<int32_t>& rectangle,
-                             const Vector4<uint8_t>& color) noexcept
-    : Component(std::move(gameObject)), rectangle_(rectangle), color_(color) {}
+SolidRenderer::SolidRenderer(std::weak_ptr<GameObject> gameObject) noexcept
+    : Component(std::move(gameObject)) {}
 
 SolidRenderer::~SolidRenderer() noexcept = default;
 
@@ -39,4 +37,11 @@ Json::Value SolidRenderer::toJson() const noexcept {
   json["rectangle"] = rectangle().toJson();
   json["color"] = color().toJson();
   return json;
+}
+
+void SolidRenderer::patch(const Json::Value& json) noexcept {
+  Component::patch(json);
+
+  rectangle_ = Vector4<int32_t>(json["rectangle"]);
+  color_ = Vector4<uint8_t>(json["color"]);
 }

@@ -8,6 +8,7 @@
 
 #include <iostream>
 
+#include "factories/BulletBoxFactory.h"
 #include "factories/ButtonFactory.h"
 #include "factories/ImageRendererFactory.h"
 #include "factories/NetworkControllerFactory.h"
@@ -96,6 +97,7 @@ bool Game::init() noexcept {
       std::make_shared<PlayerControllerFactory>());
   ComponentManager::add<SolidRenderer>(
       std::make_shared<SolidRendererFactory>());
+  ComponentManager::add<BulletBox>(std::make_shared<BulletBoxFactory>());
   ComponentManager::add<Button>(std::make_shared<ButtonFactory>());
   ComponentManager::add<TextRenderer>(std::make_shared<TextRendererFactory>());
   ComponentManager::add<PhysicsBody>(std::make_shared<PhysicsBodyFactory>());

@@ -7,16 +7,3 @@ SolidRendererFactory::SolidRendererFactory() noexcept
     : ComponentFactory("SolidRenderer") {}
 
 SolidRendererFactory::~SolidRendererFactory() noexcept = default;
-
-// {
-//   "name": "ImageRenderer",
-//   "rectangle": [0, 0, 500, 500],
-//   "color": [255, 255, 0, 255]
-// }
-
-std::shared_ptr<SolidRenderer> SolidRendererFactory::fromJson(
-    const Json::Value& json, std::weak_ptr<GameObject> parent) const noexcept {
-  return std::make_shared<SolidRenderer>(parent,
-                                         Vector4<int32_t>(json["rectangle"]),
-                                         Vector4<uint8_t>(json["color"]));
-}

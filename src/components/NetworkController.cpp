@@ -11,9 +11,11 @@
 
 NetworkController::NetworkController(
     std::weak_ptr<GameObject> gameObject) noexcept
-    : Component(std::move(gameObject)), client_(nullptr) {}
+    : Component(std::move(gameObject)) {}
 
-NetworkController::~NetworkController() noexcept { client()->disconnect(); }
+NetworkController::~NetworkController() noexcept {
+  if (enabled()) client()->disconnect();
+}
 
 void NetworkController::onAwake() noexcept {
   Component::onAwake();

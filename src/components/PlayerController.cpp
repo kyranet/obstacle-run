@@ -14,13 +14,9 @@
 #include "scenes/Scene.h"
 #include "utils/Time.h"
 
-PlayerController::PlayerController(std::weak_ptr<GameObject> gameObject,
-                                   double bulletNext, uint8_t bulletClip,
-                                   uint8_t speed) noexcept
-    : Component(std::move(gameObject)),
-      bulletNext_(bulletNext),
-      bulletClip_(bulletClip),
-      speed_(speed) {}
+PlayerController::PlayerController(
+    std::weak_ptr<GameObject> gameObject) noexcept
+    : Component(std::move(gameObject)) {}
 
 PlayerController::~PlayerController() noexcept = default;
 
@@ -83,16 +79,31 @@ void PlayerController::onUpdate() noexcept {
     const auto bp = Vector4<int32_t>{start, bs};
     const auto go = std::make_shared<GameObject>(scene());
     go->name() = "Bullet";
-    const auto newTransform = std::make_shared<Transform>(
-        go->shared_from_this(), bp.toVector2<float>(), bs);
-    const auto newPhysics = std::make_shared<PhysicsBody>(
-        go->shared_from_this(), b2BodyType::b2_dynamicBody, false, 1.f, 1.f,
-        0.4f, bp, static_cast<uint16_t>(1 << 4),
-        static_cast<uint16_t>(0b11111));
-    const auto newBullet = std::make_shared<BulletBox>(
-        go->shared_from_this(), bp,
-        Vector2<double>{-cos(angle) * 5000000000.0, -sin(angle) * 5000000000.0},
-        2.f);
+    go->active() = true;
+
+    const auto newTransform =
+        std::make_shared<Transform>(go->shared_from_this());
+    newTransform->patch({{0, true}, bp.toVector2<float>(), bs});
+
+    const auto newPhysics =
+        std::make_shared<PhysicsBody>(go->shared_from_this());
+    newPhysics->patch({{0, true},
+                       b2BodyType::b2_dynamicBody,
+                       false,
+                       1.f,
+                       1.f,
+                       0.4f,
+                       bp,
+                       static_cast<uint16_t>(1 << 4),
+                       static_cast<uint16_t>(0b11111)});
+
+    const auto newBullet = std::make_shared<BulletBox>(go->shared_from_this());
+    newBullet->patch({{0, true},
+                      2.f,
+                      bp,
+                      Vector2<double>{-cos(angle) * 5000000000.0,
+                                      -sin(angle) * 5000000000.0}});
+
     go->addComponent(newTransform);
     go->addComponent(newPhysics);
     go->addComponent(newBullet);
@@ -129,4 +140,12 @@ Json::Value PlayerController::toJson() const noexcept {
   json["bullet_next"] = bulletNext();
   json["speed"] = speed();
   return json;
+}
+
+void PlayerController::patch(const Json::Value& json) noexcept {
+  Component::patch(json);
+
+  bulletNext_ = json["bullet_next"].asDouble();
+  bulletClip_ = static_cast<uint8_t>(json["bullet_clip"].asUInt());
+  speed_ = static_cast<uint8_t>(json["speed"].asUInt());
 }

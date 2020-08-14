@@ -2,14 +2,20 @@
   "name": "menu",
   "game_objects": [
     {
+      "id": 0,
+      "active": true,
       "name": "Background",
       "components": [
         {
+          "id": 0,
+          "enabled": true,
           "name": "Transform",
           "position": [0, 0],
           "scale": [0, 0]
         },
         {
+          "id": 1,
+          "enabled": true,
           "name": "ImageRenderer",
           "image": "ForestBackground",
           "fit": "cover"
@@ -18,18 +24,26 @@
       "children": []
     },
     {
+      "id": 1,
+      "active": true,
       "name": "Network",
       "components": [
         {
+          "id": 0,
+          "enabled": false,
           "name": "NetworkController"
         }
       ],
       "children": []
     },
     {
+      "id": 2,
+      "active": true,
       "name": "Walls",
       "components": [
         {
+          "id": 0,
+          "enabled": true,
           "name": "PhysicsBody",
           "type":"static",
           "sensor": false,
@@ -41,6 +55,8 @@
           "mask": ["player", "bullet", "boundary"]
         },
         {
+          "id": 1,
+          "enabled": true,
           "name": "PhysicsBody",
           "type": "static",
           "sensor": false,
@@ -55,14 +71,20 @@
       "children": []
     },
     {
+      "id": 3,
+      "active": true,
       "name": "Destructible-Walls",
       "components": [],
       "children": []
     },
     {
-      "name": "Collectible-1",
+      "id": 4,
+      "active": true,
+      "name": "Collectibles",
       "components": [
         {
+          "id": 0,
+          "enabled": true,
           "name": "PhysicsBody",
           "type":"static",
           "sensor": true,
@@ -77,23 +99,33 @@
       "children": []
     },
     {
+      "id": 5,
+      "active": true,
       "name": "Bullets",
       "components": [],
       "children": []
     },
     {
+      "id": 6,
+      "active": true,
       "name": "Players",
       "components": [],
       "children": [
         {
+          "id": 0,
+          "active": true,
           "name": "Player",
           "components": [
             {
+              "id": 0,
+              "enabled": true,
               "name": "Transform",
               "position": [50, 50],
               "scale": [1, 1]
             },
             {
+              "id": 1,
+              "enabled": true,
               "name": "PhysicsBody",
               "type":"dynamic",
               "sensor": false,
@@ -105,12 +137,16 @@
               "mask": ["boundary", "collectible", "bullet"]
             },
             {
+              "id": 2,
+              "enabled": true,
               "name": "PlayerController",
               "bullet_clip": 2,
               "bullet_next": 1,
               "speed": 100
             },
             {
+              "id": 3,
+              "enabled": true,
               "name": "SolidRenderer",
               "rectangle": [0, 0, 50, 50],
               "color": [255, 255, 0, 255]
@@ -121,14 +157,20 @@
       ]
     },
     {
+      "id": 7,
+      "active": true,
       "name": "GUI",
       "components": [
         {
+          "id": 0,
+          "enabled": true,
           "name": "Transform",
           "position": [0, 0],
           "scale": [0, 0]
         },
         {
+          "id": 1,
+          "enabled": true,
           "name": "TextRenderer",
           "font": "PaperWorks",
           "size": 80,
@@ -136,6 +178,8 @@
           "color": [255, 255, 255, 255]
         },
         {
+          "id": 2,
+          "enabled": true,
           "name": "Button"
         }
       ]

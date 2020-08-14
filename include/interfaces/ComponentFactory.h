@@ -7,10 +7,13 @@
 #include <string>
 #include <utility>
 
-class Component;
+#include "objects/Component.h"
+
 class GameObject;
 
-template <typename T>
+template <typename T,
+          typename std::enable_if<std::is_base_of<Component, T>::value>::type* =
+              nullptr>
 class ComponentFactory {
   std::string name_;
 
@@ -24,5 +27,9 @@ class ComponentFactory {
 
   [[nodiscard]] virtual std::shared_ptr<T> fromJson(
       const Json::Value& json,
-      std::weak_ptr<GameObject> parent) const noexcept = 0;
+      std::weak_ptr<GameObject> parent) const noexcept {
+    auto component = std::make_shared<T>(parent);
+    component->patch(json);
+    return component;
+  }
 };

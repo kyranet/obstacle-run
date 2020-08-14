@@ -6,44 +6,8 @@
 #include "objects/GameObject.h"
 #include "scenes/Scene.h"
 
-PhysicsBody::PhysicsBody(std::weak_ptr<GameObject> parent, b2BodyType type,
-                         bool sensor, float density, float restitution,
-                         float linearDamping, Vector4<int32_t> data,
-                         uint16_t category, uint16_t mask) noexcept
-    : Component(std::move(parent)),
-      type_(type),
-      sensor_(sensor),
-      density_(density),
-      restitution_(restitution),
-      linearDamping_(linearDamping),
-      data_(data),
-      category_(category),
-      mask_(mask) {
-  b2BodyDef bodyDef;
-  bodyDef.type = type_;
-  bodyDef.position.Set(static_cast<float>(data.x()),
-                       static_cast<float>(data.y()));
-  bodyDef.angle = 0.f;
-  bodyDef.fixedRotation = true;
-  bodyDef.linearDamping = linearDamping;
-  bodyDef.awake = true;
-
-  body_ = scene().lock()->world().CreateBody(&bodyDef);
-
-  b2PolygonShape boxShape;
-  boxShape.SetAsBox(static_cast<float>(data.z()) / 2.f,
-                    static_cast<float>(data.a()) / 2.f);
-
-  b2FixtureDef fixtureDef;
-  fixtureDef.shape = &boxShape;
-  fixtureDef.density = density;
-  fixtureDef.isSensor = sensor_;
-  fixtureDef.filter.categoryBits = category_;
-  fixtureDef.filter.maskBits = mask_;
-  fixtureDef.restitution = restitution;
-  fixtureDef.userData = this;
-  body_->CreateFixture(&fixtureDef);
-}
+PhysicsBody::PhysicsBody(std::weak_ptr<GameObject> parent) noexcept
+    : Component(std::move(parent)) {}
 
 PhysicsBody::~PhysicsBody() noexcept {
   if (gameObject().expired()) return;
@@ -112,4 +76,89 @@ Json::Value PhysicsBody::getJsonFromMask(const uint16_t bits) noexcept {
     json.append("bullet");
   if (bits & static_cast<uint16_t>(PhysicsBodyMask::Goal)) json.append("goal");
   return json;
+}
+
+void PhysicsBody::patch(const Json::Value& json) noexcept {
+  patch(physics_body_patch_t{{json["id"].asUInt(), json["enabled"].asBool()},
+                             getBodyTypeFromName(json["type"].asString()),
+                             json["sensor"].asBool(),
+                             json["density"].asFloat(),
+                             json["restitution"].asFloat(),
+                             json["linear_damping"].asFloat(),
+                             Vector4<int32_t>(json["data"]),
+                             getMaskFromJson(json["category"]),
+                             getMaskFromJson(json["mask"])});
+}
+
+b2BodyType PhysicsBody::getBodyTypeFromName(const std::string& value) noexcept {
+  if (value == "static") return b2BodyType::b2_staticBody;
+  if (value == "kinematic") return b2BodyType::b2_kinematicBody;
+
+  assert(((void)"'value' must be one of 'static', 'kinematic', or 'dynamic'.",
+          value == "dynamic"));
+  return b2BodyType::b2_dynamicBody;
+}
+
+PhysicsBodyMask PhysicsBody::getBodyMaskFromName(
+    const std::string& value) noexcept {
+  if (value == "boundary") return PhysicsBodyMask::Boundary;
+  if (value == "player") return PhysicsBodyMask::Player;
+  if (value == "enemy") return PhysicsBodyMask::Enemy;
+  if (value == "collectible") return PhysicsBodyMask::Collectible;
+  if (value == "bullet") return PhysicsBodyMask::Bullet;
+
+  assert(((void)"'value' must be one of 'boundary', 'player', 'enemy', "
+                "'collectible', 'bullet', or 'goal'.",
+          value == "goal"));
+  return PhysicsBodyMask::Goal;
+}
+
+uint16_t PhysicsBody::getMaskFromJson(const Json::Value& json) noexcept {
+  assert(((void)"'json' must be an array.", json.isArray()));
+
+  uint16_t bits = 0;
+  for (const auto& mask : json) {
+    assert(((void)"'mask' must be a string.", mask.isString()));
+    bits |= static_cast<uint16_t>(getBodyMaskFromName(mask.asString()));
+  }
+
+  return bits;
+}
+
+void PhysicsBody::patch(const physics_body_patch_t& data) noexcept {
+  Component::patch(data);
+
+  type_ = data.type;
+  sensor_ = data.sensor;
+  density_ = data.density;
+  restitution_ = data.restitution;
+  linearDamping_ = data.linearDamping;
+  data_ = data.data;
+  category_ = data.category;
+  mask_ = data.mask;
+
+  b2BodyDef bodyDef;
+  bodyDef.type = type_;
+  bodyDef.position.Set(static_cast<float>(data_.x()),
+                       static_cast<float>(data_.y()));
+  bodyDef.angle = 0.f;
+  bodyDef.fixedRotation = true;
+  bodyDef.linearDamping = linearDamping_;
+  bodyDef.awake = true;
+
+  body_ = scene().lock()->world().CreateBody(&bodyDef);
+
+  b2PolygonShape boxShape;
+  boxShape.SetAsBox(static_cast<float>(data_.z()) / 2.f,
+                    static_cast<float>(data_.a()) / 2.f);
+
+  b2FixtureDef fixtureDef;
+  fixtureDef.shape = &boxShape;
+  fixtureDef.density = density_;
+  fixtureDef.isSensor = sensor_;
+  fixtureDef.filter.categoryBits = category_;
+  fixtureDef.filter.maskBits = mask_;
+  fixtureDef.restitution = restitution_;
+  fixtureDef.userData = this;
+  body_->CreateFixture(&fixtureDef);
 }

@@ -40,19 +40,20 @@ enum class ImageFit {
 struct SDL_Texture;
 
 class ImageRenderer final : public Component {
-  std::string path_;
-  ImageFit fit_;
+  std::string path_{};
+  ImageFit fit_{};
   std::shared_ptr<Image> image_{};
   SDL_Texture* texture_ = nullptr;
 
   void updateImageFit() noexcept;
 
+  [[nodiscard]] static ImageFit getImageFitFromName(
+      const std::string& value) noexcept;
   [[nodiscard]] static std::string getNameFromImageFit(ImageFit value) noexcept;
 
  public:
-  explicit ImageRenderer(std::weak_ptr<GameObject> gameObject, std::string path,
-                         ImageFit fit) noexcept;
-  ~ImageRenderer() noexcept;
+  explicit ImageRenderer(std::weak_ptr<GameObject> gameObject) noexcept;
+  ~ImageRenderer() noexcept override;
 
   void onAwake() noexcept override;
   void onRender() noexcept override;
@@ -69,5 +70,6 @@ class ImageRenderer final : public Component {
     return image_;
   }
 
-  [[nodiscard]] virtual Json::Value toJson() const noexcept override;
+  [[nodiscard]] Json::Value toJson() const noexcept override;
+  void patch(const Json::Value& json) noexcept override;
 };

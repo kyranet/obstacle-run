@@ -8,15 +8,14 @@ class Transform;
 class PhysicsBody;
 
 class PlayerController final : public Component {
-  double bulletNext_;
-  uint8_t bulletClip_;
-  uint8_t speed_;
-  std::shared_ptr<PhysicsBody> physicsBody_;
-  std::weak_ptr<GameObject> bullets_;
+  double bulletNext_{};
+  uint8_t bulletClip_{};
+  uint8_t speed_{};
+  std::shared_ptr<PhysicsBody> physicsBody_{};
+  std::weak_ptr<GameObject> bullets_{};
 
  public:
-  PlayerController(std::weak_ptr<GameObject> gameObject, double bulletNext,
-                   uint8_t bulletClip, uint8_t speed) noexcept;
+  explicit PlayerController(std::weak_ptr<GameObject> gameObject) noexcept;
   ~PlayerController() noexcept override;
   void onAwake() noexcept override;
   void onUpdate() noexcept override;
@@ -37,5 +36,6 @@ class PlayerController final : public Component {
   }
   inline uint8_t& bulletClip() noexcept { return bulletClip_; }
 
-  [[nodiscard]] virtual Json::Value toJson() const noexcept override;
+  [[nodiscard]] Json::Value toJson() const noexcept override;
+  void patch(const Json::Value& json) noexcept override;
 };

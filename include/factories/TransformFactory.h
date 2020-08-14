@@ -9,8 +9,4 @@ class TransformFactory final : public ComponentFactory<Transform> {
  public:
   TransformFactory() noexcept;
   ~TransformFactory() noexcept override;
-
-  [[nodiscard]] std::shared_ptr<Transform> fromJson(
-      const Json::Value& json,
-      std::weak_ptr<GameObject> parent) const noexcept override;
 };

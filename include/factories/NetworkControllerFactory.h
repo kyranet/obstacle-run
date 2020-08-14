@@ -12,8 +12,4 @@ class NetworkControllerFactory final
  public:
   NetworkControllerFactory() noexcept;
   ~NetworkControllerFactory() noexcept override;
-
-  [[nodiscard]] std::shared_ptr<NetworkController> fromJson(
-      const Json::Value& json,
-      std::weak_ptr<GameObject> parent) const noexcept override;
 };

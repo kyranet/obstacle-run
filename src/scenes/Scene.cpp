@@ -20,7 +20,7 @@ Scene::~Scene() noexcept { end(); }
 
 void Scene::onStart() const noexcept {
   for (const auto& gameObject : gameObjects()) {
-    gameObject->onAwake();
+    if (gameObject->active()) gameObject->onAwake();
   }
 }
 
@@ -28,7 +28,7 @@ void Scene::onCreate() noexcept {
   size_t last = gameObjects_.size();
   gameObjects_.resize(last + newGameObjects_.size());
   for (auto& gameObject : newGameObjects_) {
-    gameObject->onAwake();
+    if (gameObject->active()) gameObject->onAwake();
 
     std::shared_ptr<GameObject> sharedPtr(std::move(gameObject));
     gameObjects_[last++].swap(sharedPtr);

@@ -13,10 +13,8 @@ class SolidRenderer final : public Component {
   Vector4<uint8_t> color_;
 
  public:
-  SolidRenderer(std::weak_ptr<GameObject> gameObject,
-                const Vector4<int32_t>& rectangle,
-                const Vector4<uint8_t>& color) noexcept;
-  ~SolidRenderer() noexcept;
+  explicit SolidRenderer(std::weak_ptr<GameObject> gameObject) noexcept;
+  ~SolidRenderer() noexcept override;
 
   void onAwake() noexcept override;
   void onRender() noexcept override;
@@ -33,5 +31,6 @@ class SolidRenderer final : public Component {
   }
   inline Vector4<uint8_t>& color() noexcept { return color_; }
 
-  [[nodiscard]] virtual Json::Value toJson() const noexcept override;
+  [[nodiscard]] Json::Value toJson() const noexcept override;
+  void patch(const Json::Value& json) noexcept override;
 };

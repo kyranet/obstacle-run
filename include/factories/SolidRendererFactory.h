@@ -11,8 +11,4 @@ class SolidRendererFactory final : public ComponentFactory<SolidRenderer> {
  public:
   SolidRendererFactory() noexcept;
   ~SolidRendererFactory() noexcept override;
-
-  [[nodiscard]] std::shared_ptr<SolidRenderer> fromJson(
-      const Json::Value& json,
-      std::weak_ptr<GameObject> parent) const noexcept override;
 };

@@ -7,6 +7,11 @@
 class GameObject;
 class Scene;
 
+struct component_patch_t {
+  uint32_t id;
+  bool enabled;
+};
+
 class Component {
  private:
   bool enabled_{false};
@@ -44,4 +49,13 @@ class Component {
   virtual void onRender() noexcept;
 
   [[nodiscard]] virtual Json::Value toJson() const noexcept;
+
+  virtual void patch(const Json::Value& json) noexcept {
+    patch({json["id"].asUInt(), json["enabled"].asBool()});
+  }
+
+  void patch(const component_patch_t& data) noexcept {
+    id_ = data.id;
+    enabled_ = data.enabled;
+  }
 };

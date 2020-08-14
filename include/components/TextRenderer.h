@@ -15,19 +15,17 @@ class Font;
 class Transform;
 
 class TextRenderer final : public Component {
-  std::string font_;
-  std::string text_;
-  uint16_t size_;
-  Vector4<int32_t> rectangle_;
-  Vector4<uint8_t> color_;
+  std::string font_{};
+  std::string text_{};
+  uint16_t size_{};
+  Vector4<int32_t> rectangle_{};
+  Vector4<uint8_t> color_{};
   std::weak_ptr<Font> ttfFont_{};
   SDL_Texture* texture_ = nullptr;
 
  public:
-  TextRenderer(std::weak_ptr<GameObject> gameObject, std::string font,
-               std::string text, uint16_t size,
-               Vector4<uint8_t> color) noexcept;
-  ~TextRenderer() noexcept;
+  explicit TextRenderer(std::weak_ptr<GameObject> gameObject) noexcept;
+  ~TextRenderer() noexcept override;
 
   void onAwake() noexcept override;
   void onRender() noexcept override;
@@ -56,5 +54,6 @@ class TextRenderer final : public Component {
 
   void refresh() noexcept;
 
-  [[nodiscard]] virtual Json::Value toJson() const noexcept override;
+  [[nodiscard]] Json::Value toJson() const noexcept override;
+  void patch(const Json::Value& json) noexcept override;
 };

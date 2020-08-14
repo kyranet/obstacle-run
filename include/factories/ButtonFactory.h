@@ -9,7 +9,4 @@ class ButtonFactory final : public ComponentFactory<Button> {
  public:
   ButtonFactory() noexcept;
   ~ButtonFactory() noexcept override;
-  [[nodiscard]] std::shared_ptr<Button> fromJson(
-      const Json::Value& json,
-      std::weak_ptr<GameObject> parent) const noexcept override;
 };

@@ -11,8 +11,8 @@
 struct SDL_Rect;
 struct SDL_Point;
 class Scene;
-class Component;
 class Transform;
+class Component;
 
 class GameObject final : public std::enable_shared_from_this<GameObject> {
   uint32_t id_{0};
@@ -126,4 +126,6 @@ class GameObject final : public std::enable_shared_from_this<GameObject> {
   void onLateUpdate() noexcept;
   void onRender() const noexcept;
   void onDestroy() noexcept;
+
+  [[nodiscard]] Json::Value toJson() const noexcept;
 };
