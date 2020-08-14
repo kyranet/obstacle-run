@@ -70,7 +70,7 @@ void Client::deserializeMessage(uint8_t* message) noexcept {
   }
 }
 
-std::pair<uint8_t*, int32_t> Client::serializeMessage(
+std::tuple<uint8_t*, int32_t> Client::serializeMessage(
     ClientEvent event, void* data) const noexcept {
   switch (event) {
     case ClientEvent::kConnect:

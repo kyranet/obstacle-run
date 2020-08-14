@@ -98,7 +98,7 @@ SDL_Point Input::rawMousePosition() noexcept {
 std::shared_ptr<const GameObject> Input::screenMouseToRay() noexcept {
   if (casted_) return casted_;
   const auto& scene = SceneManager::getActiveScene();
-  const auto& gameObjects = scene->gameObjects();
+  const auto& gameObjects = scene.lock()->gameObjects();
   const auto& position = mousePosition_;
   const auto point = SDL_Point{position.x(), position.y()};
   for (auto it = gameObjects.rbegin(); it != gameObjects.rend(); ++it) {

@@ -113,7 +113,7 @@ void Game::run() {
   SceneManager::loadScene(scene);
   SceneManager::setActiveScene(scene);
 
-  scene->run();
+  scene.lock()->run();
 }
 
 Game* Game::getInstance() {

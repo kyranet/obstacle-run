@@ -15,9 +15,10 @@ class Component;
 class Transform;
 
 class GameObject final : public std::enable_shared_from_this<GameObject> {
-  bool active_ = false;
-  bool destroyed_ = false;
-  bool transparent_ = false;
+  uint32_t id_{0};
+  bool active_{false};
+  bool destroyed_{false};
+  bool transparent_{false};
   std::string name_{};
   std::weak_ptr<Scene> scene_{};
   std::weak_ptr<GameObject> parent_{};
@@ -35,6 +36,9 @@ class GameObject final : public std::enable_shared_from_this<GameObject> {
     return name_;
   }
   inline std::string& name() noexcept { return name_; }
+
+  [[nodiscard]] inline const uint32_t& id() const noexcept { return id_; }
+  inline uint32_t& id() noexcept { return id_; }
 
   [[nodiscard]] inline const std::weak_ptr<GameObject>& parent()
       const noexcept {

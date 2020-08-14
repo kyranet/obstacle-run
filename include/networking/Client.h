@@ -48,7 +48,7 @@ class Client {
   uint32_t event_ = 0;
   uint8_t id_ = 0;
 
-  [[nodiscard]] std::pair<uint8_t*, int32_t> serializeMessage(
+  [[nodiscard]] std::tuple<uint8_t*, int32_t> serializeMessage(
       ClientEvent event, void* data) const noexcept;
   void deserializeMessage(uint8_t* message) noexcept;
 
@@ -84,8 +84,8 @@ class Client {
   }
 
   inline void send(ClientEvent event, void* data = nullptr) noexcept {
-    const auto pair = serializeMessage(event, data);
-    send(pair.first, pair.second);
+    const auto& [message, size] = serializeMessage(event, data);
+    send(message, size);
   }
 
   inline bool readEvent(client_event_t* event) noexcept {

@@ -16,45 +16,45 @@ size_t SceneManager::index_ = invalidIndex_;
 
 size_t SceneManager::getSceneCount() noexcept { return scenes_.size(); }
 
-std::shared_ptr<Scene> SceneManager::createScene(
+std::weak_ptr<Scene> SceneManager::createScene(
     const std::string& name) noexcept {
   auto scene = std::make_shared<Scene>(name);
   scenes_.emplace_back(std::make_pair(scene->name(), scene));
   return scene;
 }
 
-std::shared_ptr<Scene> SceneManager::getActiveScene() noexcept {
+std::weak_ptr<Scene> SceneManager::getActiveScene() noexcept {
   return index_ == invalidIndex_ ? nullptr : scenes_[index_].second;
 }
 
-std::shared_ptr<Scene> SceneManager::getSceneAt(size_t position) noexcept {
+std::weak_ptr<Scene> SceneManager::getSceneAt(size_t position) noexcept {
   return scenes_[position].second;
 }
 
-std::shared_ptr<Scene> SceneManager::getSceneByName(
+std::weak_ptr<Scene> SceneManager::getSceneByName(
     const std::string& name) noexcept {
   for (const auto& pair : scenes_) {
     if (pair.first == name) return pair.second;
   }
-  return nullptr;
+
+  return std::weak_ptr<Scene>();
 }
 
-void SceneManager::loadScene(const std::shared_ptr<Scene>& scene) {
+void SceneManager::loadScene(const std::weak_ptr<Scene>& scene) {
   assert((
       (void)"'scene' from SceneManager::loadScene(Scene*) must not be nullptr.",
-      scene));
-  scene->load();
+      !scene.expired()));
+  scene.lock()->load();
 }
 
 void SceneManager::loadScene(const std::string& name) {
   loadScene(getSceneByName(name));
 }
 
-void SceneManager::setActiveScene(
-    const std::shared_ptr<Scene>& scene) noexcept {
+void SceneManager::setActiveScene(const std::weak_ptr<Scene>& scene) noexcept {
   size_t i = 0;
   for (const auto& pair : scenes_) {
-    if (pair.second == scene) {
+    if (scene.lock() == pair.second) {
       index_ = i;
       break;
     }

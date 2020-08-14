@@ -19,14 +19,14 @@ class SceneManager final {
   ~SceneManager() = delete;
 
   [[nodiscard]] static size_t getSceneCount() noexcept;
-  [[nodiscard]] static std::shared_ptr<Scene> createScene(
+  [[nodiscard]] static std::weak_ptr<Scene> createScene(
       const std::string& name) noexcept;
-  [[nodiscard]] static std::shared_ptr<Scene> getActiveScene() noexcept;
-  [[nodiscard]] static std::shared_ptr<Scene> getSceneAt(
+  [[nodiscard]] static std::weak_ptr<Scene> getActiveScene() noexcept;
+  [[nodiscard]] static std::weak_ptr<Scene> getSceneAt(
       size_t position) noexcept;
-  [[nodiscard]] static std::shared_ptr<Scene> getSceneByName(
+  [[nodiscard]] static std::weak_ptr<Scene> getSceneByName(
       const std::string& name) noexcept;
-  static void loadScene(const std::shared_ptr<Scene>& scene);
+  static void loadScene(const std::weak_ptr<Scene>& scene);
   static void loadScene(const std::string& name);
-  static void setActiveScene(const std::shared_ptr<Scene>& scene) noexcept;
+  static void setActiveScene(const std::weak_ptr<Scene>& scene) noexcept;
 };

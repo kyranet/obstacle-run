@@ -9,8 +9,9 @@ class Scene;
 
 class Component {
  private:
-  bool enabled_ = false;
-  bool destroyed_ = false;
+  bool enabled_{false};
+  bool destroyed_{false};
+  uint32_t id_{0};
   std::weak_ptr<GameObject> gameObject_{};
 
  public:
@@ -24,6 +25,9 @@ class Component {
     return destroyed_;
   }
   inline bool& destroyed() noexcept { return destroyed_; }
+
+  [[nodiscard]] inline const uint32_t& id() const noexcept { return id_; }
+  inline uint32_t& id() noexcept { return id_; }
 
   [[nodiscard]] inline const std::weak_ptr<GameObject>& gameObject()
       const noexcept {

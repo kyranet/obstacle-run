@@ -28,3 +28,9 @@ constexpr Endian endian() {
                          ? Endian::kPdpEndian
                          : Endian::kUnknownEndian;
 }
+
+/**
+ * A simple function that can be used to help determine if a program's
+ * endianness is Little Endian at compile-time.
+ */
+constexpr bool littleEndian() { return endian() == Endian::kLittleEndian; }
