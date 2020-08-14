@@ -47,7 +47,7 @@ void TextRenderer::onRender() noexcept {
 }
 
 Json::Value TextRenderer::toJson() const noexcept {
-  Json::Value json(Json::objectValue);
+  auto json = Component::toJson();
   json["name"] = "TextRenderer";
   json["font"] = font();
   json["text"] = text();

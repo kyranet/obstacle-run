@@ -37,7 +37,7 @@ void NetworkController::onUpdate() noexcept {
 }
 
 Json::Value NetworkController::toJson() const noexcept {
-  Json::Value json(Json::objectValue);
+  auto json = Component::toJson();
   json["name"] = "NetworkController";
   return json;
 }

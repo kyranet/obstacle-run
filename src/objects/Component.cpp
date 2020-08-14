@@ -23,3 +23,10 @@ void Component::onRender() noexcept {}
 const std::weak_ptr<Scene>& Component::scene() const noexcept {
   return gameObject().lock()->scene();
 }
+
+Json::Value Component::toJson() const noexcept {
+  Json::Value json(Json::objectValue);
+  json["id"] = id();
+  json["enabled"] = enabled();
+  return json;
+}

@@ -98,7 +98,7 @@ void ImageRenderer::updateImageFit() noexcept {
 }
 
 Json::Value ImageRenderer::toJson() const noexcept {
-  Json::Value json(Json::objectValue);
+  auto json = Component::toJson();
   json["name"] = "ImageRenderer";
   json["image"] = path();
   json["fit"] = getNameFromImageFit(fit());

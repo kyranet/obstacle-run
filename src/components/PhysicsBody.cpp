@@ -74,7 +74,7 @@ void PhysicsBody::onRender() noexcept {
 #endif
 
 Json::Value PhysicsBody::toJson() const noexcept {
-  Json::Value json(Json::objectValue);
+  auto json = Component::toJson();
   json["name"] = "PhysicsBody";
   json["type"] = getNameFromBodyType(type());
   json["sensor"] = sensor();

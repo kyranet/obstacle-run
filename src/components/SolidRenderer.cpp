@@ -34,7 +34,7 @@ SDL_Rect SolidRenderer::calculatedRectangle() const noexcept {
 }
 
 Json::Value SolidRenderer::toJson() const noexcept {
-  Json::Value json(Json::objectValue);
+  auto json = Component::toJson();
   json["name"] = "SolidRenderer";
   json["rectangle"] = rectangle().toJson();
   json["color"] = color().toJson();

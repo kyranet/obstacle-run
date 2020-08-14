@@ -51,7 +51,7 @@ void BulletBox::onUpdate() noexcept {
 }
 
 Json::Value BulletBox::toJson() const noexcept {
-  Json::Value json(Json::objectValue);
+  auto json = Component::toJson();
   json["name"] = "BulletBox";
   json["data"] = data().toJson();
   json["velocity"] = velocity().toJson();

@@ -33,7 +33,7 @@ void Button::onUpdate() noexcept {
 }
 
 Json::Value Button::toJson() const noexcept {
-  Json::Value json(Json::objectValue);
+  auto json = Component::toJson();
   json["name"] = "Button";
   return json;
 }
