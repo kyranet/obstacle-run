@@ -49,3 +49,12 @@ void BulletBox::onUpdate() noexcept {
     walls->addComponent(newPhysicsBody);
   }
 }
+
+Json::Value BulletBox::toJson() const noexcept {
+  Json::Value json(Json::objectValue);
+  json["name"] = "BulletBox";
+  json["data"] = data().toJson();
+  json["velocity"] = velocity().toJson();
+  json["remaining"] = remaining();
+  return json;
+}

@@ -32,4 +32,6 @@ class SolidRenderer final : public Component {
     return color_;
   }
   inline Vector4<uint8_t>& color() noexcept { return color_; }
+
+  [[nodiscard]] virtual Json::Value toJson() const noexcept override;
 };

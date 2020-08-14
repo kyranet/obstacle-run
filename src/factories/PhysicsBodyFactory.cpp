@@ -19,39 +19,13 @@ PhysicsBodyFactory::~PhysicsBodyFactory() noexcept = default;
 // }
 
 std::shared_ptr<PhysicsBody> PhysicsBodyFactory::fromJson(
-    const Json::Value& json, std::weak_ptr<GameObject> parent) {
+    const Json::Value& json, std::weak_ptr<GameObject> parent) const noexcept {
   return std::make_shared<PhysicsBody>(
       parent, getBodyTypeFromName(json["type"].asString()),
       json["sensor"].asBool(), json["density"].asFloat(),
       json["restitution"].asFloat(), json["linear_damping"].asFloat(),
       Vector4<int32_t>(json["data"]), getMaskFromJson(json["category"]),
       getMaskFromJson(json["mask"]));
-}
-
-Json::Value PhysicsBodyFactory::toJson(
-    std::shared_ptr<PhysicsBody> value) const {
-  Json::Value json(Json::objectValue);
-  json["name"] = name();
-  json["type"] = getNameFromBodyType(value->type());
-  json["sensor"] = value->sensor();
-  json["density"] = value->density();
-  json["restitution"] = value->restitution();
-  json["linear_damping"] = value->linearDamping();
-  json["data"] = value->data().toJson();
-  json["category"] = getJsonFromMask(value->category());
-  json["mask"] = getJsonFromMask(value->mask());
-  return json;
-}
-
-std::string PhysicsBodyFactory::getNameFromBodyType(b2BodyType value) noexcept {
-  switch (value) {
-    case b2BodyType::b2_staticBody:
-      return "static";
-    case b2BodyType::b2_kinematicBody:
-      return "kinematic";
-    default:
-      return "dynamic";
-  }
 }
 
 b2BodyType PhysicsBodyFactory::getBodyTypeFromName(
@@ -64,7 +38,7 @@ b2BodyType PhysicsBodyFactory::getBodyTypeFromName(
   return b2BodyType::b2_dynamicBody;
 }
 
-PhysicsBodyFactory::PhysicsBodyMask PhysicsBodyFactory::getBodyMaskFromName(
+PhysicsBodyMask PhysicsBodyFactory::getBodyMaskFromName(
     const std::string& value) noexcept {
   if (value == "boundary") return PhysicsBodyMask::Boundary;
   if (value == "player") return PhysicsBodyMask::Player;
@@ -88,20 +62,4 @@ uint16_t PhysicsBodyFactory::getMaskFromJson(const Json::Value& json) noexcept {
   }
 
   return bits;
-}
-
-Json::Value PhysicsBodyFactory::getJsonFromMask(const uint16_t bits) noexcept {
-  Json::Value json(Json::arrayValue);
-  if (bits & static_cast<uint16_t>(PhysicsBodyMask::Boundary))
-    json.append("boundary");
-  if (bits & static_cast<uint16_t>(PhysicsBodyMask::Player))
-    json.append("player");
-  if (bits & static_cast<uint16_t>(PhysicsBodyMask::Enemy))
-    json.append("enemy");
-  if (bits & static_cast<uint16_t>(PhysicsBodyMask::Collectible))
-    json.append("collectible");
-  if (bits & static_cast<uint16_t>(PhysicsBodyMask::Bullet))
-    json.append("bullet");
-  if (bits & static_cast<uint16_t>(PhysicsBodyMask::Goal)) json.append("goal");
-  return json;
 }

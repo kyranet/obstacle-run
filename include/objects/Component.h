@@ -42,4 +42,6 @@ class Component {
   virtual void onUpdate() noexcept;
   virtual void onLateUpdate() noexcept;
   virtual void onRender() noexcept;
+
+  [[nodiscard]] virtual Json::Value toJson() const noexcept = 0;
 };

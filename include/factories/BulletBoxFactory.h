@@ -10,7 +10,6 @@ class BulletBoxFactory final : public ComponentFactory<BulletBox> {
   BulletBoxFactory() noexcept;
   ~BulletBoxFactory() noexcept override;
   [[nodiscard]] std::shared_ptr<BulletBox> fromJson(
-      const Json::Value& json, std::weak_ptr<GameObject> parent) override;
-  [[nodiscard]] Json::Value toJson(
-      std::shared_ptr<BulletBox> value) const override;
+      const Json::Value& json,
+      std::weak_ptr<GameObject> parent) const noexcept override;
 };

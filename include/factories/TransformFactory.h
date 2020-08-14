@@ -11,7 +11,6 @@ class TransformFactory final : public ComponentFactory<Transform> {
   ~TransformFactory() noexcept override;
 
   [[nodiscard]] std::shared_ptr<Transform> fromJson(
-      const Json::Value& json, std::weak_ptr<GameObject> parent) override;
-  [[nodiscard]] Json::Value toJson(
-      std::shared_ptr<Transform> value) const override;
+      const Json::Value& json,
+      std::weak_ptr<GameObject> parent) const noexcept override;
 };

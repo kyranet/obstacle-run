@@ -32,3 +32,11 @@ SDL_Rect SolidRenderer::calculatedRectangle() const noexcept {
   return (rectangle() + gameObject().lock()->transform().lock()->position())
       .toRectangle();
 }
+
+Json::Value SolidRenderer::toJson() const noexcept {
+  Json::Value json(Json::objectValue);
+  json["name"] = "SolidRenderer";
+  json["rectangle"] = rectangle().toJson();
+  json["color"] = color().toJson();
+  return json;
+}

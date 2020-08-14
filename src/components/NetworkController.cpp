@@ -35,3 +35,9 @@ void NetworkController::onUpdate() noexcept {
     debug_print("Received event %i", event.event);
   }
 }
+
+Json::Value NetworkController::toJson() const noexcept {
+  Json::Value json(Json::objectValue);
+  json["name"] = "NetworkController";
+  return json;
+}

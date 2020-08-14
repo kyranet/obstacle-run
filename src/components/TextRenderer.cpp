@@ -45,3 +45,13 @@ void TextRenderer::onRender() noexcept {
   const auto& renderer = Game::renderer();
   SDL_RenderCopy(renderer, texture_, &src, &rect);
 }
+
+Json::Value TextRenderer::toJson() const noexcept {
+  Json::Value json(Json::objectValue);
+  json["name"] = "TextRenderer";
+  json["font"] = font();
+  json["text"] = text();
+  json["size"] = size();
+  json["color"] = color().toJson();
+  return json;
+}

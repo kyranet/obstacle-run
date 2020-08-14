@@ -11,17 +11,8 @@ BulletBoxFactory::~BulletBoxFactory() noexcept = default;
 //   "remaining": 2.5
 // }
 
-Json::Value BulletBoxFactory::toJson(std::shared_ptr<BulletBox> value) const {
-  Json::Value json(Json::objectValue);
-  json["name"] = name();
-  json["data"] = value->data().toJson();
-  json["velocity"] = value->velocity().toJson();
-  json["remaining"] = value->remaining();
-  return json;
-}
-
 std::shared_ptr<BulletBox> BulletBoxFactory::fromJson(
-    const Json::Value& json, std::weak_ptr<GameObject> parent) {
+    const Json::Value& json, std::weak_ptr<GameObject> parent) const noexcept {
   return std::make_shared<BulletBox>(parent, Vector4<int32_t>(json["data"]),
                                      Vector2<double>(json["velocity"]),
                                      json["remaining"].asDouble());

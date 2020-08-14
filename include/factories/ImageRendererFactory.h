@@ -8,7 +8,6 @@
 #include "interfaces/ComponentFactory.h"
 
 class ImageRendererFactory final : public ComponentFactory<ImageRenderer> {
-  static std::string getNameFromImageFit(ImageFit value) noexcept;
   static ImageFit getImageFitFromName(const std::string& value) noexcept;
 
  public:
@@ -16,7 +15,6 @@ class ImageRendererFactory final : public ComponentFactory<ImageRenderer> {
   ~ImageRendererFactory() noexcept override;
 
   [[nodiscard]] std::shared_ptr<ImageRenderer> fromJson(
-      const Json::Value& json, std::weak_ptr<GameObject> parent) override;
-  [[nodiscard]] Json::Value toJson(
-      std::shared_ptr<ImageRenderer> value) const override;
+      const Json::Value& json,
+      std::weak_ptr<GameObject> parent) const noexcept override;
 };

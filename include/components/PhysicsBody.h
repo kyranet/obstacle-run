@@ -7,6 +7,15 @@
 #include "objects/Component.h"
 #include "utils/Vector4.h"
 
+enum class PhysicsBodyMask : uint16_t {
+  Boundary = 1 << 0,
+  Player = 1 << 1,
+  Enemy = 1 << 2,
+  Collectible = 1 << 3,
+  Bullet = 1 << 4,
+  Goal = 1 << 5
+};
+
 class PhysicsBody final : public Component {
   b2Body* body_{};
   b2BodyType type_;
@@ -17,6 +26,10 @@ class PhysicsBody final : public Component {
   Vector4<int32_t> data_;
   uint16_t category_;
   uint16_t mask_;
+
+  [[nodiscard]] static Json::Value getJsonFromMask(uint16_t bits) noexcept;
+  [[nodiscard]] static std::string getNameFromBodyType(
+      b2BodyType value) noexcept;
 
  public:
   PhysicsBody(std::weak_ptr<GameObject> gameObject, b2BodyType type,
@@ -61,4 +74,6 @@ class PhysicsBody final : public Component {
   void onRender() noexcept override;
 #endif
   void onLateUpdate() noexcept override;
+
+  [[nodiscard]] virtual Json::Value toJson() const noexcept override;
 };

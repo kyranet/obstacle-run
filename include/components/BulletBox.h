@@ -30,4 +30,6 @@ class BulletBox final : public Component {
   [[nodiscard]] inline const Vector2<double>& velocity() const noexcept {
     return velocity_;
   }
+
+  [[nodiscard]] virtual Json::Value toJson() const noexcept override;
 };

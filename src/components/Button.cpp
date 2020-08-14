@@ -31,3 +31,9 @@ void Button::onUpdate() noexcept {
 
   text->refresh();
 }
+
+Json::Value Button::toJson() const noexcept {
+  Json::Value json(Json::objectValue);
+  json["name"] = "Button";
+  return json;
+}

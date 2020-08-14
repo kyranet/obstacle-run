@@ -9,4 +9,6 @@ class Button final : public Component {
   explicit Button(std::weak_ptr<GameObject> gameObject) noexcept;
 
   void onUpdate() noexcept override;
+
+  [[nodiscard]] virtual Json::Value toJson() const noexcept override;
 };

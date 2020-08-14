@@ -22,7 +22,7 @@ class ComponentFactory {
     return name_;
   }
 
-  virtual std::shared_ptr<T> fromJson(const Json::Value& json,
-                                      std::weak_ptr<GameObject> parent) = 0;
-  virtual Json::Value toJson(std::shared_ptr<T> value) const = 0;
+  [[nodiscard]] virtual std::shared_ptr<T> fromJson(
+      const Json::Value& json,
+      std::weak_ptr<GameObject> parent) const noexcept = 0;
 };

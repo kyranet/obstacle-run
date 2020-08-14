@@ -121,3 +121,12 @@ void PlayerController::onRender() noexcept {
   }
 }
 #endif
+
+Json::Value PlayerController::toJson() const noexcept {
+  Json::Value json(Json::objectValue);
+  json["name"] = "PlayerController";
+  json["bullet_clip"] = bulletClip();
+  json["bullet_next"] = bulletNext();
+  json["speed"] = speed();
+  return json;
+}

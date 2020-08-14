@@ -10,3 +10,11 @@ Transform::Transform(std::weak_ptr<GameObject> gameObject,
       scale_(std::move(scale)) {}
 
 Transform::~Transform() noexcept = default;
+
+Json::Value Transform::toJson() const noexcept {
+  Json::Value json(Json::objectValue);
+  json["name"] = "Transform";
+  json["position"] = position().toJson();
+  json["scale"] = scale().toJson();
+  return json;
+}

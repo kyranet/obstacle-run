@@ -33,4 +33,6 @@ class Transform final : public Component {
     return {static_cast<int32_t>(position().x()),
             static_cast<int32_t>(position().y()), scale().x(), scale().y()};
   }
+
+  [[nodiscard]] virtual Json::Value toJson() const noexcept override;
 };

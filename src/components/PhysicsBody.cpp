@@ -72,3 +72,44 @@ void PhysicsBody::onRender() noexcept {
   SDL_RenderDrawRect(Game::renderer(), &destination);
 }
 #endif
+
+Json::Value PhysicsBody::toJson() const noexcept {
+  Json::Value json(Json::objectValue);
+  json["name"] = "PhysicsBody";
+  json["type"] = getNameFromBodyType(type());
+  json["sensor"] = sensor();
+  json["density"] = density();
+  json["restitution"] = restitution();
+  json["linear_damping"] = linearDamping();
+  json["data"] = data().toJson();
+  json["category"] = getJsonFromMask(category());
+  json["mask"] = getJsonFromMask(mask());
+  return json;
+}
+
+std::string PhysicsBody::getNameFromBodyType(b2BodyType value) noexcept {
+  switch (value) {
+    case b2BodyType::b2_staticBody:
+      return "static";
+    case b2BodyType::b2_kinematicBody:
+      return "kinematic";
+    default:
+      return "dynamic";
+  }
+}
+
+Json::Value PhysicsBody::getJsonFromMask(const uint16_t bits) noexcept {
+  Json::Value json(Json::arrayValue);
+  if (bits & static_cast<uint16_t>(PhysicsBodyMask::Boundary))
+    json.append("boundary");
+  if (bits & static_cast<uint16_t>(PhysicsBodyMask::Player))
+    json.append("player");
+  if (bits & static_cast<uint16_t>(PhysicsBodyMask::Enemy))
+    json.append("enemy");
+  if (bits & static_cast<uint16_t>(PhysicsBodyMask::Collectible))
+    json.append("collectible");
+  if (bits & static_cast<uint16_t>(PhysicsBodyMask::Bullet))
+    json.append("bullet");
+  if (bits & static_cast<uint16_t>(PhysicsBodyMask::Goal)) json.append("goal");
+  return json;
+}

@@ -20,4 +20,6 @@ class NetworkController final : public Component {
   [[nodiscard]] const std::unique_ptr<Client>& client() const noexcept {
     return client_;
   }
+
+  [[nodiscard]] virtual Json::Value toJson() const noexcept override;
 };

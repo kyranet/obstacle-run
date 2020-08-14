@@ -36,4 +36,6 @@ class PlayerController final : public Component {
     return bulletClip_;
   }
   inline uint8_t& bulletClip() noexcept { return bulletClip_; }
+
+  [[nodiscard]] virtual Json::Value toJson() const noexcept override;
 };

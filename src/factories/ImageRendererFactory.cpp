@@ -15,32 +15,10 @@ ImageRendererFactory::~ImageRendererFactory() noexcept = default;
 // }
 
 std::shared_ptr<ImageRenderer> ImageRendererFactory::fromJson(
-    const Json::Value& json, std::weak_ptr<GameObject> parent) {
+    const Json::Value& json, std::weak_ptr<GameObject> parent) const noexcept {
   return std::make_shared<ImageRenderer>(
       parent, json["image"].asString(),
       getImageFitFromName(json["fit"].asString()));
-}
-
-Json::Value ImageRendererFactory::toJson(
-    std::shared_ptr<ImageRenderer> value) const {
-  Json::Value json(Json::objectValue);
-  json["name"] = name();
-  json["image"] = value->path();
-  json["fit"] = getNameFromImageFit(value->fit());
-  return json;
-}
-
-std::string ImageRendererFactory::getNameFromImageFit(ImageFit value) noexcept {
-  switch (value) {
-    case ImageFit::None:
-      return "none";
-    case ImageFit::Fill:
-      return "fill";
-    case ImageFit::Contain:
-      return "contain";
-    default:
-      return "cover";
-  }
 }
 
 ImageFit ImageRendererFactory::getImageFitFromName(

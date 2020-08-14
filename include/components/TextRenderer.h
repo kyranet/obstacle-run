@@ -55,4 +55,6 @@ class TextRenderer final : public Component {
   }
 
   void refresh() noexcept;
+
+  [[nodiscard]] virtual Json::Value toJson() const noexcept override;
 };

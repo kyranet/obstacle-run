@@ -47,6 +47,8 @@ class ImageRenderer final : public Component {
 
   void updateImageFit() noexcept;
 
+  [[nodiscard]] static std::string getNameFromImageFit(ImageFit value) noexcept;
+
  public:
   explicit ImageRenderer(std::weak_ptr<GameObject> gameObject, std::string path,
                          ImageFit fit) noexcept;
@@ -66,4 +68,6 @@ class ImageRenderer final : public Component {
   [[nodiscard]] inline const std::shared_ptr<Image> image() const noexcept {
     return image_;
   }
+
+  [[nodiscard]] virtual Json::Value toJson() const noexcept override;
 };

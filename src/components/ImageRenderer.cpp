@@ -96,3 +96,24 @@ void ImageRenderer::updateImageFit() noexcept {
               static_cast<int>(imageHeight * static_cast<float>(windowWidth) /
                                static_cast<float>(imageWidth))};
 }
+
+Json::Value ImageRenderer::toJson() const noexcept {
+  Json::Value json(Json::objectValue);
+  json["name"] = "ImageRenderer";
+  json["image"] = path();
+  json["fit"] = getNameFromImageFit(fit());
+  return json;
+}
+
+std::string ImageRenderer::getNameFromImageFit(ImageFit value) noexcept {
+  switch (value) {
+    case ImageFit::None:
+      return "none";
+    case ImageFit::Fill:
+      return "fill";
+    case ImageFit::Contain:
+      return "contain";
+    default:
+      return "cover";
+  }
+}
