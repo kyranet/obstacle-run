@@ -70,10 +70,10 @@ Json::Value BulletBox::toJson() const noexcept {
 }
 
 void BulletBox::patch(const Json::Value& json) noexcept {
-  patch(bullet_box_patch_t{{json["id"].asUInt(), json["enabled"].asBool()},
-                           json["remaining"].asDouble(),
-                           Vector4<int32_t>(json["data"]),
-                           Vector2<double>(json["velocity"])});
+  patch({{json["id"].asUInt(), json["enabled"].asBool()},
+         json["remaining"].asDouble(),
+         Vector4<int32_t>(json["data"]),
+         Vector2<double>(json["velocity"])});
 }
 
 void BulletBox::patch(const bullet_box_patch_t& json) noexcept {

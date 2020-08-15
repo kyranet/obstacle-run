@@ -8,6 +8,11 @@
 #include "utils/Vector4.h"
 class Transform;
 
+struct solid_renderer_patch_t : component_patch_t {
+  Vector4<int32_t> rectangle;
+  Vector4<uint8_t> color;
+};
+
 class SolidRenderer final : public Component {
   Vector4<int32_t> rectangle_;
   Vector4<uint8_t> color_;
@@ -33,4 +38,5 @@ class SolidRenderer final : public Component {
 
   [[nodiscard]] Json::Value toJson() const noexcept override;
   void patch(const Json::Value& json) noexcept override;
+  void patch(const solid_renderer_patch_t& json) noexcept;
 };

@@ -10,6 +10,9 @@ class NetworkController final : public Component {
   std::unique_ptr<Client> client_;
   std::weak_ptr<GameObject> players_;
 
+  void createPlayer(uint8_t id);
+  void removePlayer(uint8_t id);
+
  public:
   explicit NetworkController(std::weak_ptr<GameObject> gameObject) noexcept;
   ~NetworkController() noexcept override;

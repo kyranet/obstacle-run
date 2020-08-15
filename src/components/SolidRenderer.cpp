@@ -40,8 +40,14 @@ Json::Value SolidRenderer::toJson() const noexcept {
 }
 
 void SolidRenderer::patch(const Json::Value& json) noexcept {
+  patch({{json["id"].asUInt(), json["enabled"].asBool()},
+         Vector4<int32_t>(json["rectangle"]),
+         Vector4<uint8_t>(json["color"])});
+}
+
+void SolidRenderer::patch(const solid_renderer_patch_t& json) noexcept {
   Component::patch(json);
 
-  rectangle_ = Vector4<int32_t>(json["rectangle"]);
-  color_ = Vector4<uint8_t>(json["color"]);
+  rectangle_ = json.rectangle;
+  color_ = json.color;
 }
