@@ -56,7 +56,7 @@ void Server::ServerClient::run() noexcept {
       else
         std::cerr << "[CLIENT] TCP Error: " << SDLNet_GetError() << '\n';
 
-      status_ = ClientStatus::kClosed;
+      disconnect();
       break;
     }
 

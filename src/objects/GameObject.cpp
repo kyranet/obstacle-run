@@ -13,11 +13,7 @@ GameObject::GameObject(std::weak_ptr<Scene> scene,
                        std::weak_ptr<GameObject> parent) noexcept
     : scene_(std::move(scene)), parent_(std::move(parent)) {}
 
-GameObject::~GameObject() noexcept {
-  for (auto& child : children_) {
-    child.reset();
-  }
-}
+GameObject::~GameObject() noexcept = default;
 
 std::shared_ptr<const GameObject> GameObject::clickScan(
     SDL_Point point) const noexcept {
@@ -99,14 +95,24 @@ void GameObject::onLateUpdate() noexcept {
     if (child->active()) child->onLateUpdate();
   }
 
+  size_t childIndex = children().size();
+  while (childIndex != 0) {
+    const auto& child = children().at(--childIndex);
+    if (child->destroyed()) {
+      children_.erase(children().begin() + childIndex);
+    }
+  }
+
   for (const auto& component : components()) {
     if (component->enabled()) component->onLateUpdate();
   }
 
-  size_t i = components().size();
-  while (i != 0) {
-    const auto& component = components().at(--i);
-    if (component->destroyed()) components_.erase(components().begin() + i);
+  size_t componentIndex = components().size();
+  while (componentIndex != 0) {
+    const auto& component = components().at(--componentIndex);
+    if (component->destroyed()) {
+      components_.erase(components().begin() + componentIndex);
+    }
   }
 }
 
@@ -136,4 +142,10 @@ Json::Value GameObject::toJson() const noexcept {
   json["components"] = components;
 
   return json;
+}
+
+void GameObject::destroy() noexcept {
+  children_.clear();
+  components_.clear();
+  destroyed_ = true;
 }

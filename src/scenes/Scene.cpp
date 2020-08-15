@@ -58,7 +58,7 @@ void Scene::onUpdate() noexcept {
   while (i < gameObjects_.size()) {
     auto& entry = gameObjects_[i];
     entry->onUpdate();
-    if (entry->destroy()) {
+    if (entry->destroyed()) {
       gameObjects_.erase(gameObjects_.begin() + i);
       entry->onDestroy();
       entry.reset();
@@ -163,7 +163,7 @@ void Scene::addGameObject(GameObject* gameObject) noexcept {
 }
 
 void Scene::removeGameObject(GameObject* gameObject) noexcept {
-  gameObject->destroy() = true;
+  gameObject->destroyed() = true;
 }
 
 std::weak_ptr<GameObject> Scene::getGameObjectByName(

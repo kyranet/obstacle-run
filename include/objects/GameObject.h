@@ -71,10 +71,12 @@ class GameObject final : public std::enable_shared_from_this<GameObject> {
   }
   inline bool& transparent() noexcept { return transparent_; }
 
-  [[nodiscard]] inline const bool& destroy() const noexcept {
+  void destroy() noexcept;
+
+  [[nodiscard]] inline const bool& destroyed() const noexcept {
     return destroyed_;
   }
-  inline bool& destroy() noexcept { return destroyed_; }
+  inline bool& destroyed() noexcept { return destroyed_; }
 
   [[nodiscard]] SDL_Rect rectangle() const noexcept;
 
