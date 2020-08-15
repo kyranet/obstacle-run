@@ -87,18 +87,17 @@ void PlayerController::onUpdate() noexcept {
 
     const auto newPhysics =
         std::make_shared<PhysicsBody>(go->shared_from_this());
-    newPhysics->patch({{0, true},
+    newPhysics->patch({{1, true},
                        b2BodyType::b2_dynamicBody,
                        false,
                        1.f,
                        1.f,
                        0.4f,
-                       bp,
                        static_cast<uint16_t>(1 << 4),
                        static_cast<uint16_t>(0b11111)});
 
     const auto newBullet = std::make_shared<BulletBox>(go->shared_from_this());
-    newBullet->patch({{0, true},
+    newBullet->patch({{2, true},
                       2.f,
                       bp,
                       Vector2<double>{-cos(angle) * 5000000000.0,
@@ -112,11 +111,7 @@ void PlayerController::onUpdate() noexcept {
   }
 }
 
-void PlayerController::onLateUpdate() noexcept {
-  Component::onLateUpdate();
-  gameObject().lock()->transform().lock()->position() =
-      physicsBody_->data().toVector2<float>();
-}
+void PlayerController::onLateUpdate() noexcept { Component::onLateUpdate(); }
 
 #if !NDEBUG
 void PlayerController::onRender() noexcept {

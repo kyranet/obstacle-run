@@ -22,7 +22,6 @@ struct physics_body_patch_t : component_patch_t {
   float density;
   float restitution;
   float linearDamping;
-  Vector4<int32_t> data;
   uint16_t category;
   uint16_t mask;
 };
@@ -34,7 +33,6 @@ class PhysicsBody final : public Component {
   float density_{};
   float restitution_{};
   float linearDamping_{};
-  Vector4<int32_t> data_{};
   uint16_t category_{};
   uint16_t mask_{};
 
@@ -48,13 +46,13 @@ class PhysicsBody final : public Component {
   [[nodiscard]] static b2BodyType getBodyTypeFromName(
       const std::string& value) noexcept;
 
+  void refresh() noexcept;
+
  public:
   explicit PhysicsBody(std::weak_ptr<GameObject> gameObject) noexcept;
   ~PhysicsBody() noexcept override;
 
-  [[nodiscard]] inline const Vector4<int32_t>& data() const noexcept {
-    return data_;
-  }
+  void onAwake() noexcept override;
 
   [[nodiscard]] inline b2Body* body() const noexcept { return body_; }
 
@@ -79,10 +77,6 @@ class PhysicsBody final : public Component {
   }
 
   [[nodiscard]] inline const uint16_t& mask() const noexcept { return mask_; }
-
-  [[nodiscard]] inline SDL_Rect rectangle() const noexcept {
-    return data().toRectangle();
-  }
 
 #if !NDEBUG
   void onRender() noexcept override;

@@ -40,35 +40,64 @@
       "id": 2,
       "active": true,
       "name": "Walls",
-      "components": [
+      "components": [],
+      "children": [
         {
           "id": 0,
-          "enabled": true,
-          "name": "PhysicsBody",
-          "type":"static",
-          "sensor": false,
-          "density": 0,
-          "restitution": 0,
-          "linear_damping": 0,
-          "data": [200, 200, 50, 50],
-          "category": ["boundary"],
-          "mask": ["player", "bullet", "boundary"]
+          "active": true,
+          "name": "Wall-0",
+          "components": [
+            {
+              "id": 0,
+              "enabled": true,
+              "name": "Transform",
+              "position": [200, 200],
+              "scale": [50, 50]
+            },
+            {
+              "id": 0,
+              "enabled": true,
+              "name": "PhysicsBody",
+              "type":"static",
+              "sensor": false,
+              "density": 0,
+              "restitution": 0,
+              "linear_damping": 0,
+              "data": [200, 200, 50, 50],
+              "category": ["boundary"],
+              "mask": ["player", "bullet", "boundary"]
+            }
+          ],
+          "children": []
         },
         {
           "id": 1,
-          "enabled": true,
-          "name": "PhysicsBody",
-          "type": "static",
-          "sensor": false,
-          "density": 0,
-          "restitution": 0,
-          "linear_damping": 0,
-          "data": [150, 250, 50, 50],
-          "category":  ["boundary"],
-          "mask":  ["player", "bullet", "boundary"]
+          "active": true,
+          "name": "Wall-1",
+          "components": [
+            {
+              "id": 0,
+              "enabled": true,
+              "name": "Transform",
+              "position": [150, 250],
+              "scale": [50, 50]
+            },
+            {
+              "id": 1,
+              "enabled": true,
+              "name": "PhysicsBody",
+              "type": "static",
+              "sensor": false,
+              "density": 0,
+              "restitution": 0,
+              "linear_damping": 0,
+              "category":  ["boundary"],
+              "mask":  ["player", "bullet", "boundary"]
+            }
+          ],
+          "children": []
         }
-      ],
-      "children": []
+      ]
     },
     {
       "id": 3,
@@ -85,13 +114,19 @@
         {
           "id": 0,
           "enabled": true,
+          "name": "Transform",
+          "position": [200, 250],
+          "scale": [25, 25]
+        },
+        {
+          "id": 1,
+          "enabled": true,
           "name": "PhysicsBody",
           "type":"static",
           "sensor": true,
           "density": 0,
           "restitution": 0,
           "linear_damping": 0,
-          "data": [200, 250, 25, 25],
           "category": ["collectible"],
           "mask": ["player"]
         }
@@ -121,7 +156,7 @@
               "enabled": true,
               "name": "Transform",
               "position": [50, 50],
-              "scale": [1, 1]
+              "scale": [50, 50]
             },
             {
               "id": 1,
@@ -132,7 +167,6 @@
               "density": 10000,
               "restitution": 0,
               "linear_damping": 1,
-              "data": [50, 50, 50, 50],
               "category": ["player"],
               "mask": ["boundary", "collectible", "bullet"]
             },

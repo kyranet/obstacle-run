@@ -19,18 +19,33 @@ PhysicsBody::~PhysicsBody() noexcept {
   if (!world.IsLocked()) world.DestroyBody(body());
 }
 
+void PhysicsBody::onAwake() noexcept {
+  Component::onAwake();
+  refresh();
+}
+
 void PhysicsBody::onLateUpdate() noexcept {
   Component::onLateUpdate();
 
-  data_.x() = static_cast<int32_t>(body()->GetPosition().x - data().z() / 2.f);
-  data_.y() = static_cast<int32_t>(body()->GetPosition().y - data().a() / 2.f);
+  auto tf = gameObject().lock()->transform().lock();
+  auto& ps = tf->position();
+  auto& sc = tf->scale();
+
+  ps.x() = body()->GetPosition().x - sc.x() / 2.f;
+  ps.y() = body()->GetPosition().y - sc.y() / 2.f;
 }
 
 #if !NDEBUG
 void PhysicsBody::onRender() noexcept {
   Component::onRender();
 
-  const auto destination = rectangle();
+  auto tf = gameObject().lock()->transform().lock();
+  auto& ps = tf->position();
+  auto& sc = tf->scale();
+
+  const auto destination =
+      SDL_Rect{static_cast<int32_t>(ps.x()), static_cast<int32_t>(ps.y()),
+               sc.x(), sc.y()};
   SDL_SetRenderDrawColor(Game::renderer(), 255, sensor() ? 128 : 0,
                          type() == b2BodyType::b2_dynamicBody ? 255 : 0, 100);
   SDL_RenderDrawRect(Game::renderer(), &destination);
@@ -45,7 +60,6 @@ Json::Value PhysicsBody::toJson() const noexcept {
   json["density"] = density();
   json["restitution"] = restitution();
   json["linear_damping"] = linearDamping();
-  json["data"] = data().toJson();
   json["category"] = getJsonFromMask(category());
   json["mask"] = getJsonFromMask(mask());
   return json;
@@ -85,7 +99,6 @@ void PhysicsBody::patch(const Json::Value& json) noexcept {
                              json["density"].asFloat(),
                              json["restitution"].asFloat(),
                              json["linear_damping"].asFloat(),
-                             Vector4<int32_t>(json["data"]),
                              getMaskFromJson(json["category"]),
                              getMaskFromJson(json["mask"])});
 }
@@ -133,14 +146,18 @@ void PhysicsBody::patch(const physics_body_patch_t& data) noexcept {
   density_ = data.density;
   restitution_ = data.restitution;
   linearDamping_ = data.linearDamping;
-  data_ = data.data;
   category_ = data.category;
   mask_ = data.mask;
+}
+
+void PhysicsBody::refresh() noexcept {
+  const auto tf = gameObject().lock()->transform().lock();
+  const auto& ps = tf->position();
+  const auto& sc = tf->scale();
 
   b2BodyDef bodyDef;
   bodyDef.type = type_;
-  bodyDef.position.Set(static_cast<float>(data_.x()),
-                       static_cast<float>(data_.y()));
+  bodyDef.position.Set(static_cast<float>(ps.x()), static_cast<float>(ps.y()));
   bodyDef.angle = 0.f;
   bodyDef.fixedRotation = true;
   bodyDef.linearDamping = linearDamping_;
@@ -149,8 +166,8 @@ void PhysicsBody::patch(const physics_body_patch_t& data) noexcept {
   body_ = scene().lock()->world().CreateBody(&bodyDef);
 
   b2PolygonShape boxShape;
-  boxShape.SetAsBox(static_cast<float>(data_.z()) / 2.f,
-                    static_cast<float>(data_.a()) / 2.f);
+  boxShape.SetAsBox(static_cast<float>(sc.x()) / 2.f,
+                    static_cast<float>(sc.y()) / 2.f);
 
   b2FixtureDef fixtureDef;
   fixtureDef.shape = &boxShape;

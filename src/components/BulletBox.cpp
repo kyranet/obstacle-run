@@ -34,21 +34,29 @@ void BulletBox::onUpdate() noexcept {
 
     auto walls =
         scene().lock()->getGameObjectByName("Destructible-Walls").lock();
+    auto go = std::make_shared<GameObject>(scene(), walls->shared_from_this());
+    go->name() = "Wall";
+    go->active() = true;
+
+    const auto newTransform =
+        std::make_shared<Transform>(go->shared_from_this());
+    newTransform->patch({{0, true},
+                         gameObject().lock()->transform().lock()->position(),
+                         {50, 50}});
     const auto newPhysicsBody =
-        std::make_shared<PhysicsBody>(walls->shared_from_this());
-    newPhysicsBody->patch(
-        {{0, true},
-         b2BodyType::b2_dynamicBody,
-         false,
-         1000000.f,
-         0.f,
-         1.f,
-         Vector4<int32_t>{body_.lock()->data().toVector2<int32_t>(),
-                          Vector2<int32_t>{50, 50}},
-         static_cast<uint16_t>(0b00001),
-         static_cast<uint16_t>(0b10011)});
-    newPhysicsBody->onAwake();
-    walls->addComponent(newPhysicsBody);
+        std::make_shared<PhysicsBody>(go->shared_from_this());
+    newPhysicsBody->patch({{1, true},
+                           b2BodyType::b2_dynamicBody,
+                           false,
+                           1000000.f,
+                           0.f,
+                           1.f,
+                           static_cast<uint16_t>(0b00001),
+                           static_cast<uint16_t>(0b10011)});
+    go->addComponent(newTransform);
+    go->addComponent(newPhysicsBody);
+    go->onAwake();
+    walls->addChild(go);
   }
 }
 
