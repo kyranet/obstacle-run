@@ -81,41 +81,7 @@ void PlayerController::onUpdate() noexcept {
     const auto& mp = Input::mousePosition();
 
     const auto angle = atan2(pp.y() - mp.y(), pp.x() - mp.x());
-    const auto start = Vector2<float>(pp.x() - (sp.x() * cos(angle) * 2.f),
-                                      pp.y() - (sp.y() * sin(angle) * 2.f));
-    const auto bs = Vector2<int32_t>{8, 8};
-    const auto bp = Vector4<int32_t>{start, bs};
-    const auto go = std::make_shared<GameObject>(scene());
-    go->name() = "Bullet";
-    go->active() = true;
-
-    const auto newTransform =
-        std::make_shared<Transform>(go->shared_from_this());
-    newTransform->patch({{0, true}, bp.toVector2<float>(), bs});
-
-    const auto newPhysics =
-        std::make_shared<PhysicsBody>(go->shared_from_this());
-    newPhysics->patch({{1, true},
-                       b2BodyType::b2_dynamicBody,
-                       false,
-                       1.f,
-                       1.f,
-                       0.4f,
-                       static_cast<uint16_t>(1 << 4),
-                       static_cast<uint16_t>(0b11111)});
-
-    const auto newBullet = std::make_shared<BulletBox>(go->shared_from_this());
-    newBullet->patch({{2, true},
-                      2.f,
-                      bp,
-                      Vector2<double>{-cos(angle) * 5000000000.0,
-                                      -sin(angle) * 5000000000.0}});
-
-    go->addComponent(newTransform);
-    go->addComponent(newPhysics);
-    go->addComponent(newBullet);
-    go->onAwake();
-    bullets_.lock()->addChild(go);
+    network_.lock()->client()->send(OutgoingClientEvent::kBulletShoot, &angle);
   }
 }
 

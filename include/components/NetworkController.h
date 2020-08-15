@@ -10,12 +10,15 @@ class Client;
 class NetworkController final : public Component {
   std::unique_ptr<Client> client_;
   std::weak_ptr<GameObject> players_;
+  std::weak_ptr<GameObject> bullets_;
 
   void createPlayer(uint8_t id, const Vector2<float>& position) const noexcept;
   void createPlayer(uint8_t id) const noexcept;
   void removePlayer(uint8_t id) const noexcept;
   void movePlayer(uint8_t player,
                   const Vector2<float>& position) const noexcept;
+  void createBullet(const Vector2<float>& position,
+                    const Vector2<double>& velocity) const noexcept;
 
  public:
   explicit NetworkController(std::weak_ptr<GameObject> gameObject) noexcept;

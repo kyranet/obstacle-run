@@ -14,15 +14,21 @@
 
 class Server : public std::enable_shared_from_this<Server> {
   enum class ClientStatus : uint8_t { kPending, kRunning, kClosed };
-  enum class ClientEvent : uint8_t { kConnect, kDisconnect, kUpdatePosition };
+  enum class ClientEvent : uint8_t {
+    kConnect,
+    kDisconnect,
+    kUpdatePosition,
+    kBulletShoot
+  };
   enum class OutgoingMessageType : uint8_t {
     kPlayerIdentify,
     kPlayerConnect,
     kPlayerDisconnect,
     kPlayerInsertPosition,
-    kPlayerUpdatePosition
+    kPlayerUpdatePosition,
+    kBulletShoot
   };
-  enum class IncomingMessageType : uint8_t { kUpdatePosition };
+  enum class IncomingMessageType : uint8_t { kUpdatePosition, kBulletShoot };
   class ServerClient;
 
   struct client_event_base_t {};
@@ -39,6 +45,11 @@ class Server : public std::enable_shared_from_this<Server> {
     explicit client_event_player_update_t(Vector2<float> position)
         : position_(std::move(position)) {}
     Vector2<float> position_;
+  };
+
+  struct client_event_bullet_shoot_t : public client_event_base_t {
+    explicit client_event_bullet_shoot_t(float angle) : angle_(angle) {}
+    float angle_;
   };
 
   struct client_event_t {

@@ -90,22 +90,36 @@ void Client::deserializeMessage(uint8_t* message) noexcept {
       pushEvent({type, new client_event_player_update_t{id, position}});
       break;
     }
+    case IncomingClientEvent::kBulletShoot: {
+      Vector2<float> position{buffer_->readFloat(message, 5),
+                              buffer_->readFloat(message, 5 + sizeof(float))};
+      Vector2<double> velocity{
+          buffer_->readDouble(message, 5 + sizeof(float) * 2),
+          buffer_->readDouble(message, 5 + sizeof(float) * 2 + sizeof(double))};
+      pushEvent({type, new client_event_bullet_shoot_t{position, velocity}});
+      break;
+    }
   }
 }
 
-std::tuple<uint8_t*, int32_t> Client::serializeMessage(
-    OutgoingClientEvent event, const void* data) const noexcept {
+void Client::send(OutgoingClientEvent event, const void* data) noexcept {
   switch (event) {
     case OutgoingClientEvent::kUpdatePosition: {
       constexpr static int32_t size = 5 + sizeof(float) * 2;
-      const auto& vector = reinterpret_cast<const Vector2<float>*>(data);
+      const auto& vector = *reinterpret_cast<const Vector2<float>*>(data);
       uint8_t message[size];
       buffer_->writeUint8(message, static_cast<uint8_t>(event), 4);
-      buffer_->writeFloat(message, vector->x(), 5);
-      buffer_->writeFloat(message, vector->y(), 5 + sizeof(float));
-      return {message, size};
+      buffer_->writeFloat(message, vector.x(), 5);
+      buffer_->writeFloat(message, vector.y(), 5 + sizeof(float));
+      return send(message, size);
+    }
+    case OutgoingClientEvent::kBulletShoot: {
+      constexpr static int32_t size = 5 + sizeof(float);
+      const auto& angle = *reinterpret_cast<const float*>(data);
+      uint8_t message[size];
+      buffer_->writeUint8(message, static_cast<uint8_t>(event), 4);
+      buffer_->writeFloat(message, angle, 5);
+      return send(message, size);
     }
   }
-
-  return std::pair<uint8_t*, int32_t>();
 }

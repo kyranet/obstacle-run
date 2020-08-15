@@ -60,6 +60,9 @@ void Server::ServerClient::run() noexcept {
       break;
     }
 
+    // Messages must have at least 5 bytes (event_id {4}, player_id {1}):
+    if (len <= 5) continue;
+
     // Print the received message
     debug_print("[CLIENT] Received [%i]: %.*s\n", len, len, message);
     parseMessage(message);
@@ -84,6 +87,12 @@ void Server::ServerClient::parseMessage(uint8_t* message) noexcept {
       pushEvent({ClientEvent::kUpdatePosition, this,
                  new client_event_player_update_t{position}});
       position_ = position;
+      break;
+    }
+    case IncomingMessageType::kBulletShoot: {
+      const auto angle = buffer_->readFloat(message, 5);
+      pushEvent({ClientEvent::kBulletShoot, this,
+                 new client_event_bullet_shoot_t{angle}});
       break;
     }
   }
@@ -196,6 +205,30 @@ void Server::handleEvents() noexcept {
         buffer_->writeFloat(message, data->position_.x(), 6);
         buffer_->writeFloat(message, data->position_.y(), 6 + sizeof(float));
         broadcastExcept(message, size, client->id());
+      } else if (event.event == ClientEvent::kBulletShoot) {
+        constexpr const auto size = 5 + sizeof(float) * 2 + sizeof(double) * 2;
+        const auto& data =
+            *reinterpret_cast<client_event_bullet_shoot_t*>(event.data);
+
+        const auto& sp = Vector2{50.f, 50.f} / 2.f;
+        const auto& pp = event.client->position();
+
+        const auto start =
+            Vector2<float>(pp.x() - (sp.x() * cos(data.angle_) * 2.f),
+                           pp.y() - (sp.y() * sin(data.angle_) * 2.f));
+        const auto velocity = Vector2<double>{-cos(data.angle_) * 5000000000.0,
+                                              -sin(data.angle_) * 5000000000.0};
+
+        uint8_t message[size];
+        buffer_->writeUint8(
+            message, static_cast<uint8_t>(OutgoingMessageType::kBulletShoot),
+            4);
+        buffer_->writeFloat(message, start.x(), 5);
+        buffer_->writeFloat(message, start.y(), 5 + sizeof(float));
+        buffer_->writeDouble(message, velocity.x(), 5 + sizeof(float) * 2);
+        buffer_->writeDouble(message, velocity.y(),
+                             5 + sizeof(float) * 2 + sizeof(double));
+        broadcast(message, size);
       }
     }
   }

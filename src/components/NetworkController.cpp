@@ -1,16 +1,16 @@
 // Copyright (c) 2020 Antonio Román. All rights reserved.
 #include "components/NetworkController.h"
 
-#include <utils/DebugAssert.h>
-
 #include <thread>
 #include <utility>
 
+#include "components/BulletBox.h"
 #include "components/PhysicsBody.h"
 #include "components/SolidRenderer.h"
 #include "components/Transform.h"
 #include "networking/Client.h"
 #include "scenes/Scene.h"
+#include "utils/DebugAssert.h"
 
 NetworkController::NetworkController(
     std::weak_ptr<GameObject> gameObject) noexcept
@@ -24,6 +24,7 @@ void NetworkController::onAwake() noexcept {
   Component::onAwake();
 
   players_ = scene().lock()->getGameObjectByName("Players");
+  bullets_ = scene().lock()->getGameObjectByName("Bullets");
 
   client_ = std::make_unique<Client>();
   std::thread([&]() {
@@ -67,6 +68,12 @@ void NetworkController::onUpdate() noexcept {
         const auto* pack =
             reinterpret_cast<client_event_player_update_t*>(event.data);
         movePlayer(pack->player_, pack->position_);
+        break;
+      }
+      case IncomingClientEvent::kBulletShoot: {
+        const auto* pack =
+            reinterpret_cast<client_event_bullet_shoot_t*>(event.data);
+        createBullet(pack->position_, pack->velocity_);
         break;
       }
     }
@@ -138,4 +145,34 @@ void NetworkController::movePlayer(
       break;
     }
   }
+}
+
+void NetworkController::createBullet(
+    const Vector2<float>& position,
+    const Vector2<double>& velocity) const noexcept {
+  const auto go = std::make_shared<GameObject>(scene());
+  go->name() = "Bullet";
+  go->active() = true;
+
+  const auto newTransform = std::make_shared<Transform>(go->shared_from_this());
+  newTransform->patch({{0, true}, position, {8, 8}});
+
+  const auto newPhysics = std::make_shared<PhysicsBody>(go->shared_from_this());
+  newPhysics->patch({{1, true},
+                     b2BodyType::b2_dynamicBody,
+                     false,
+                     1.f,
+                     1.f,
+                     0.4f,
+                     static_cast<uint16_t>(1 << 4),
+                     static_cast<uint16_t>(0b11111)});
+
+  const auto newBullet = std::make_shared<BulletBox>(go->shared_from_this());
+  newBullet->patch({{2, true}, 2.f, velocity});
+
+  go->addComponent(newTransform);
+  go->addComponent(newPhysics);
+  go->addComponent(newBullet);
+  go->onAwake();
+  bullets_.lock()->addChild(go);
 }

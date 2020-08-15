@@ -226,6 +226,24 @@ class Buffer {
     }
   }
 
+  [[nodiscard]] inline double readDouble(const uint8_t* buffer,
+                                         size_t offset) noexcept {
+    if constexpr (littleEndian()) {
+      return reinterpret_cast<const double*>(buffer + offset)[0];
+    } else {
+      auto* temporary = reinterpret_cast<uint8_t*>(doubleArray_);
+      temporary[7] = buffer[offset];
+      temporary[6] = buffer[offset + 1];
+      temporary[5] = buffer[offset + 2];
+      temporary[4] = buffer[offset + 3];
+      temporary[3] = buffer[offset + 4];
+      temporary[2] = buffer[offset + 5];
+      temporary[1] = buffer[offset + 6];
+      temporary[0] = buffer[offset + 7];
+      return doubleArray_[0];
+    }
+  }
+
   inline void writeCString(uint8_t* buffer, const char* value, size_t size,
                            size_t offset) const noexcept {
     writeUint32(buffer, static_cast<uint32_t>(size), offset);

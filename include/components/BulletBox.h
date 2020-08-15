@@ -7,14 +7,12 @@
 
 struct bullet_box_patch_t : component_patch_t {
   double remaining;
-  Vector4<int32_t> data;
   Vector2<double> velocity;
 };
 
 class PhysicsBody;
 class BulletBox final : public Component {
   double remaining_{};
-  Vector4<int32_t> data_{};
   Vector2<double> velocity_{};
   std::weak_ptr<PhysicsBody> body_{};
 
@@ -26,10 +24,6 @@ class BulletBox final : public Component {
 
   [[nodiscard]] inline const double& remaining() const noexcept {
     return remaining_;
-  }
-
-  [[nodiscard]] inline const Vector4<int32_t>& data() const noexcept {
-    return data_;
   }
 
   [[nodiscard]] inline const Vector2<double>& velocity() const noexcept {

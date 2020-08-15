@@ -18,9 +18,10 @@ enum class IncomingClientEvent : uint8_t {
   kPlayerConnect,
   kPlayerDisconnect,
   kPlayerInsertPosition,
-  kPlayerUpdatePosition
+  kPlayerUpdatePosition,
+  kBulletShoot
 };
-enum class OutgoingClientEvent : uint8_t { kUpdatePosition };
+enum class OutgoingClientEvent : uint8_t { kUpdatePosition, kBulletShoot };
 
 struct client_event_base_t {};
 
@@ -53,6 +54,13 @@ struct client_event_player_update_t : public client_event_base_t {
   Vector2<float> position_;
 };
 
+struct client_event_bullet_shoot_t : public client_event_base_t {
+  client_event_bullet_shoot_t(Vector2<float> position, Vector2<double> velocity)
+      : position_(std::move(position)), velocity_(std::move(velocity)) {}
+  Vector2<float> position_;
+  Vector2<double> velocity_;
+};
+
 struct client_event_t {
   IncomingClientEvent event;
   client_event_base_t* data;
@@ -68,8 +76,6 @@ class Client {
   uint32_t event_{0};
   uint8_t id_{0};
 
-  [[nodiscard]] std::tuple<uint8_t*, int32_t> serializeMessage(
-      OutgoingClientEvent event, const void* data) const noexcept;
   void deserializeMessage(uint8_t* message) noexcept;
 
   inline void pushEvent(const client_event_t& event) noexcept {
@@ -94,10 +100,10 @@ class Client {
     status_ = ClientStatus::kClosed;
   }
 
-  inline void send(uint8_t* data, int32_t size) noexcept {
-    buffer_->writeUint32(data, event_, 0);
+  inline void send(uint8_t* message, int32_t size) noexcept {
+    buffer_->writeUint32(message, event_, 0);
 
-    if (SDLNet_TCP_Send(socket_, data, size) != size) {
+    if (SDLNet_TCP_Send(socket_, message, size) != size) {
       // Not all bits were sent, meaning an abrupt disconnection or unknown
       // socket error.
       disconnect();
@@ -107,11 +113,7 @@ class Client {
     ++event_;
   }
 
-  inline void send(OutgoingClientEvent event,
-                   const void* data = nullptr) noexcept {
-    const auto& [message, size] = serializeMessage(event, data);
-    send(message, size);
-  }
+  void send(OutgoingClientEvent event, const void* data = nullptr) noexcept;
 
   inline bool readEvent(client_event_t* event) noexcept {
     std::lock_guard<std::mutex> guard(event_mutex_);

@@ -19,7 +19,7 @@ void BulletBox::onAwake() noexcept {
   body_ = go->getComponent<PhysicsBody>();
 
   auto* pBody = body_.lock()->body();
-  pBody->SetTransform(data_.toVector2<float>().toVec(), 0.f);
+  pBody->SetTransform(go->transform().lock()->position().toVec(), 0.f);
   pBody->ApplyForceToCenter(velocity_.toVec(), true);
 }
 
@@ -68,7 +68,6 @@ void BulletBox::onUpdate() noexcept {
 Json::Value BulletBox::toJson() const noexcept {
   auto json = Component::toJson();
   json["name"] = "BulletBox";
-  json["data"] = data().toJson();
   json["velocity"] = velocity().toJson();
   json["remaining"] = remaining();
   return json;
@@ -77,13 +76,11 @@ Json::Value BulletBox::toJson() const noexcept {
 void BulletBox::patch(const Json::Value& json) noexcept {
   patch({{json["id"].asUInt(), json["enabled"].asBool()},
          json["remaining"].asDouble(),
-         Vector4<int32_t>(json["data"]),
          Vector2<double>(json["velocity"])});
 }
 
 void BulletBox::patch(const bullet_box_patch_t& json) noexcept {
   Component::patch(json);
-  data_ = json.data;
   velocity_ = json.velocity;
   remaining_ = json.remaining;
 }
