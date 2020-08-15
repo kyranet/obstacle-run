@@ -83,6 +83,7 @@ void Server::ServerClient::parseMessage(uint8_t* message) noexcept {
                               buffer_->readFloat(message, 5 + sizeof(float))};
       pushEvent({ClientEvent::kUpdatePosition, this,
                  new client_event_player_update_t{position}});
+      position_ = position;
       break;
     }
   }
@@ -157,13 +158,31 @@ void Server::handleEvents() noexcept {
       }
 
       if (event.event == ClientEvent::kConnect) {
-        constexpr const auto size = 6;
-        uint8_t message[size];
-        buffer_->writeUint8(
-            message, static_cast<uint8_t>(OutgoingMessageType::kPlayerConnect),
-            4);
-        buffer_->writeUint8(message, client->id(), 5);
-        broadcastExcept(message, size, client->id());
+        {
+          constexpr const auto size = 6;
+          uint8_t message[size];
+          buffer_->writeUint8(
+              message,
+              static_cast<uint8_t>(OutgoingMessageType::kPlayerConnect), 4);
+          buffer_->writeUint8(message, client->id(), 5);
+          broadcastExcept(message, size, client->id());
+        }
+
+        for (const auto& c : clients_) {
+          // Do not send the same ID twice
+          if (c->id() == client->id()) continue;
+
+          constexpr const auto size = 6 + sizeof(float) * 2;
+          uint8_t message[size];
+          buffer_->writeUint8(
+              message,
+              static_cast<uint8_t>(OutgoingMessageType::kPlayerInsertPosition),
+              4);
+          buffer_->writeUint8(message, c->id(), 5);
+          buffer_->writeFloat(message, c->position().x(), 6);
+          buffer_->writeFloat(message, c->position().y(), 6 + sizeof(float));
+          client->send(message, size);
+        }
       } else if (event.event == ClientEvent::kUpdatePosition) {
         constexpr const auto size = 6 + sizeof(float) * 2;
         const auto* data =

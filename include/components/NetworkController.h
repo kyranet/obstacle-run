@@ -11,6 +11,7 @@ class NetworkController final : public Component {
   std::unique_ptr<Client> client_;
   std::weak_ptr<GameObject> players_;
 
+  void createPlayer(uint8_t id, const Vector2<float>& position) const noexcept;
   void createPlayer(uint8_t id) const noexcept;
   void removePlayer(uint8_t id) const noexcept;
   void movePlayer(uint8_t player,

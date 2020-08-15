@@ -51,6 +51,12 @@ void NetworkController::onUpdate() noexcept {
         createPlayer(pack->player_);
         break;
       }
+      case IncomingClientEvent::kPlayerInsertPosition: {
+        const auto* pack =
+            reinterpret_cast<client_event_player_insert_t*>(event.data);
+        createPlayer(pack->player_, pack->position_);
+        break;
+      }
       case IncomingClientEvent::kPlayerDisconnect: {
         const auto* pack =
             reinterpret_cast<client_event_disconnect_t*>(event.data);
@@ -74,13 +80,18 @@ Json::Value NetworkController::toJson() const noexcept {
 }
 
 void NetworkController::createPlayer(uint8_t id) const noexcept {
+  createPlayer(id, {50.f, 50.f});
+}
+
+void NetworkController::createPlayer(
+    uint8_t id, const Vector2<float>& position) const noexcept {
   auto go = std::make_shared<GameObject>(scene(), players_);
   go->name() = "Opponent";
   go->active() = true;
   go->id() = id;
 
   auto newTransform = std::make_shared<Transform>(go->shared_from_this());
-  newTransform->patch({{0, true}, {50.f, 50.f}, {50, 50}});
+  newTransform->patch({{0, true}, position, {50, 50}});
 
   constexpr const auto category = static_cast<uint16_t>(PhysicsBodyMask::Enemy);
   constexpr const auto mask =

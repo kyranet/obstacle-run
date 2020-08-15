@@ -19,6 +19,7 @@ class Server : public std::enable_shared_from_this<Server> {
     kPlayerIdentify,
     kPlayerConnect,
     kPlayerDisconnect,
+    kPlayerInsertPosition,
     kPlayerUpdatePosition
   };
   enum class IncomingMessageType : uint8_t { kUpdatePosition };
@@ -56,6 +57,7 @@ class Server : public std::enable_shared_from_this<Server> {
     uint8_t id_{0};
     uint32_t event_{0};
     uint32_t remoteEvent_{0};
+    Vector2<float> position_{};
 
     void parseMessage(uint8_t* message) noexcept;
     bool sendIdentify() noexcept;
@@ -76,6 +78,10 @@ class Server : public std::enable_shared_from_this<Server> {
     }
 
     [[nodiscard]] inline const uint8_t& id() const noexcept { return id_; }
+
+    [[nodiscard]] inline const Vector2<float>& position() const noexcept {
+      return position_;
+    }
 
     inline void disconnect() noexcept {
       pushEvent(

@@ -66,6 +66,13 @@ void Client::deserializeMessage(uint8_t* message) noexcept {
       pushEvent({type, new client_event_identify_t{id}});
       break;
     }
+    case IncomingClientEvent::kPlayerInsertPosition: {
+      const auto id = buffer_->readUint8(message, 5);
+      Vector2<float> position{buffer_->readFloat(message, 6),
+                              buffer_->readFloat(message, 6 + sizeof(float))};
+      pushEvent({type, new client_event_player_insert_t{id, position}});
+      break;
+    }
     case IncomingClientEvent::kPlayerConnect: {
       const auto id = buffer_->readUint8(message, 5);
       pushEvent({type, new client_event_connect_t{id}});

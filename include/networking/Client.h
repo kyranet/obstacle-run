@@ -17,6 +17,7 @@ enum class IncomingClientEvent : uint8_t {
   kPlayerIdentify,
   kPlayerConnect,
   kPlayerDisconnect,
+  kPlayerInsertPosition,
   kPlayerUpdatePosition
 };
 enum class OutgoingClientEvent : uint8_t { kUpdatePosition };
@@ -36,6 +37,13 @@ struct client_event_connect_t : public client_event_base_t {
 struct client_event_disconnect_t : public client_event_base_t {
   explicit client_event_disconnect_t(uint8_t player) : player_(player) {}
   uint8_t player_;
+};
+
+struct client_event_player_insert_t : public client_event_base_t {
+  client_event_player_insert_t(uint8_t player, Vector2<float> position)
+      : player_(player), position_(std::move(position)) {}
+  uint8_t player_;
+  Vector2<float> position_;
 };
 
 struct client_event_player_update_t : public client_event_base_t {
