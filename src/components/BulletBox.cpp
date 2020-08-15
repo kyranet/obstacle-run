@@ -32,9 +32,8 @@ void BulletBox::onUpdate() noexcept {
     body_.lock()->destroy();
     destroy();
 
-    auto walls =
-        scene().lock()->getGameObjectByName("Destructible-Walls").lock();
-    auto go = std::make_shared<GameObject>(scene(), walls->shared_from_this());
+    auto walls = scene().lock()->getGameObjectByName("Destructible-Walls");
+    auto go = std::make_shared<GameObject>(scene(), walls);
     go->name() = "Wall";
     go->active() = true;
 
@@ -43,6 +42,12 @@ void BulletBox::onUpdate() noexcept {
     newTransform->patch({{0, true},
                          gameObject().lock()->transform().lock()->position(),
                          {50, 50}});
+    constexpr const auto category =
+        static_cast<uint16_t>(PhysicsBodyMask::Boundary);
+    constexpr const auto mask =
+        static_cast<uint16_t>(PhysicsBodyMask::Boundary) |
+        static_cast<uint16_t>(PhysicsBodyMask::Bullet) |
+        static_cast<uint16_t>(PhysicsBodyMask::Player);
     const auto newPhysicsBody =
         std::make_shared<PhysicsBody>(go->shared_from_this());
     newPhysicsBody->patch({{1, true},
@@ -51,12 +56,12 @@ void BulletBox::onUpdate() noexcept {
                            1000000.f,
                            0.f,
                            1.f,
-                           static_cast<uint16_t>(0b00001),
-                           static_cast<uint16_t>(0b10011)});
+                           category,
+                           mask});
     go->addComponent(newTransform);
     go->addComponent(newPhysicsBody);
     go->onAwake();
-    walls->addChild(go);
+    walls.lock()->addChild(go);
   }
 }
 

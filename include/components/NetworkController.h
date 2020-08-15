@@ -3,6 +3,7 @@
 #pragma once
 
 #include "objects/Component.h"
+#include "utils/Vector2.h"
 
 class Client;
 
@@ -10,8 +11,10 @@ class NetworkController final : public Component {
   std::unique_ptr<Client> client_;
   std::weak_ptr<GameObject> players_;
 
-  void createPlayer(uint8_t id);
-  void removePlayer(uint8_t id);
+  void createPlayer(uint8_t id) const noexcept;
+  void removePlayer(uint8_t id) const noexcept;
+  void movePlayer(uint8_t player,
+                  const Vector2<float>& position) const noexcept;
 
  public:
   explicit NetworkController(std::weak_ptr<GameObject> gameObject) noexcept;

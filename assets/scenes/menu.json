@@ -65,7 +65,7 @@
               "linear_damping": 0,
               "data": [200, 200, 50, 50],
               "category": ["boundary"],
-              "mask": ["player", "bullet", "boundary"]
+              "mask": ["player", "bullet", "enemy", "boundary"]
             }
           ],
           "children": []
@@ -92,7 +92,7 @@
               "restitution": 0,
               "linear_damping": 0,
               "category":  ["boundary"],
-              "mask":  ["player", "bullet", "boundary"]
+              "mask":  ["player", "bullet", "enemy", "boundary"]
             }
           ],
           "children": []
@@ -168,7 +168,7 @@
               "restitution": 0,
               "linear_damping": 1,
               "category": ["player"],
-              "mask": ["boundary", "collectible", "bullet"]
+              "mask": ["boundary", "enemy", "collectible", "bullet"]
             },
             {
               "id": 2,

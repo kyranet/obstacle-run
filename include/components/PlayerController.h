@@ -6,6 +6,7 @@
 
 class Transform;
 class PhysicsBody;
+class NetworkController;
 
 class PlayerController final : public Component {
   double bulletNext_{};
@@ -13,6 +14,7 @@ class PlayerController final : public Component {
   uint8_t speed_{};
   std::shared_ptr<PhysicsBody> physicsBody_{};
   std::weak_ptr<GameObject> bullets_{};
+  std::weak_ptr<NetworkController> network_{};
 
  public:
   explicit PlayerController(std::weak_ptr<GameObject> gameObject) noexcept;

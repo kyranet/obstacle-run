@@ -19,27 +19,34 @@ Client::Client() noexcept {
     exit(2);
   }
 
-  status_ = ClientStatus::kRunning;
   std::cout << "\033[0;32mReady!\033[0m\n";
 }
 
 Client::~Client() noexcept { SDLNet_TCP_Close(socket_); }
 
 void Client::run() noexcept {
+  status_ = ClientStatus::kRunning;
+  std::cout << "[CLIENT] Running.\n";
+
   while (running()) {
     // Read the buffer from the client
-    uint8_t message[1024];
-    int len = SDLNet_TCP_Recv(socket_, message, 1024);
+    uint8_t message[64];
+    int len = SDLNet_TCP_Recv(socket_, message, 64);
     if (len <= 0) {
-      std::cerr << "Received empty TCP message. Error: " << SDLNet_GetError()
-                << '\n';
+      if (len == 0)
+        std::cout << "[CLIENT] Disconnected.\n";
+      else
+        std::cerr << "[CLIENT] TCP Error: " << SDLNet_GetError() << '\n';
+      status_ = ClientStatus::kClosed;
       break;
     }
 
     // Print the received message
-    debug_print("[CLIENT] Received: %.*s\n", len, message);
+    debug_print("[CLIENT] Received [%i]: %.*s\n", len, len, message);
     deserializeMessage(message);
   }
+
+  status_ = ClientStatus::kPending;
 }
 
 void Client::deserializeMessage(uint8_t* message) noexcept {
@@ -80,11 +87,11 @@ void Client::deserializeMessage(uint8_t* message) noexcept {
 }
 
 std::tuple<uint8_t*, int32_t> Client::serializeMessage(
-    OutgoingClientEvent event, void* data) const noexcept {
+    OutgoingClientEvent event, const void* data) const noexcept {
   switch (event) {
     case OutgoingClientEvent::kUpdatePosition: {
       constexpr static int32_t size = 5 + sizeof(float) * 2;
-      const auto& vector = reinterpret_cast<Vector2<float>*>(data);
+      const auto& vector = reinterpret_cast<const Vector2<float>*>(data);
       uint8_t message[size];
       buffer_->writeUint8(message, static_cast<uint8_t>(event), 4);
       buffer_->writeFloat(message, vector->x(), 5);

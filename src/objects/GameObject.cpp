@@ -4,6 +4,7 @@
 
 #include <utility>
 
+#include "components/PhysicsBody.h"
 #include "components/Transform.h"
 #include "managers/ComponentManager.h"
 #include "utils/DebugAssert.h"
@@ -72,6 +73,7 @@ void GameObject::load(const Json::Value& value) {
 
 void GameObject::onAwake() noexcept {
   transform_ = getComponent<Transform>();
+  physics_ = getComponent<PhysicsBody>();
 
   for (const auto& child : children()) {
     if (child->active()) child->onAwake();

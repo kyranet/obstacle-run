@@ -21,11 +21,15 @@ Server::ServerClient::ServerClient(std::weak_ptr<Server> server,
   // Print out the clients IP and port number
   uint32_t ipAddress;
   ipAddress = SDL_SwapBE32(remoteIP->host);
-  printf("Accepted a connection from %d.%d.%d.%d port %hu\n", ipAddress >> 24u,
-         (ipAddress >> 16u) & 0xFFu, (ipAddress >> 8u) & 0xFFu,
-         ipAddress & 0xFFu, remoteIP->port);
+  printf("[CLIENT] Received a connection from %d.%d.%d.%d port %hu\n",
+         ipAddress >> 24u, (ipAddress >> 16u) & 0xFFu,
+         (ipAddress >> 8u) & 0xFFu, ipAddress & 0xFFu, remoteIP->port);
 
   if (sendIdentify()) {
+    printf("[CLIENT] Accepted a connection from %d.%d.%d.%d port %hu\n",
+           ipAddress >> 24u, (ipAddress >> 16u) & 0xFFu,
+           (ipAddress >> 8u) & 0xFFu, ipAddress & 0xFFu, remoteIP->port);
+
     status_ = ClientStatus::kRunning;
     pushEvent(
         {ClientEvent::kConnect, this, new client_event_connect_t{ipAddress}});
@@ -38,18 +42,26 @@ Server::ServerClient::~ServerClient() noexcept {
 }
 
 void Server::ServerClient::run() noexcept {
+  std::cout << "[CLIENT] Running.\n";
+
   while (running()) {
+    debug_print("[CLIENT] Waiting message from: %i\n", id());
+
     // Read the buffer from the client
-    uint8_t message[1024];
-    int len = SDLNet_TCP_Recv(socket_, message, 1024);
-    if (!len) {
-      std::cerr << "Received empty TCP message. Error: " << SDLNet_GetError()
-                << '\n';
+    uint8_t message[64];
+    int len = SDLNet_TCP_Recv(socket_, message, 64);
+    if (len <= 0) {
+      if (len == 0)
+        std::cout << "[CLIENT] Disconnected.\n";
+      else
+        std::cerr << "[CLIENT] TCP Error: " << SDLNet_GetError() << '\n';
+
+      status_ = ClientStatus::kClosed;
       break;
     }
 
     // Print the received message
-    debug_print("[SERVER] Received: %.*s\n", len, message);
+    debug_print("[CLIENT] Received [%i]: %.*s\n", len, len, message);
     parseMessage(message);
   }
 }
@@ -112,7 +124,6 @@ Server::Server() noexcept {
     exit(2);
   }
 
-  status_ = ServerStatus::kRunning;
   std::cout << "\033[0;32mReady!\033[0m\n";
 }
 
@@ -133,13 +144,39 @@ void Server::handleEvents() noexcept {
     auto& client = clients_[--i];
     while (client->readEvent(&event)) {
       if (event.event == ClientEvent::kDisconnect) {
+        constexpr const auto size = 6;
+        uint8_t message[size];
+        buffer_->writeUint8(
+            message,
+            static_cast<uint8_t>(OutgoingMessageType::kPlayerDisconnect), 4);
+        buffer_->writeUint8(message, client->id(), 5);
+        broadcastExcept(message, 6, client->id());
+
         clients_.erase(clients_.begin() + i);
         break;
-      } else if (event.event == ClientEvent::kConnect) {
-        uint8_t message[6];
-        message[4] = static_cast<uint8_t>(OutgoingMessageType::kPlayerConnect);
-        message[5] = client->id();
-        broadcastExcept(message, 6, client->id());
+      }
+
+      if (event.event == ClientEvent::kConnect) {
+        constexpr const auto size = 6;
+        uint8_t message[size];
+        buffer_->writeUint8(
+            message, static_cast<uint8_t>(OutgoingMessageType::kPlayerConnect),
+            4);
+        buffer_->writeUint8(message, client->id(), 5);
+        broadcastExcept(message, size, client->id());
+      } else if (event.event == ClientEvent::kUpdatePosition) {
+        constexpr const auto size = 6 + sizeof(float) * 2;
+        const auto* data =
+            reinterpret_cast<client_event_player_update_t*>(event.data);
+        uint8_t message[size];
+        buffer_->writeUint8(
+            message,
+            static_cast<uint8_t>(OutgoingMessageType::kPlayerUpdatePosition),
+            4);
+        buffer_->writeUint8(message, client->id(), 5);
+        buffer_->writeFloat(message, data->position_.x(), 6);
+        buffer_->writeFloat(message, data->position_.y(), 6 + sizeof(float));
+        broadcastExcept(message, size, client->id());
       }
     }
   }
@@ -149,6 +186,9 @@ void Server::run() noexcept {
   const constexpr static uint32_t gameFrameRate = 60U;
   const constexpr static auto frameTime =
       static_cast<uint32_t>(1000 / gameFrameRate);
+
+  std::cout << "[SERVER] Running.\n";
+  status_ = ServerStatus::kRunning;
 
   while (running()) {
     handleEvents();
@@ -163,8 +203,9 @@ void Server::run() noexcept {
     }
 
     std::thread([&, client]() {
-      clients_.emplace_back(
-          std::make_unique<ServerClient>(shared_from_this(), client));
+      auto sc = new ServerClient(shared_from_this(), client);
+      clients_.emplace_back(sc);
+      sc->run();
     }).detach();
   }
 }

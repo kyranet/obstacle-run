@@ -7,9 +7,11 @@
 #include "Game.h"
 #endif
 #include "components/BulletBox.h"
+#include "components/NetworkController.h"
 #include "components/PhysicsBody.h"
 #include "components/Transform.h"
 #include "managers/Input.h"
+#include "networking/Client.h"
 #include "objects/GameObject.h"
 #include "scenes/Scene.h"
 #include "utils/Time.h"
@@ -27,6 +29,12 @@ void PlayerController::onAwake() noexcept {
   physicsBody_ = go->getComponent<PhysicsBody>();
   bullets_ = go->scene().lock()->getGameObjectByName("Bullets");
   assert(((void)"'bullets_' must not be expired", !bullets_.expired()));
+
+  network_ = go->scene()
+                 .lock()
+                 ->getGameObjectByName("Network")
+                 .lock()
+                 ->getComponent<NetworkController>();
 }
 
 void PlayerController::onUpdate() noexcept {
@@ -111,7 +119,15 @@ void PlayerController::onUpdate() noexcept {
   }
 }
 
-void PlayerController::onLateUpdate() noexcept { Component::onLateUpdate(); }
+void PlayerController::onLateUpdate() noexcept {
+  Component::onLateUpdate();
+
+  const auto& vec =
+      gameObject().lock()->physics().lock()->body()->GetPosition();
+  auto position = Vector2<float>(vec);
+  network_.lock()->client()->send(OutgoingClientEvent::kUpdatePosition,
+                                  &position);
+}
 
 #if !NDEBUG
 void PlayerController::onRender() noexcept {

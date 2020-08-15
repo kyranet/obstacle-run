@@ -111,6 +111,7 @@ class Server : public std::enable_shared_from_this<Server> {
   enum class ServerStatus : uint8_t { kPending, kRunning, kClosed };
 
   std::vector<std::unique_ptr<ServerClient>> clients_{};
+  std::unique_ptr<Buffer> buffer_{};
   std::mutex player_counter_mutex_{};
   uint8_t playerCounter_{0};
   ServerStatus status_;

@@ -61,7 +61,7 @@ class Client {
   uint8_t id_{0};
 
   [[nodiscard]] std::tuple<uint8_t*, int32_t> serializeMessage(
-      OutgoingClientEvent event, void* data) const noexcept;
+      OutgoingClientEvent event, const void* data) const noexcept;
   void deserializeMessage(uint8_t* message) noexcept;
 
   inline void pushEvent(const client_event_t& event) noexcept {
@@ -99,7 +99,8 @@ class Client {
     ++event_;
   }
 
-  inline void send(OutgoingClientEvent event, void* data = nullptr) noexcept {
+  inline void send(OutgoingClientEvent event,
+                   const void* data = nullptr) noexcept {
     const auto& [message, size] = serializeMessage(event, data);
     send(message, size);
   }

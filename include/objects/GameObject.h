@@ -11,8 +11,9 @@
 struct SDL_Rect;
 struct SDL_Point;
 class Scene;
-class Transform;
 class Component;
+class Transform;
+class PhysicsBody;
 
 class GameObject final : public std::enable_shared_from_this<GameObject> {
   uint32_t id_{0};
@@ -23,6 +24,7 @@ class GameObject final : public std::enable_shared_from_this<GameObject> {
   std::weak_ptr<Scene> scene_{};
   std::weak_ptr<GameObject> parent_{};
   std::weak_ptr<Transform> transform_{};
+  std::weak_ptr<PhysicsBody> physics_{};
   std::vector<std::shared_ptr<GameObject>> children_{};
   std::vector<std::shared_ptr<Component>> components_{};
 
@@ -54,6 +56,11 @@ class GameObject final : public std::enable_shared_from_this<GameObject> {
   [[nodiscard]] inline const std::weak_ptr<Transform>& transform()
       const noexcept {
     return transform_;
+  }
+
+  [[nodiscard]] inline const std::weak_ptr<PhysicsBody>& physics()
+      const noexcept {
+    return physics_;
   }
 
   [[nodiscard]] inline const bool& active() const noexcept { return active_; }
