@@ -30,7 +30,8 @@ void NetworkController::onAwake() noexcept {
   std::thread([&]() {
     client_->run();
     destroy();
-  }).detach();
+  })
+      .detach();
 }
 
 void NetworkController::onUpdate() noexcept {
@@ -90,8 +91,9 @@ void NetworkController::createPlayer(uint8_t id) const noexcept {
   createPlayer(id, {50.f, 50.f});
 }
 
-void NetworkController::createPlayer(
-    uint8_t id, const Vector2<float>& position) const noexcept {
+void NetworkController::createPlayer(uint8_t id,
+                                     const Vector2<float>& position) const
+    noexcept {
   auto go = std::make_shared<GameObject>(scene(), players_);
   go->name() = "Opponent";
   go->active() = true;
@@ -136,8 +138,9 @@ void NetworkController::removePlayer(uint8_t id) const noexcept {
   }
 }
 
-void NetworkController::movePlayer(
-    uint8_t id, const Vector2<float>& position) const noexcept {
+void NetworkController::movePlayer(uint8_t id,
+                                   const Vector2<float>& position) const
+    noexcept {
   for (const auto& player : players_.lock()->children()) {
     if (player->id() == id) {
       player->physics().lock()->body()->SetTransform(position.toVec(), 0.f);
@@ -147,9 +150,9 @@ void NetworkController::movePlayer(
   }
 }
 
-void NetworkController::createBullet(
-    const Vector2<float>& position,
-    const Vector2<double>& velocity) const noexcept {
+void NetworkController::createBullet(const Vector2<float>& position,
+                                     const Vector2<double>& velocity) const
+    noexcept {
   const auto go = std::make_shared<GameObject>(scene());
   go->name() = "Bullet";
   go->active() = true;

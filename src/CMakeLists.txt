@@ -5,8 +5,7 @@
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 find_package(SDL2_ttf REQUIRED)
-find_package(SDL2_net REQUIRED)
-include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR} ${SDL2_NET_INCLUDE_DIR} third-party/jsoncpp)
+include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR} third-party/jsoncpp)
 
 set(DEPENDENCY_LIBRARIES box2d)
 
@@ -57,7 +56,7 @@ target_include_directories(Game
   )
 
 # Link the libraries and install them.
-target_link_libraries(Game ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SDL2_NET_LIBRARY} ${DEPENDENCY_LIBRARIES})
+target_link_libraries(Game ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${DEPENDENCY_LIBRARIES})
 
 add_custom_command(
   TARGET Game POST_BUILD

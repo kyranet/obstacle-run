@@ -2,7 +2,6 @@
 
 #include "Game.h"
 
-#include <SDL_net.h>
 #include <SDL_ttf.h>
 
 #include <iostream>
@@ -62,7 +61,6 @@ bool Game::end() noexcept {
   // Quit SDL subsystems
   SDL_Quit();
   TTF_Quit();
-  SDLNet_Quit();
 
   return true;
 }
@@ -75,11 +73,6 @@ bool Game::init() noexcept {
 
   if (TTF_Init() != 0) {
     std::cerr << "Error initializing TTF.\nReason: " << TTF_GetError();
-    return false;
-  }
-
-  if (SDLNet_Init() != 0) {
-    std::cerr << "Error initializing NET.\nReason: " << SDLNet_GetError();
     return false;
   }
 

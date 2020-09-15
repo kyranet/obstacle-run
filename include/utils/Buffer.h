@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <cmath>
 #include <cstdint>
 #include <cstring>
 #include <string>
@@ -14,8 +15,8 @@ class Buffer {
   double doubleArray_[1];
 
  public:
-  inline void writeInt8(uint8_t* buffer, int8_t input,
-                        size_t offset) const noexcept {
+  inline void writeInt8(uint8_t* buffer, int8_t input, size_t offset) const
+      noexcept {
     reinterpret_cast<int8_t*>(buffer + offset)[0] = input;
   }
 
@@ -24,8 +25,8 @@ class Buffer {
     return reinterpret_cast<const int8_t*>(buffer)[offset];
   }
 
-  inline void writeUint8(uint8_t* buffer, uint8_t input,
-                         size_t offset) const noexcept {
+  inline void writeUint8(uint8_t* buffer, uint8_t input, size_t offset) const
+      noexcept {
     buffer[offset] = input;
   }
 
@@ -34,8 +35,8 @@ class Buffer {
     return buffer[offset];
   }
 
-  inline void writeInt16(uint8_t* buffer, int16_t input,
-                         size_t offset) const noexcept {
+  inline void writeInt16(uint8_t* buffer, int16_t input, size_t offset) const
+      noexcept {
     if constexpr (littleEndian()) {
       reinterpret_cast<int16_t*>(buffer + offset)[0] = input;
     } else {
@@ -49,17 +50,17 @@ class Buffer {
     if constexpr (littleEndian()) {
       return reinterpret_cast<const int16_t*>(buffer + offset)[0];
     } else {
-      static const auto& valuePower = static_cast<int16_t>(pow(2, 8));
-      static const auto& signPower = static_cast<int16_t>(pow(2, 15));
-      const auto& first = buffer[offset];
-      const auto& last = buffer[offset + 1];
+      static const auto valuePower = static_cast<int16_t>(pow(2, 8));
+      static const auto signPower = static_cast<int16_t>(pow(2, 15));
+      const auto first = buffer[offset];
+      const auto last = buffer[offset + 1];
       const auto val = first + last * valuePower;
       return val | (val & signPower) * 0x1fffe;
     }
   }
 
-  inline void writeUint16(uint8_t* buffer, uint16_t input,
-                          size_t offset) const noexcept {
+  inline void writeUint16(uint8_t* buffer, uint16_t input, size_t offset) const
+      noexcept {
     if constexpr (littleEndian()) {
       reinterpret_cast<uint16_t*>(buffer + offset)[0] = input;
     } else {
@@ -73,15 +74,15 @@ class Buffer {
     if constexpr (littleEndian()) {
       return reinterpret_cast<const uint16_t*>(buffer + offset)[0];
     } else {
-      static const auto& valuePower = static_cast<int16_t>(pow(2, 8));
-      const auto& first = buffer[offset];
-      const auto& last = buffer[offset + 1];
+      static const auto valuePower = static_cast<int16_t>(pow(2, 8));
+      const auto first = buffer[offset];
+      const auto last = buffer[offset + 1];
       return first + last * valuePower;
     }
   }
 
-  inline void writeInt32(uint8_t* buffer, int32_t input,
-                         size_t offset) const noexcept {
+  inline void writeInt32(uint8_t* buffer, int32_t input, size_t offset) const
+      noexcept {
     if constexpr (littleEndian()) {
       reinterpret_cast<int32_t*>(buffer + offset)[0] = input;
     } else {
@@ -97,16 +98,16 @@ class Buffer {
     if constexpr (littleEndian()) {
       return reinterpret_cast<const int32_t*>(buffer + offset)[0];
     } else {
-      static const auto& powerOf8 = static_cast<int32_t>(pow(2, 8));
-      static const auto& powerOf16 = static_cast<int32_t>(pow(2, 16));
+      static const auto powerOf8 = static_cast<int32_t>(pow(2, 8));
+      static const auto powerOf16 = static_cast<int32_t>(pow(2, 16));
       return buffer[offset] + buffer[offset + 1] * powerOf8 +
              buffer[offset + 2] * powerOf16 +
              (buffer[offset + 3] << 24);  // Overflow
     }
   }
 
-  inline void writeUint32(uint8_t* buffer, uint32_t input,
-                          size_t offset) const noexcept {
+  inline void writeUint32(uint8_t* buffer, uint32_t input, size_t offset) const
+      noexcept {
     if constexpr (littleEndian()) {
       reinterpret_cast<uint32_t*>(buffer + offset)[0] = input;
     } else {
@@ -156,8 +157,8 @@ class Buffer {
     }
   }
 
-  inline void writeInt64(uint8_t* buffer, int64_t input,
-                         size_t offset) const noexcept {
+  inline void writeInt64(uint8_t* buffer, int64_t input, size_t offset) const
+      noexcept {
     if constexpr (littleEndian()) {
       reinterpret_cast<int64_t*>(buffer + offset)[0] = input;
     } else {
@@ -182,8 +183,8 @@ class Buffer {
     }
   }
 
-  inline void writeUint64(uint8_t* buffer, uint64_t input,
-                          size_t offset) const noexcept {
+  inline void writeUint64(uint8_t* buffer, uint64_t input, size_t offset) const
+      noexcept {
     if constexpr (littleEndian()) {
       reinterpret_cast<uint64_t*>(buffer + offset)[0] = input;
     } else {
@@ -268,9 +269,9 @@ class Buffer {
     return {value, size};
   }
 
-  inline std::string readString(const uint8_t* buffer,
-                                size_t offset) const noexcept {
-    const auto& [value, size] = readCString(buffer, offset);
+  inline std::string readString(const uint8_t* buffer, size_t offset) const
+      noexcept {
+    const auto [value, size] = readCString(buffer, offset);
     return std::string(value, size);
   }
 };

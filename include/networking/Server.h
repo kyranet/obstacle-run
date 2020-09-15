@@ -2,7 +2,10 @@
 
 #pragma once
 
-#include <SDL_net.h>
+#include <netdb.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include <mutex>
 #include <queue>
@@ -10,7 +13,14 @@
 #include <utility>
 
 #include "utils/Buffer.h"
+#include "utils/DebugAssert.h"
 #include "utils/Vector2.h"
+
+const auto socket_bind = &bind;
+const auto socket_close = &close;
+const auto socket_read = &read;
+const auto socket_write = &write;
+const auto socket_listen = &listen;
 
 class Server : public std::enable_shared_from_this<Server> {
   enum class ClientStatus : uint8_t { kPending, kRunning, kClosed };
@@ -34,9 +44,11 @@ class Server : public std::enable_shared_from_this<Server> {
   struct client_event_base_t {};
 
   struct client_event_connect_t : public client_event_base_t {
-    explicit client_event_connect_t(uint32_t ipAddress)
-        : ipAddress_(ipAddress) {}
-    uint32_t ipAddress_;
+    explicit client_event_connect_t(char host[NI_MAXHOST],
+                                    char service[NI_MAXSERV])
+        : host_(host), service_(service) {}
+    char* host_;
+    char* service_;
   };
 
   struct client_event_disconnect_t : public client_event_base_t {};
@@ -64,7 +76,8 @@ class Server : public std::enable_shared_from_this<Server> {
     std::queue<client_event_t> events_{};
     std::mutex event_mutex_{};
     std::weak_ptr<Server> server_;
-    TCPsocket socket_;
+    int socket_;
+    sockaddr addr_;
     uint8_t id_{0};
     uint32_t event_{0};
     uint32_t remoteEvent_{0};
@@ -79,7 +92,8 @@ class Server : public std::enable_shared_from_this<Server> {
     }
 
    public:
-    ServerClient(std::weak_ptr<Server> server, TCPsocket socket) noexcept;
+    ServerClient(std::weak_ptr<Server> server, int socket,
+                 sockaddr addr) noexcept;
     ~ServerClient() noexcept;
 
     void run() noexcept;
@@ -104,7 +118,8 @@ class Server : public std::enable_shared_from_this<Server> {
       // Set the event count before sending:
       buffer_->writeUint32(data, event_, 0);
 
-      if (SDLNet_TCP_Send(socket_, data, size) != size) {
+      debug_print("[CLIENT] Sending [%i]: %.*s\n", size, size, data);
+      if (socket_write(socket_, data, size) < 0) {
         // Not all bits were sent, meaning an abrupt disconnection or unknown
         // socket error.
         disconnect();
@@ -127,12 +142,15 @@ class Server : public std::enable_shared_from_this<Server> {
 
   enum class ServerStatus : uint8_t { kPending, kRunning, kClosed };
 
+  std::mutex pending_clients_mutex_{};
+  std::queue<ServerClient*> pending_clients_{};
+
   std::vector<std::unique_ptr<ServerClient>> clients_{};
   std::unique_ptr<Buffer> buffer_{};
   std::mutex player_counter_mutex_{};
   uint8_t playerCounter_{0};
   ServerStatus status_;
-  TCPsocket server_;
+  int server_;
 
   inline void broadcastExcept(uint8_t* data, int32_t size,
                               uint8_t id) noexcept {

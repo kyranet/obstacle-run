@@ -26,8 +26,8 @@ class ComponentFactory {
   }
 
   [[nodiscard]] virtual std::shared_ptr<T> fromJson(
-      const Json::Value& json,
-      std::weak_ptr<GameObject> parent) const noexcept {
+      const Json::Value& json, std::weak_ptr<GameObject> parent) const
+      noexcept {
     auto component = std::make_shared<T>(parent);
     component->patch(json);
     return component;

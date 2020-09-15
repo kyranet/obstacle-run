@@ -8,36 +8,31 @@
 
 #include "utils/DebugAssert.h"
 
-Server::ServerClient::ServerClient(std::weak_ptr<Server> server,
-                                   TCPsocket socket) noexcept
-    : server_(std::move(server)), socket_(socket) {
+Server::ServerClient::ServerClient(std::weak_ptr<Server> server, int socket,
+                                   sockaddr addr) noexcept
+    : server_(std::move(server)), socket_(socket), addr_(addr) {
   // Get the client's IP and port number
-  const auto remoteIP = SDLNet_TCP_GetPeerAddress(socket_);
-  if (!remoteIP) {
-    printf("SDLNet_TCP_GetPeerAddress: %s\n", SDLNet_GetError());
-    return;
-  }
+  socklen_t client_len = sizeof(struct sockaddr);
+  char host[NI_MAXHOST];
+  char service[NI_MAXSERV];
+
+  getnameinfo(&addr_, client_len, host, NI_MAXHOST, service, NI_MAXSERV,
+              NI_NUMERICHOST | NI_NUMERICSERV);
 
   // Print out the clients IP and port number
-  uint32_t ipAddress;
-  ipAddress = SDL_SwapBE32(remoteIP->host);
-  printf("[CLIENT] Received a connection from %d.%d.%d.%d port %hu\n",
-         ipAddress >> 24u, (ipAddress >> 16u) & 0xFFu,
-         (ipAddress >> 8u) & 0xFFu, ipAddress & 0xFFu, remoteIP->port);
+  printf("[CLIENT] Received a connection from %s:%s\n", host, service);
 
   if (sendIdentify()) {
-    printf("[CLIENT] Accepted a connection from %d.%d.%d.%d port %hu\n",
-           ipAddress >> 24u, (ipAddress >> 16u) & 0xFFu,
-           (ipAddress >> 8u) & 0xFFu, ipAddress & 0xFFu, remoteIP->port);
+    printf("[CLIENT] Accepted a connection from %s:%s\n", host, service);
 
     status_ = ClientStatus::kRunning;
-    pushEvent(
-        {ClientEvent::kConnect, this, new client_event_connect_t{ipAddress}});
+    pushEvent({ClientEvent::kConnect, this,
+               new client_event_connect_t{host, service}});
   }
 }
 
 Server::ServerClient::~ServerClient() noexcept {
-  SDLNet_TCP_Close(socket_);
+  socket_close(socket_);
   status_ = ClientStatus::kClosed;
 }
 
@@ -49,12 +44,12 @@ void Server::ServerClient::run() noexcept {
 
     // Read the buffer from the client
     uint8_t message[64];
-    int len = SDLNet_TCP_Recv(socket_, message, 64);
+    ssize_t len = socket_read(socket_, message, 64);
     if (len <= 0) {
       if (len == 0)
         std::cout << "[CLIENT] Disconnected.\n";
       else
-        std::cerr << "[CLIENT] TCP Error: " << SDLNet_GetError() << '\n';
+        std::cerr << "[CLIENT] Encountered an error.\n";
 
       disconnect();
       break;
@@ -110,39 +105,38 @@ bool Server::ServerClient::sendIdentify() noexcept {
 Server::Server() noexcept {
   status_ = ServerStatus::kPending;
 
-  if (SDL_Init(0) == -1) {
-    printf("SDL_Init: %s\n", SDL_GetError());
-    exit(1);
-  }
+  std::cout << "Starting server... ";
 
-  if (SDLNet_Init() == -1) {
-    printf("SDLNet_Init: %s\n", SDLNet_GetError());
+  server_ = socket(AF_INET, SOCK_STREAM, 0);
+  if (server_ < 0) {
+    std::cerr << "[SERVER] Failed to create socket.\n";
     exit(2);
   }
 
-  std::cout << "Starting server... ";
+  struct sockaddr_in serv_addr;
+  bzero((char*)&serv_addr, sizeof(serv_addr));
+  serv_addr.sin_family = AF_INET;
+  serv_addr.sin_addr.s_addr = INADDR_ANY;
+  serv_addr.sin_port = htons(9999);
 
-  IPaddress ip;
-  if (SDLNet_ResolveHost(&ip, nullptr, 9999) == -1) {
-    std::cerr << "SDLNet_ResolveHost: " << SDLNet_GetError() << '\n';
-    exit(1);
+  if (socket_bind(server_, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) <
+      0) {
+    std::cerr << "[SERVER] Failed to bind socket.\n";
+    exit(2);
   }
 
-  server_ = SDLNet_TCP_Open(&ip);
-  if (!server_) {
-    std::cerr << "SDLNet_TCP_Open: " << SDLNet_GetError() << '\n';
+  if (socket_listen(server_, 5) < 0) {
+    std::cerr << "[SERVER] Failed to listen for new connections.\n";
     exit(2);
   }
 
   std::cout << "\033[0;32mReady!\033[0m\n";
+  debug_print("[SERVER] FD [%i]\n", server_);
 }
 
 Server::~Server() noexcept {
-  SDLNet_TCP_Close(server_);
+  socket_close(server_);
   status_ = ServerStatus::kClosed;
-
-  SDL_Quit();
-  SDLNet_Quit();
 }
 
 void Server::handleEvents() noexcept {
@@ -235,29 +229,48 @@ void Server::handleEvents() noexcept {
 }
 
 void Server::run() noexcept {
-  const constexpr static uint32_t gameFrameRate = 60U;
+  const constexpr static int64_t gameFrameRate = 60;
   const constexpr static auto frameTime =
-      static_cast<uint32_t>(1000 / gameFrameRate);
+      std::chrono::milliseconds(static_cast<int64_t>(1000 / gameFrameRate));
 
   std::cout << "[SERVER] Running.\n";
   status_ = ServerStatus::kRunning;
 
+  std::thread([&]() {
+    while (status_ == ServerStatus::kRunning) {
+      struct sockaddr_in client_addr;
+      socklen_t client_len = sizeof(client_addr);
+      auto* casted_client_addr = (struct sockaddr*)&client_addr;
+
+      int sd_client = accept(server_, casted_client_addr, &client_len);
+      if (sd_client < 0) {
+        std::cerr << "[CLIENT] Errored while accepting a connection.\n";
+        exit(1);
+      }
+
+      debug_print("[CLIENT] FD [%i]\n", sd_client);
+
+      auto sc =
+          new ServerClient(shared_from_this(), sd_client, *casted_client_addr);
+      std::lock_guard<std::mutex> guard(pending_clients_mutex_);
+      pending_clients_.push(sc);
+    }
+  }).detach();
+
   while (running()) {
     handleEvents();
 
-    // Try to accept a connection
-    auto* client = SDLNet_TCP_Accept(server_);
-
-    // No connection accepted
-    if (!client) {
-      SDL_Delay(frameTime);
-      continue;
+    {
+      std::lock_guard<std::mutex> guard(pending_clients_mutex_);
+      while (!pending_clients_.empty()) {
+        auto* client = pending_clients_.back();
+        debug_print("[CLIENT] Inserting player: %d\n", client->id());
+        pending_clients_.pop();
+        std::thread([&]() { client->run(); }).detach();
+        clients_.emplace_back(client);
+      }
     }
 
-    std::thread([&, client]() {
-      auto sc = new ServerClient(shared_from_this(), client);
-      clients_.emplace_back(sc);
-      sc->run();
-    }).detach();
+    std::this_thread::sleep_for(frameTime);
   }
 }

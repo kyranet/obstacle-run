@@ -178,22 +178,22 @@ class Vector2 final {
 
   template <typename Q, typename = typename std::enable_if_t<
                             std::is_convertible_v<T, Q>, Q>>
-  [[nodiscard]] inline Vector2<T> operator-(
-      const Vector2<Q>& v) const noexcept {
+  [[nodiscard]] inline Vector2<T> operator-(const Vector2<Q>& v) const
+      noexcept {
     return Vector2(x() - static_cast<T>(v.x()), y() - static_cast<T>(v.y()));
   }
 
   template <typename Q, typename = typename std::enable_if_t<
                             std::is_convertible_v<T, Q>, Q>>
-  [[nodiscard]] inline Vector2<T> operator+(
-      const Vector2<Q>& v) const noexcept {
+  [[nodiscard]] inline Vector2<T> operator+(const Vector2<Q>& v) const
+      noexcept {
     return Vector2(x() + static_cast<T>(v.x()), y() + static_cast<T>(v.y()));
   }
 
   template <typename Q, typename = typename std::enable_if_t<
                             std::is_convertible_v<T, Q>, Q>>
-  [[nodiscard]] inline Vector2<T> operator*(
-      const Vector2<Q>& d) const noexcept {
+  [[nodiscard]] inline Vector2<T> operator*(const Vector2<Q>& d) const
+      noexcept {
     return Vector2(x() * static_cast<T>(d.x()), y() * static_cast<T>(d.y()));
   }
 

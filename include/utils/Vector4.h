@@ -237,48 +237,48 @@ class Vector4 final {
 
   template <typename Q, typename = typename std::enable_if_t<
                             std::is_convertible_v<T, Q>, Q>>
-  [[nodiscard]] inline Vector4<T> operator-(
-      const Vector4<Q>& v) const noexcept {
+  [[nodiscard]] inline Vector4<T> operator-(const Vector4<Q>& v) const
+      noexcept {
     return Vector4(x() - static_cast<T>(v.x()), y() - static_cast<T>(v.y()),
                    z() - static_cast<T>(v.z()), a() - static_cast<T>(v.a()));
   }
 
   template <typename Q, typename = typename std::enable_if_t<
                             std::is_convertible_v<T, Q>, Q>>
-  [[nodiscard]] inline Vector4<T> operator-(
-      const Vector2<Q>& v) const noexcept {
+  [[nodiscard]] inline Vector4<T> operator-(const Vector2<Q>& v) const
+      noexcept {
     return Vector4(x() - static_cast<T>(v.x()), y() - static_cast<T>(v.y()),
                    z(), a());
   }
 
   template <typename Q, typename = typename std::enable_if_t<
                             std::is_convertible_v<T, Q>, Q>>
-  [[nodiscard]] inline Vector4<T> operator+(
-      const Vector4<Q>& v) const noexcept {
+  [[nodiscard]] inline Vector4<T> operator+(const Vector4<Q>& v) const
+      noexcept {
     return Vector4(x() + static_cast<T>(v.x()), y() + static_cast<T>(v.y()),
                    z() + static_cast<T>(v.z()), a() + static_cast<T>(v.a()));
   }
 
   template <typename Q, typename = typename std::enable_if_t<
                             std::is_convertible_v<T, Q>, Q>>
-  [[nodiscard]] inline Vector4<T> operator+(
-      const Vector2<Q>& v) const noexcept {
+  [[nodiscard]] inline Vector4<T> operator+(const Vector2<Q>& v) const
+      noexcept {
     return Vector4(x() + static_cast<T>(v.x()), y() + static_cast<T>(v.y()),
                    z(), a());
   }
 
   template <typename Q, typename = typename std::enable_if_t<
                             std::is_convertible_v<T, Q>, Q>>
-  [[nodiscard]] inline Vector4<T> operator*(
-      const Vector4<Q>& d) const noexcept {
+  [[nodiscard]] inline Vector4<T> operator*(const Vector4<Q>& d) const
+      noexcept {
     return Vector4(x() * static_cast<T>(d.x()), y() * static_cast<T>(d.y()),
                    z() * static_cast<T>(d.z()), a() * static_cast<T>(d.a()));
   }
 
   template <typename Q, typename = typename std::enable_if_t<
                             std::is_convertible_v<T, Q>, Q>>
-  [[nodiscard]] inline Vector4<T> operator*(
-      const Vector2<Q>& d) const noexcept {
+  [[nodiscard]] inline Vector4<T> operator*(const Vector2<Q>& d) const
+      noexcept {
     return Vector4(x() * static_cast<T>(d.x()), y() * static_cast<T>(d.y()),
                    z(), a());
   }

@@ -34,8 +34,8 @@ class Component {
   [[nodiscard]] inline const uint32_t& id() const noexcept { return id_; }
   inline uint32_t& id() noexcept { return id_; }
 
-  [[nodiscard]] inline const std::weak_ptr<GameObject>& gameObject()
-      const noexcept {
+  [[nodiscard]] inline const std::weak_ptr<GameObject>& gameObject() const
+      noexcept {
     return gameObject_;
   }
 

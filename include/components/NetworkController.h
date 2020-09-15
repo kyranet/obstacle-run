@@ -15,8 +15,8 @@ class NetworkController final : public Component {
   void createPlayer(uint8_t id, const Vector2<float>& position) const noexcept;
   void createPlayer(uint8_t id) const noexcept;
   void removePlayer(uint8_t id) const noexcept;
-  void movePlayer(uint8_t player,
-                  const Vector2<float>& position) const noexcept;
+  void movePlayer(uint8_t player, const Vector2<float>& position) const
+      noexcept;
   void createBullet(const Vector2<float>& position,
                     const Vector2<double>& velocity) const noexcept;
 

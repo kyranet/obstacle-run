@@ -35,9 +35,9 @@ class PhysicsWorld {
     return max();
   }
 
-  [[nodiscard]] inline uint32_t collides(
-      const Vector2<float>& point,
-      const Vector2<int32_t>& size) const noexcept {
+  [[nodiscard]] inline uint32_t collides(const Vector2<float>& point,
+                                         const Vector2<int32_t>& size) const
+      noexcept {
     return collides(Vector2<int32_t>(point), size);
   }
 

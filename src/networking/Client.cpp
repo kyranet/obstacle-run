@@ -5,24 +5,36 @@
 #include "utils/DebugAssert.h"
 
 Client::Client() noexcept {
-  std::cout << "Starting client... ";
+  std::cout << "[CLIENT] Starting client... ";
 
-  IPaddress ip;
-  if (SDLNet_ResolveHost(&ip, "localhost", 9999) == -1) {
-    printf("SDLNet_ResolveHost: %s\n", SDLNet_GetError());
-    exit(1);
+  socket_ = socket(AF_INET, SOCK_STREAM, 0);
+  if (socket_ < 0) {
+    std::cerr << "[CLIENT] Failed to open a socket.\n";
+    exit(2);
   }
 
-  socket_ = SDLNet_TCP_Open(&ip);
-  if (!socket_) {
-    std::cerr << "SDLNet_TCP_Open: " << SDLNet_GetError() << '\n';
+  auto* server = gethostbyname("0.0.0.0");
+  if (server == nullptr) {
+    std::cerr << "[CLIENT] There is no such host.\n";
+    exit(2);
+  }
+
+  struct sockaddr_in serv_addr;
+  bzero(&serv_addr, sizeof(serv_addr));
+  serv_addr.sin_family = AF_INET;
+  bcopy(server->h_addr, &serv_addr.sin_addr.s_addr, server->h_length);
+  serv_addr.sin_port = htons(9999);
+
+  if (socket_connect(socket_, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) <
+      0) {
+    std::cerr << "[CLIENT] Failed to connect to server.";
     exit(2);
   }
 
   std::cout << "\033[0;32mReady!\033[0m\n";
 }
 
-Client::~Client() noexcept { SDLNet_TCP_Close(socket_); }
+Client::~Client() noexcept { socket_close(socket_); }
 
 void Client::run() noexcept {
   status_ = ClientStatus::kRunning;
@@ -31,14 +43,14 @@ void Client::run() noexcept {
   while (running()) {
     // Read the buffer from the client
     uint8_t message[64];
-    int len = SDLNet_TCP_Recv(socket_, message, 64);
+    ssize_t len = socket_read(socket_, message, 64);
     if (len <= 0) {
       if (len == 0)
         std::cout << "[CLIENT] Disconnected.\n";
       else
-        std::cerr << "[CLIENT] TCP Error: " << SDLNet_GetError() << '\n';
+        std::cerr << "[CLIENT] Encountered an error.\n";
       status_ = ClientStatus::kClosed;
-      break;
+      return;
     }
 
     // Print the received message

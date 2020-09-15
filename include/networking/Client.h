@@ -2,7 +2,10 @@
 
 #pragma once
 
-#include <SDL_net.h>
+#include <netdb.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include <cstdint>
 #include <memory>
@@ -11,6 +14,11 @@
 
 #include "utils/Buffer.h"
 #include "utils/Vector2.h"
+
+const auto socket_close = &close;
+const auto socket_connect = &connect;
+const auto socket_read = &read;
+const auto socket_write = &write;
 
 enum class ClientStatus : uint8_t { kPending, kRunning, kClosed };
 enum class IncomingClientEvent : uint8_t {
@@ -71,7 +79,7 @@ class Client {
   std::unique_ptr<Buffer> buffer_{};
   std::queue<client_event_t> events_{};
   std::mutex event_mutex_{};
-  TCPsocket socket_;
+  int socket_;
   uint32_t remoteEvent_{0};
   uint32_t event_{0};
   uint8_t id_{0};
@@ -103,7 +111,7 @@ class Client {
   inline void send(uint8_t* message, int32_t size) noexcept {
     buffer_->writeUint32(message, event_, 0);
 
-    if (SDLNet_TCP_Send(socket_, message, size) != size) {
+    if (socket_write(socket_, message, size) < 0) {
       // Not all bits were sent, meaning an abrupt disconnection or unknown
       // socket error.
       disconnect();

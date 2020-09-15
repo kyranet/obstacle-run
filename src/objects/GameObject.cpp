@@ -15,8 +15,8 @@ GameObject::GameObject(std::weak_ptr<Scene> scene,
 
 GameObject::~GameObject() noexcept = default;
 
-std::shared_ptr<const GameObject> GameObject::clickScan(
-    SDL_Point point) const noexcept {
+std::shared_ptr<const GameObject> GameObject::clickScan(SDL_Point point) const
+    noexcept {
   for (auto it = children().rbegin(); it != children().rend(); ++it) {
     const auto& child = (*it);
     if (child->clickScan(point)) return child;
