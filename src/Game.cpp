@@ -2,7 +2,6 @@
 
 #include "Game.h"
 
-#include <SDL_mixer.h>
 #include <SDL_net.h>
 #include <SDL_ttf.h>
 
@@ -63,7 +62,6 @@ bool Game::end() noexcept {
   // Quit SDL subsystems
   SDL_Quit();
   TTF_Quit();
-  Mix_Quit();
   SDLNet_Quit();
 
   return true;
@@ -77,11 +75,6 @@ bool Game::init() noexcept {
 
   if (TTF_Init() != 0) {
     std::cerr << "Error initializing TTF.\nReason: " << TTF_GetError();
-    return false;
-  }
-
-  if (Mix_Init(MIX_INIT_MP3 | MIX_INIT_OGG) == 0) {
-    std::cerr << "Error initializing MIX.\nReason: " << Mix_GetError();
     return false;
   }
 

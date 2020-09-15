@@ -5,9 +5,8 @@
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 find_package(SDL2_ttf REQUIRED)
-find_package(SDL2_mixer REQUIRED)
 find_package(SDL2_net REQUIRED)
-include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR} ${SDL2_NET_INCLUDE_DIR} third-party/jsoncpp)
+include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR} ${SDL2_NET_INCLUDE_DIR} third-party/jsoncpp)
 
 set(DEPENDENCY_LIBRARIES box2d)
 
@@ -58,7 +57,7 @@ target_include_directories(Game
   )
 
 # Link the libraries and install them.
-target_link_libraries(Game ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SDL2_MIXER_LIBRARIES} ${SDL2_NET_LIBRARY} ${DEPENDENCY_LIBRARIES})
+target_link_libraries(Game ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SDL2_NET_LIBRARY} ${DEPENDENCY_LIBRARIES})
 
 add_custom_command(
   TARGET Game POST_BUILD
@@ -67,7 +66,7 @@ add_custom_command(
   $<TARGET_FILE_DIR:Game>/assets
 )
 
-if (BUILD_LOCAL)
+if (MSVC)
     add_custom_command(
       TARGET Game POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy_directory
